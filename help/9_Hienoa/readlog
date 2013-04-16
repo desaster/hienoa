@@ -1,0 +1,10 @@
+Synopsis:
+   readlog
+
+Description:
+   This command displays your awaylog.  Awaylog contains messages and notices
+   that are logged while you are away (if configured so).
+
+See Also:
+   away(9); back(9); remlog(9);
+

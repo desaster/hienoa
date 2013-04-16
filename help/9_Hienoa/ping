@@ -1,0 +1,10 @@
+Synopsis:
+   ping <nick|#channel|*>
+
+Description:
+   This command is a wrapper to epic's PING command.  Unlike the original
+   PING, this requires an argument.
+
+See Also:
+   ping(1);
+

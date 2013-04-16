@@ -1,0 +1,13 @@
+Synopsis:
+   ban [#channel] <nick|nick!user@host>
+
+Description:
+   This commands adds new ban to a channel.  If no channel is specified,
+   current will be used.
+
+   The ban can be given as full hostmask, e.g. *!*@*kirjasto.jamsa.fi,
+   or as nick so the hostmask will be determined by using USERHOST.
+
+See Also:
+   unban(9); mode(1)
+

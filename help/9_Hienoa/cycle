@@ -1,0 +1,10 @@
+Synopsis:
+   cycle [#channel]
+
+Description:
+    This command will quickly leave and rejoin a channel.  If no channel is
+    specified, current will be used.
+
+Aliases:
+   leavejoin
+

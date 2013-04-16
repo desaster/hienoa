@@ -1,0 +1,223 @@
+# Copyright (c) 2003, 2004 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+# *** READ AT YOUR OWN RISK ***
+# I claim no responsibility for any mental damage caused by this code
+
+package help
+
+alias h.basename (h.path) {
+    if (right(1 $h.path) == [/]) {
+	return $strip(" " $pop($split(/ $left(${@h.path - 1} $h.path))))
+    } else {
+	return $strip(" " $pop($split(/ $h.path)))
+    }
+}
+
+alias h.help.show_file (file) {
+    @ :fd = open($file R)
+    @ :h.linecount = 0
+    @ :h.chr = []
+    while (1) {
+	@ :h.l = read($fd)
+	if (eof($fd)) break
+	if (left(1 $h.l) == [#]) continue
+	echo $h.l
+	@ :h.linecount += numlines($word(0 $geom()) $h.l)
+	if (h.linecount >= winsize()) {
+	    @ :h.linecount = 0
+	    if (getset(HELP_PAGER) == [OFF]) { continue }
+	    @ :h.chr = \
+		[$'*** Hit any key for more, $chr(39)q$chr(39) to quit ***']
+	    if (h.chr == [q]) break
+	}
+    }
+    @ close($fd)
+    if (getset(HELP_PAGER) == [ON]) {
+	@ :h.chr = [$'*** Hit any key to end ***']
+    }
+
+}
+
+alias h.help.show_dir (h.dir) {
+    @ :h.helpfile = [$h.dir/$h.basename($h.dir)]
+    if (fexist($h.helpfile) == 1) {
+	h.help.show_file $h.helpfile
+    }
+}
+
+alias h.help.show_topics (h.files) {
+    @ :h.column = 0
+    @ :h.line = :h.topics = []
+    fe ($h.files) h.file {
+	push :h.topics $h.basename($h.file)
+    }
+    @ :h.maxlen = maxlen($h.topics) + 2
+    @ :h.columns = word(0 $geom()) / h.maxlen
+    fe ($h.topics) h.topic {
+	@ :h.line #= pad($h.maxlen " " $h.topic)
+	if (++h.column == h.columns) {
+	    echo $h.line
+	    @ :h.line = []
+	    @ :h.column = 0
+	}
+    }
+    if (strlen($h.line)) { echo $h.line }
+}
+
+alias h.help.show_help (h.base_path, ...) {
+
+    @ :h.args = [$*]
+    @ :h.help_path = h.base_path
+    @ :h.topic_stack = []
+    @ :h.show_help = 1
+    @ :h.show_topics = 1
+
+    while (1) {
+	if (!strlen($h.args)) {
+	    if (h.help_path =~ [%/]) {
+		if (h.show_help) { h.help.show_dir $h.help_path }
+		if (h.show_topics) {
+		    echo *** $h.basename($h.help_path) choices:
+		    h.help.show_topics $glob($h.help_path/*)
+		}
+		@ :h.show_help = :h.show_topics = 0
+	    } else {
+		h.help.show_file $h.help_path
+		pop h.topic_stack
+	    }
+	    while (1) {
+		if (!strlen($h.topic_stack)) break
+		@ :h.topic = rightw(1 $h.topic_stack)
+		@ :h.subtopic = []
+		if (getset(HELP_PROMPT) == [ON]) {
+		    @ :h.subtopic = [$"$h.topic help? "]
+		}
+		if (strlen($h.subtopic)) {
+		    @ :h.help_path = h.base_path
+		    @ :h.args = h.topic_stack
+		    @ :h.topic_stack = []
+		    if (h.subtopic != [?]) {
+			push :h.args $h.subtopic
+			@ :h.show_help = :h.show_topics = 1
+		    } else {
+			@ :h.show_help = 0
+			@ :h.show_topics = 1
+		    }
+		    break
+		} else {
+		    pop h.topic_stack
+		    @ :h.show_help = :h.show_topics = 0
+		}
+	    }
+	    if (strlen($h.args)) continue
+	    break
+	}
+	@ :h.topic = shift(h.args)
+	@ :h.result = pattern($h.help_path/$h.topic $glob($h.help_path/*))
+
+	# if we didn't find a perfect match..
+	if (!strlen($h.result)) {
+	    @ :h.result = pattern($h.help_path/$h.topic* $glob($h.help_path/*))
+	}
+	if (!strlen($h.result)) {
+	    echo *** No help available on $h.topic: Use ? for list of topics
+	    @ :h.show_help = :h.show_topics = 0
+	    continue
+	}
+	if (numwords($h.result) > 1) {
+	    echo *** $h.basename($h.help_path) choices:
+	    h.help.show_topics $h.result
+	    @ :h.show_topics = :h.show_help = 0
+	} else {
+	    push :h.topic_stack $h.basename($word(0 $h.result))
+	    @ :h.help_path = word(0 $h.result)
+	}
+    }
+}
+
+alias h.find_recursive (path, text) {
+    fe ($glob($path/*)) file {
+	if (h.basename($file) =~ [$text*]) {
+	    return $file
+	} elsif (right(1 $file) == [/]) {
+	    @ :result = h.find_recursive($file $text)
+	    if (strlen($result)) { return $result }
+	}
+    }
+}
+
+# The top level help command that handles multiple help paths and
+# calls h.help.show_help
+alias help {
+    @ :h.args = [$*]
+    @ :h.show_help = 1
+    @ :h.help_paths = [$h.path/help/ $HELP_PATH/]
+
+    while (1) {
+	if (strlen($h.args)) {
+	    @ :h.found = 0
+	    fe ($h.help_paths) h.help_path {
+		@ :h.topic = word(0 $h.args)
+		@ :h.files = glob($h.help_path/*)
+		if (strlen($pattern($h.help_path/$h.topic* $h.files))) {
+		    @ :h.found = 1
+		    h.help.show_help $h.help_path $h.args
+		    break
+		}
+	    }
+	    if (!h.found) {
+		@ :h.search_paths = h.help_paths
+		xecho -b Searching for "$word(0 $h.args)"
+		while (1) {
+		    if (!strlen($h.search_paths)) break
+		    @ :h.help_path = pop(h.search_paths)
+		    @ :result = h.find_recursive($h.help_path $word(0 $h.args))
+		    if (!strlen($result)) continue
+
+		    # if it's a directory, remove the trailing /
+		    if (right(1 $result) == [/]) {
+			@ :result = before(-1 / $result)
+		    }
+
+		    @ :h.topic_stack = tr(#/# #$rest(${
+			strlen($h.help_path) + 1} $result))
+		    if (numwords($h.args) == 1) {
+			@ pop(h.topic_stack)
+		    }
+
+		    # re-call help with a full 'path'
+		    help $h.topic_stack ${numwords($h.args) > 1 ? \
+			restw(1 $h.args) : h.args}
+		    return
+		}
+		echo *** No help available on $h.args: Use ? for list of topics
+	    }
+	    @ :h.show_help = 0
+	    @ :h.args = []
+	    continue
+	}
+	if (h.show_help) {
+	    @ :show_help = 0
+	    @ :h.topics = h.results = []
+	    fe ($h.help_paths) h.help_path {
+		push :h.results $glob($h.help_path/*)
+	    }
+	    echo *** choices:
+	    h.help.show_topics $h.results
+	}
+	@ :h.topic = []
+	if (getset(HELP_PROMPT) == [ON]) {
+	    @ :h.topic = [$"Help? "]
+	}
+	@ :h.args = h.topic
+	if (h.args == [?]) {
+	    @ :h.show_help = 1
+	    @ :h.args = []
+	    continue
+	}
+	if (!strlen($h.args)) break
+    }
+}
+
+# vim: set ai tw=75 sw=4:

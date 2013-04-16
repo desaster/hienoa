@@ -1,0 +1,9 @@
+Synopsis:
+   chat <nick>
+
+Description:
+   This command sends a DCC CHAT request to the specified nick
+
+See Also:
+   dcc(1);
+

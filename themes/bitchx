@@ -1,0 +1,106 @@
+# hienoa theme file
+
+# Name:		bitchx
+# Author:	Upi Tamminen <desaster@dragonlight.fi>
+# Comments:	Based on "BitchX" irc client made by panasync.
+
+screenmode lowascii
+set status_no_repeat on
+
+format ACTION $stamp()&K*&Y $0/$1&n $2-
+format BANNER &R-&W:&R-
+format CHANNEL_SIGNOFF $G SignOff &W$1&n: $0 &K\(&n$2-&K\)
+format CONFIG_TITLE &n &4&B[&w $pad(${word(0 $geom()) - 5} " " hienoa $h.version - $*)&B]
+format CTCP_CHANNEL &K>&n>&W> &G$0 &K[&g$1&K]&g requested ${[$4] ? [$3-] : [$3]} from $2
+format CTCP_REPLY $G CTCP &W$1&n reply from $0: $2-
+format CTCP_USER &K>&n>&W> &G$0 &K[&g$1&K]&g requested ${[$4] ? [$3-] : [$3]} from you
+format DCC_CHAT &K[&G$0&K\(&gdcc&K\)] &n$1-
+format DCC_COMPLETED $G &RDCC&n &W$1&n:&g$2&n with $0 completed &K\(&W$3 kb/s&K\)
+format DCC_CONNECT $G &RDCC&n $1 with &W$0&K[&c$2:$3&K]&n established
+format DCC_LOST $G &RDCC&n lost &w$1&w &rto $0 &K[&w$3-&K]
+format DCC_OFFER_CHAT &K[&rdcc&K\(&R$1&K\)]&n $0
+format DCC_OFFER &K[&rdcc&K\(&R$1&K\)]&n $0
+format DCC_REQUEST $G &RDCC&n $1 &K\(&n$2&K\)&n request from &W$0&K[&c$userhost() [$3:$4]&K]&n $6 bytes
+format HILIGHT_NOTIFY $G Highlight in window #&W$0&n by &W$2&n \($4\)
+format INPUT_PROMPT [\$C] &n
+format INVITE &K>&n>&W> $0 Invites You to $1
+format JOIN $G &C$0 &K[&c$userhost()&K]&n has joined $1
+format KICK $G &n$0 was kicked off $2 by &c$1 &K\(&n$3-&K\)
+format KICK_USER &K>&n>&W> &WYou&n have been kicked off &c$2&n by &c$1 &K\(&n$3-&K\)
+format KILL $G &c$1&n was killed by &c$2 &K\(&n$4-&K\)
+format LEAVE $G $0 &K[&w$userhost()&K]&n has left $1${[$3] ? [ &K[&W$3-&K]] : []}
+format MODE $G &nmode&K/&c$1 &K[&W$2-&K]&n by &W$0
+format MSG &K[&P$0&K\(&p$userhost()&K\)]&n $1-
+format -NAMES_BOTTOM
+format NAMES_NONOP &K[ &B$pad(9 " " $0)&K ]
+format NAMES_OP &K[&C@&B$pad(9 " " $0)&K ]
+format -NAMES_ROW
+format NAMES_TOP $G &K[&GUsers&K\(&g$0&K:&g$numwords($chanusers())&K\)]
+format NAMES_VOICE &K[&Mv&B$pad(9 " " $0)&K ]
+format NICK $G &W$0&n is now known as &c$1
+format NOTICE &K-&P$0&K\(&p$userhost()&K\)-&n $1-
+format NOTIFY_SIGNOFF $G &GSignoff&n by &r$0&n at $stime($time())
+format NOTIFY_SIGNON $G &GSignon&n by &R$0&n at $stime($time())
+format PUBLIC_HL $stamp()&B<&Y$0&B>&n $2-
+format PUBLIC_MSG_HL $stamp()&b\(&Y$0&K/&n$1&b\)&n $2-
+format PUBLIC_MSG $stamp()&b\(&n$0&K/&n$1&b\)&n $2-
+format PUBLIC_NOTICE $stamp()&K-&P$0&K:&p$1&K-&n $2-
+format PUBLIC_OTHER_HL $stamp()&b<&Y$0&K:&n$1&b>&n $2-
+format PUBLIC_OTHER $stamp()&b<&n$0&K:&n$1&b>&n $2-
+format PUBLIC $stamp()&B<&n$0&B>&n $2-
+format SEND_ACTION &K* &W$N &n$1-
+format SEND_CTCP &K[&rctcp&K\(&R$1&K\)] &n$2
+format SEND_DCC_CHAT &K[&rdcc&K\(&R$0&K\)] &n$1-
+format SEND_MSG &K[&rmsg&K\(&R$0&K\)] &n$1-
+format SEND_NOTICE &K[&rnotice&K\(&R$0&K\)] &n$1-
+format SEND_PUBLIC $stamp()&P<&n$1&P>&n $2-
+format SERVER_NOTICE &G[${after(-1 . $before(-1 . $0)) ? after(-1 . $before(-1 . $0)) : [$0]}]&n $2-
+format STATUS_AWAY &4 &c\(&GzZzZ &W$0&c\)
+format STATUS_CHANMODE &4&W\(&c+&w%+&W\)
+format STATUS_CHANNEL &4%C
+format STATUS_CHANOP &4&W@
+format STATUS_CLOCK %T
+format STATUS_CPU_SAVER &N \(%L\)
+format -STATUS_DCC
+format STATUS_HOLD_LINES &4 &c\(&W%B&c\)
+format STATUS_HOLD -- more --
+format STATUS_IDLE &4&c[&wIdle &W$*&c]
+format STATUS_IRCOP &4&R*
+format STATUS_LAG &4&c[&wLag &W%1&c]
+format STATUS_LINE1 $h.format.value(status_line)
+format STATUS_LINE2 &4 %1%3&4%Q&4 %F&4 %>%H%B&4
+format STATUS_LINE &4 &c[&W%T&4&c][&W%*%@%=&w%N%#%A&4&c]%M&4 &c[&w%C%+&4&c] %5 %>
+format STATUS_MAIL &4&c[&wMail: &W%M&c]
+format STATUS_NICK &4%N
+format STATUS_NOTIFY &4 &c[&wAct: &W%F&c]
+format STATUS_OVERWRITE &4&w\(overtype\)
+format STATUS_PASTE &4 &CPASTE&N
+format STATUS_QUERY &4 &c[&wQuery: &W%Q&c]
+format STATUS_SCROLLBACK &4 &w\(scroll\)
+format -STATUS_SERVER
+format STATUS_UMODE &4&W\(&c+&w&#&W\)
+format -STATUS_UPTIME
+format STATUS_VOICE &4&G+
+format TIMESTAMP &K[&n$*&K] &n
+format TOPIC_CHANGE $G Topic &K\(&c$1&K\):&n changed by &c$0&K:&n $2-
+format TOPIC_EMPTY $G Topic &K\(&c$1&K\):&n $2-
+format TOPIC $G Topic &K\(&c$1&K\):&n $2-
+format TOPIC_SETBY $G Topic &K\(&c$1&K\):&n set by &c$2&n at &c$stime($3)&n
+format TOPIC_UNSET $G Topic &K\(&c$1&K\):&n unset by &c$0&n
+format WALLOP &G!&g$0&G!&n $2-
+format -WHO_END
+format WHOIS_AWAY &K| &Wa&nway     : $1-
+format WHOIS_CHANNELS &g| &Wc&nhannels : $2-
+format -WHOIS_END
+format WHOIS_HEADER &G.--------&g-&G--&g--&G-&g---------&K-&g--&K--&g-&K------------ --  -
+format WHOIS_IDLE &K: &Wi&ndle     : $tdiff($2) \(signon: $stime($3)\)
+format WHOIS_IRCNAME &G: &Wi&nrcname  : $2-
+format WHOIS_NICK &G| &W$1 &K\(&n$2@$3&K\) \(&W$h.tld($after(-1 . $3))&K\)
+format WHOIS_OPER &K| &Wo&nperator : $1-
+format WHOIS_SERVER &K| &Ws&nerver   : $2 \($3-\)
+format WHOIS_USERLIST &g| &Wu&nserlist : $2 \($3\) [$4-]
+format -WHOWAS_END
+format WHOWAS_HEADER &G.--------&g-&G--&g--&G-&g---------&K-&g--&K--&g-&K------------ --  -
+format WHOWAS_IRCNAME &G| &Wi&nrcname  : $*
+format WHOWAS_NICK &G: &W$1&n was &K\(&n$2@$3&K\)
+format WHO &Y$[10]0 &W$[10]1&w &c$[3]2 &w$3&R@&w$4 \($7-\)

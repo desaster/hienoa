@@ -1,0 +1,43 @@
+# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+# this file contains aliases that can't be in modules
+
+alias h.loadbar {
+    if (!h.loadbar) {
+	@ h.loadbar = \
+    	    [\(oa...h\) ] ## \
+    	    [\(a...hi\) ] ## \
+    	    [\(...hie\) ] ## \
+    	    [\(..hien\) ] ## \
+    	    [\(.hieno\) ] ## \
+    	    [\(hienoa\) ] ## \
+    	    [\(ienoa.\) ] ## \
+    	    [\(enoa..\) ] ## \
+    	    [\(noa...\) ]
+    }
+    ^set input_prompt loading $word(0 $push(h.loadbar $shift(h.loadbar)))
+}
+
+alias 1 window swap 1
+alias 2 window swap 2
+alias 3 window swap 3
+alias 4 window swap 4
+alias 5 window swap 5
+alias 6 window swap 6
+alias 7 window swap 7
+alias 8 window swap 8
+alias 9 window swap 9
+alias 10 window swap 10
+alias 11 window swap 11
+alias 12 window swap 12
+alias 13 window swap 13
+alias 14 window swap 14
+alias 15 window swap 15
+alias 16 window swap 16
+alias 17 window swap 17
+alias 18 window swap 18
+alias 19 window swap 19
+alias 20 window swap 20
+
+# vim: set ai tw=75 sw=4:

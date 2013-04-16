@@ -1,0 +1,13 @@
+Synopsis:
+   rot13 [-out|-msg <target>] <string>
+
+Description:
+   This command performs rot13 encoding on given text.
+
+Options:
+   -out        send the result to your current channel
+   -msg        send the result to a nick or channel with MSG
+
+See Also:
+   tr(6)
+

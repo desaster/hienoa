@@ -1,0 +1,13 @@
+Synopsis:
+   zap [#channel] <nick> [reason]
+
+Description:
+   This command is like BANKICK, with the addition that the ban is
+   automatically removed after specified period of time.
+
+   The reflecting configuration option is "Seconds to remove ban set by /zap"
+   (with default value 10)
+
+See Also:
+   bankick(9); ban(9); kick(9)
+

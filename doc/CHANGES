@@ -1,0 +1,517 @@
+0.53	* Implemented /help - works like the built-in /help, plus does a
+	  keyword search if no help file was found
+	* Added an option to append the sender's nick to DCC store path
+	* Depend on epic4 >= 1.2.0
+	* Removed extra whitespaces in log timestamps
+	* Show /showbans in the CRAP window if available (requested by
+	  skankke) (fixed for real this time!)
+	* Made /cycle channel key aware
+	* Automatic DCC accepting is now an userlist flag (+d). A downside
+	  is that there's now no distinction between DCC CHAT and SEND.
+	  Who cares?
+	* If a window has no channel, ctrl-x cycles servers
+	* Renamed autoreply to highlight notification (the word "autoreply"
+	  had nothing to do with the feature). Configuration & themes are
+	  affected
+	* The highlight notification now displays the nick and the keyword
+	  triggering the highlight
+	* Added a "session" feature, that can be used to save and restore
+	  the current servers, windows, channels & nicknames
+
+0.52	* Fixed a typo that would cause a log entry to not be written
+	  when quitting the client
+	* Fixed a bug that could crash epic when doing massive amount of
+	  mode changes
+	* Fixed nightly log timestamp
+	* Don't put raw dcc connections in awaylog
+	* Added a 'paste' mode where tabs don't trigger the msg target
+	  history, whitespaces are stripped off at the end of the line, and
+	  lines that begin with the CMDCHAR are sent to the channel or query
+	  target. Also added a new configuration option 'Paste mode timeout'
+	  that sets the time when the paste mode is automatically set off
+	  (default 0 = no timeout). Themes have been updated to include a
+	  paste mode indicator.  The paste mode can be toggled with ALT-t
+	* Disabled the reloading feature (ctrl-r) as it was rarely useful;
+	  Instead of reloading hienoa.irc, the .ircrc or .epicrc should be
+	  loaded. Users wanting this feature can add this command to their
+	  .ircrc:
+	      bind ^R parse_command load ~/.ircrc
+	* Added an URL shortener that shortens long urls and serves them
+	  with built-in web server (YES! A WEB SERVER!).  This is
+	  configurable in a new /config submenu 'URL Shortener'
+	* Made the default ban mask configurable via /config (requested
+	  by Thorstein Klingenberg).
+	* Made the lagmeter multiserver aware
+	* New command "/tedit" for easy editing of channel topic
+	* Show /showbans in the CRAP window if available (requested by
+	  skankke)
+
+0.51	* /theme now accepts a theme as argument
+	* Implemented color assignment to nicks in public messages
+	* === THEME BREAKAGES: ===
+	  - The nickstatus() function should not be used in themes anymore
+	    (it's done automatically now)
+	  - The arguments for SEND_PUBLIC are now:
+	      $0 = the channel the message is sent to
+	      $1 = nickname with possible status prefix
+	      $2- = text of message sent
+	* Removed long kick-messages from etc/kick
+	* /config tweaks; too long text values are now truncated on display
+	* New command: /gourl - runs the configured command with %s
+	  substituted by the last url seen (Configuration option:
+	  URL grabbing -> URL command)
+	* Fixed /zap <nonexistent nick>
+	* Added support for new style keybindings (epic4 commit id > 338)
+	* Fixed word highlighting when string has quotes, i think
+	* Replaced epic's mode stripper with my own to avoid oddly
+	  disappearing modes
+	* Added support for dated directory hierarchies for log files
+	  (as requested by liiwi)
+	* Added support for prefixing log files by year, month and
+	  full date (as requested by liiwi)
+
+0.50	* Fixed /unignore (oops)
+	* Added help-file for /unignore
+	* updated themes.txt
+
+0.49	* New configuration option: "Use gateway address for DCC" which is
+	  toggle for epic's built-in DCC_USE_GATEWAY_ADDR
+	* /url without arguments prints the last url grabbed
+	* fixed flood.irc and window.irc to use 'package' command instead of
+	  'module'
+	* Removed "show underline in cyan" option
+	* New command; /unignore <nick|hostmask>
+	* Tabkey tweaks
+	* Changed "Strip colors blah blah" to use epic's MANGLE_INBOUND
+	  instead of invidual stripcrap() calls. (this restricts advanced
+	  use of MANGLE_INBOUND, but that's ok)
+	* Userlist's password saving was totally broken !
+	* Global userlist flags didn't work in certain cases
+	* Away-messages didn't get sent to channels that weren't "current"
+	* New userlist flag; "i" - automatically joins channel if invited
+	* Scrollz-theme updates by Timothy Cava
+
+0.48	* Some help updates
+	* Tab-completion tweaks
+	* Removed the EXIT format (/quit now triggers CHANNEL_SIGNOFF)
+	* The "fake" action in /away and /back now uses "..." as channel
+	* Added PUBLIC_HL, PUBLIC_MSG_HL and PUBLIC_OTHER_HL formats.
+	  These are used when a public message contains a matching
+	  highlighted word.
+	* Make sorting names alphabetically optional (Oskuro)
+	* xterm tweaks
+	* Added "set reverse_status_line off" to defaults.irc (solves color
+	  glitches with new epic)
+	* /theme now shows the current theme (manty)
+	* Changed epic version requirement to >= 1.0 for no reason
+	* Added timestamp to the channel_signoff format in the bright
+	  theme (Oskuro)
+	* Made color stripper affect dcc chat too
+	* Added midnight-timestamp to autologging (only with channels)
+	* Implemented word hilight in channel actions
+	* Rewrote the flood protection to use epic's internal flood detection
+	  (much simpler and not as cool, but -works- :)
+	* Added /zap which works like /bankick but removes the ban after
+	  specified period of time (DanielS)
+	* Selective DCC auto-accept (config option "Nicks/hostmasks to
+	  enable auto-accept for")
+	* Logging of DCC events when away (config option "Log DCC events
+	  when away")
+	* Disabling nick completion doesn't disable nick completion
+	  with tabkey anymore (Viiru)
+	* Made disabling nick completion only affect automatic nick
+	  completion (tabkey always completes nicks now) (Viiru)
+	* Server-aware tab-completion for msgs
+	* Some internal userlist changes; username can now contain any
+	  characters
+	* Removed the auto-unban feature (use /zap instead)
+	* Removed "/hienoa latest"
+
+0.47	* Fixed /wq
+	* Missing %F and unneeded %S in splitfire theme
+	* Fixed something in echoes theme
+	* don't treat paths as commands, for example;
+	    /etc/X11	is sent to the channel
+	    /etc	is treated as command
+	    /etc/	is sent to the channel
+	    //etc	is treated as command
+	  this is very nice for pasting stuff like df output :)
+	* /addchannel's usage information was wrong
+	* Added chanop checking to user protection
+	* Added channel, nick and hostmask to AUTOREPLY format (milkpost)
+	* Track nick changes in channels and update them in query windows
+	  (by ljb@devco.net)
+
+0.46	* Added CONFIG_TITLE theme format
+	* Removed CHANNEL_INFO theme format
+	* Removed cyancow theme (blue is much nicer color)
+	* Small updates in "boring" theme (from hienoa-lzi)
+	* Minor fix in /wq
+	* Made "Strip colors/attributes from public and private messages"
+	  clean topic changes too and moved it to "Look & feel"
+	* Fixed typo in log_msg_timestamp config item which caused it to
+	  not work
+	* Don't reassign the original nick when doing /away twice
+	* Away/backmessages didn't get displayed sometimes (hopefully fixed)
+	* Changed many $N's in core/events.irc to $servernick()
+	* modified notify_signoff to not try to show the hostmask at all
+	  (all themes modified updated)
+	* leading spaces didn't get displayed when using word hilighting
+	* nicks with "\" didn't work well with dcc keybinding/autoget,
+	  kludge added
+	* bugfixes and cleanups in url grabber
+	* added license (BSD-like), see doc/COPYRIGHT for more info
+
+0.45	* Several minor bugfixes
+	* Fixed userlist behaviour so global flags have effect only when user
+	  has the channel in his channel-list (or no channels, *, which
+	  means any channel)
+	* New option "Strip colors/attributes from public and private messages"
+
+0.44	* Added theme validator; etc/checktheme.py
+	* Rewrote the userlist module;
+	    - it now allows channel-specific flags
+	    - addhost/adduser does NOT call userhost() to get the hostmask for
+	      user if no host(s) were given
+	    - /deluser takes only one user as argument
+	    - /userlist requires wildcards (*) for non-complete usernames
+	    - "a" flag can be auto-op or auto-voice depending on user's flags
+	    - new CTCP command: VOICE
+	* Fixed "Generate autoreply for hilighted words" option which
+	  wasn't used (autoreply was always generated)
+	* Changed /wn to do "window next" instead of creating new hidden
+	  window
+
+0.43	* Changed the help system; Symlinks of epic and hienoa help files are
+	  created in ~/.hienoa/help. This is a hack so both epic and hienoa
+	  help is shown in /help. The bad thing is that this feature
+	  requires ln, so UNIX filesystem is needed. If this fails, epic
+	  help is always available via //help
+	* Fixes in /unban and /showbans
+	* Autoback doesn't use the sent public message as backmessage (this
+	  annoyed me, i'll make it optional if someone wants it)
+	* Changed the config system, config entries are no more parsed
+	  seperately. Update your home-made modules
+	* Rewrote several parts of the config system (hienoa starts almost
+	  35% faster now!)
+	  -> New config format:
+	    config_title "Foo Bar Blah"
+	    config_entry "Title" type "text" var "h.cfg.huu" def "weird"
+	  Quoting should be used as shown above
+	* Added ctrl-w-s keybinding, does /window server ... (requested by
+	  whitefang)
+	* Fixed url grabbing, it didn't grab any urls :-O
+	* Made bluecow the default theme, simple enough to not scare anyone?
+
+0.42	* New configuration thingie, "wordlist"
+	* Merged autoreply & hilighting into one feature, new wordlist
+	  feature is used :)
+	* Added config entry "Show away message on these channels only"
+	* Removed option "Show channel users in reversed order"
+	* Changes in STATUS_AWAY; $0 shows the number of stored awaylog
+	  entries. All themes updated.
+	* Flood detection is disabled by default (whoops)
+
+0.41	* Small fixes from Daniel Bungert (he sent me mail about this 4
+	  months ago, sorry the delay)
+	* Removed old theme convert scripts
+	* Added user@host to NOTIFY_SIGNOFF format
+	* Fixed WHOIS_USERLIST format
+	* Fixed /userflags (couldn't remove flags)
+	* Added "ScrollZ" theme
+	* Added "cyancow" theme.. and after ten seconds added
+	  "bluecow" theme
+
+0.40	* Internal reorganizing of config variables (you need to re-set all
+	  of the config options)
+	* Small bugfix in show-names-on-join event
+	* Merged code from cthulhain;
+	    - removed public flood protection (didn't work) and made the
+	      configuration much simpler
+	    - fixed url catcher
+	    - ALT-I joins channel on invite
+	    - formated away info will only show up now when the /whois command
+	      is executed (implemented a bit differently than in hienoa-lzi)
+	    - Bugfixes & additions in xterm code (these should've been
+	      applied long time ago)
+	* Added "boring" theme by soren
+
+0.39	* Fixed a serious bug in url grabber (cthulhain)
+	* Added "something" theme by cthulhain
+	* Changes in NAMES_BOTTOM format:
+	  $0 = channel name
+	  $1 = number of users on channel
+	  $2 = number of ops on channel
+	  $3 = number of voices on channel
+	  (number of non-ops can be determined by doing ${[$1] - [$2]}
+	  All themes modified.
+	* Made user listing work better on join (needs to be tested..)
+	* Fixed SEND_DCC_CHAT in lice2 theme (kasper)
+	* Some bugfixes in userlist code
+
+0.38	* Notifylist is now saved to ~/.hienoa/config together with
+	  variables. ~/.hienoa/notify is now obsolete, remove it.
+	* Renamed showversion-helpfile to sayversion (ooops)
+	* Several patches from tyrak (i'm glad someone keeps the development
+	  going while i'm in the army ;))
+	    - delayed auto-op (instant is no more)
+	    - seperate awaylog-files (based on the pid of the client)
+	    - auto-reply (i didn't add the special theme formats)
+	* Removed all use of karll's arrays (use variable structures
+	  instead). This also makes /config list entries in aplhabetical
+	  order
+	* Userlist format changed (old userlists don't work anymore, i might
+	  do a converter some day)
+	* Dumped the auto-unloading of modules; memory leak seems to be
+	  gone (except with "/hienoa reload")
+	* Fixed CTCP OP request so it checks that the user has the channel
+	  in the userlist (bad security hole!)
+	* Lots of new features by cthulhain (applied manually and modified
+	  for my taste ;-)
+	    - automatic contextual logging (see /config -> logging)
+	    - user specific quit and kick files (~/.hienoa/quit and
+	      ~/.hienoa/kick)
+	    - lagmeter tweaks (partially merged)
+	    - nick hilightling (implemented so it hilights (underlines) the
+	      nick in the actual message instead of using special theme
+	      formats)
+	    - /wq <nick> - create a query window
+	    - added new alias /cinfo to print various info (but not publicly)
+	    - set client automatically back on send_public (partially)
+	    - added an idle meter (STATUS_IDLE) to the status bar and updated
+	      the default themes accordingly
+	    - added internal filename/command/alias tabkey completion.
+	    - added auto-accept for dcc send and chat requests
+	    - reorganized the config menu
+	    - added rudimentary flood protection.
+	    - added a /url command to output the contents of the url log.
+	      typing '/url <string>' will output all matches of <string> in
+	      the log. typing '/url -c' will clear the log.
+	      (gotta get rid of the karll-array code ;> -desaster)
+	* Removed "set window level to NONE on connect" option (window level
+	  is now set to NONE by default)
+	* Added "show underline in cyan" option
+
+0.37	* Removed a debugging text that got into 0.36
+	* Fixed a bug related to themes with single statusbar
+	* Added support for personal modules in ~/.hienoa/modules/
+	* When DCC CHAT connection is established, the nick is added to
+	  tabkey list
+	* Fixed a bug in lag code
+	* Removed "disable /list to avoid mistakes" (cleaning up the house)
+	* Removed doc/tech.txt
+
+0.36	* Fixed bug in config system (assignments were shown)
+	* Added simple /help and helpfiles for all commands (spellchecking
+	  is welcome)
+	* Renamed /showversion to /sayversion (which is the original name of
+	  it .. i think?)
+	* Added "/set high_bit_escape 0" to defaults - for real this time!
+	* Bugfix in tabkey module
+	* Renamed CTCP format to CTCP_CHANNEL (which makes more sense).
+	* Wrote 0.35 -> 0.36 theme converter, etc/themecv-0.35-0.36.py
+	* Fixed nasty bug in 0.32 -> 0.33 theme converter
+	* Removed SEND_CTCP event, SEND_CTCP format is only shown if the
+	  /ctcp command is used (this way sending internal ctcps like
+	  CLIENTINFO is be invisible to the user)
+	* Minor changes in /addchannel
+	* Added /rot13
+	* Added simple URL grabber
+
+0.35	* New feature: change nick on away (requested by moijk)
+	* Fixed config window so its not connected to any server
+	* Changed config to look in etc/config before modules
+	* Fixed stupid bug in /showbans
+
+0.34	* Replaced themecv-0.32-0.33.pl with themecv-0.32-0.33.py
+	* Fixed bug in /showbans
+	* Added few more quitmessages from fortunes database
+
+0.33	* Changed & improved config system a bit
+	* Channel users are now sorted alphabetically
+	* Added option for showing channel users in reversed order
+	* Minor fix in lice2 theme
+	* Added ~/.hienoa/themes/ directory for personal themes
+	* Added "/set mangle_logfiles all" to defaults
+	* Fixed small bug in nick completion
+	* Added few quitmessages from fortunes database
+	* Added /dns (does dns lookup on given ip/hostname)
+	* Improved keyboard code; second ALT-N switches to window N+10 and
+	  windows can now be switched with ctrl-w-N too
+	* Removed /logo - nobody wants to see bad art ;)
+	* Cleanups in table code (/notify & /showbans)
+	* Bugfixes & improvements in ban/unban code
+	* Added STATUS_SERVER format and updated all themes
+	* Wrote 0.32 -> 0.33 theme converter, etc/themecv-0.32-0.33.pl
+	  (theme converters give me freedom to heavily modify theme format
+	  without theme writers getting angry)
+
+0.32	* Fixed minor bug in /config
+	* Fixed minor bug in /wc
+	* Fixed /config to accept empty values for text fields
+	* Made "/hienoa latest" better
+	* Minor fixes in bitchx theme
+	* Added /logo for propaganda purposes ;)
+	* Added notify list saving and nice looking notify listing (some
+	  people might not like the borders, though)
+	* ... and made /showbans look nice too
+
+0.31	* Added dynamic keybindings for accepting or rejecting DCC requests
+	* Fixed "transfer complete" with incoming transfers
+	* Fixed xterm titlebar handling so no crap will pass to it (colors
+	  in topic, etc..)
+	* Modified all if-statements to use braces (even the ones without
+	  need to), this closes several major security holes!
+	* Modified xterm code so it checks for WINDOWID instead of TERM
+	* Fixed WHO format in some themes
+
+0.30	* Minor changes in some themes
+	* Fixed a bug in nick completion
+	* All WHOIS formats except WHOIS_AWAY now have server and nickname
+	  as first arguments
+	* Added new config section "DCC settings", this'll also contain XDCC
+	  stuff if i write a xdcc module
+	* Changed /config's look again
+	* gunzip'd all files due to weird bug in epic which would cause a
+	  jam after several continuous reloads (who would do that?-)
+	* Added a check to tab completion so it only works if the cursor is
+	  at end of the input line (i'll do tab-completion-in-middle later)
+	* Fixed nick completion so the line will be saved to command history
+	* Fixed /cycle
+	* Internal topic list which also saves "set by" information
+	  (requested by [Scotty])
+	* New option: show channel & topic in xterm titlebar (only works if
+	  the environment variable "TERM" begins with "xterm" or "rxvt")
+	* /userlist now uses pattern match instead of excact match
+	  ("/userlist simo" can find "[Simo]" and "simo")
+	* Added "/set high_bit_escape 0" to defaults - does this hurt anyone?
+	  if does then i'll remove it ;)
+
+0.29	* Removed NAMES_END format (there's already NAMES_BOTTOM)
+	* format argument numbers descended by one ($1 is now $0,
+	  $2 is now $1, $3 is now $2 and so on) (hopefully no-one has written
+	  a theme yet, if has - sorry :|)
+	* Renamed TECH to tech.txt and added theme.txt with documentation of
+	  all formats
+	* New option: save userlist automatically
+	* Some internal changes in format system
+	* Renamed /resetmodule to /rsmod (used by me)
+	* Renamed nstatus() to nickstatus() (used in themes)
+	* Simplified reloading & unloading
+	* Made tabkey completion a lot better!
+	* Added a hack to get rid of the annoying "Window [n] doesnt exist
+	  any more.  Punting." message
+	* Added "Time wasted ..." message when quitting
+
+0.28	* Corrected spelling in /slap
+	* Major changes in theme system; colors are now set with &<color>
+	  instead of %<color>, and statusbar codes need only one %
+	* Reformatted all themes and removed some unneeded formats
+	* SEND_CTCP format now works (if theme sets it)
+	* Added /screenmode which can be used by scripts to switch to
+	  highascii or lowascii mode
+	* Wrote new theme "echoes" (based on whitefang's "echoes" theme
+	  from LiCe)
+	* Added /theme (equals /config -> look & feel -> theme)
+
+0.27	* Removed duplicate config-entry for "max nicks in tabkey list"
+	* Added /slap - woohoo!!
+	* Fixed "/hienoa unload" and "/hienoa reload" - now they REALLY
+	  should work ;)
+	* Removed /send (it's reserved by epic)
+	* Made /showversion better (requested by [Scotty])
+	* Added auto-away (does it work?)
+	* Wrote README, added doc/TODO
+	* Added some failchecking to some userlist commands
+	* Renamed "plain" theme to "epic"
+	* Wrote new theme "splitfire" (*ach my neck hurts*)
+
+0.26	* Fixed bug (typo) in "/hienoa latest"
+	* "show nick status on public messages" now actually works
+
+0.25	* Changed required epic version to EPIC4pre2.508 (loadinfo() was
+	  introduced in 506)
+	* Moved version-checking to hienoa.irc
+	* Added hienoa.sh for clueless people (runs epic + hienoa)
+	* "/hienoa unload" and "/hienoa reload" now actually work =)
+	* Added /setpassword & /delpassword
+	* Added some failchecking to some userlist commands
+	* Added "/hienoa latest" for checking if newer version of hienoa
+	  is available
+	* Minor bugfixes in /names
+	* Op/voice protection (+p), no ban protection yet
+	  (requested by [Scotty])
+	* New option: show nick status on public messages
+	  (requested by moijk)
+
+0.24	* Bugfixes in chanop-module (reported [Scotty])
+	* Bugfix in userlist password encrypting (reported [Scotty])
+	* /adduser can now take initial flags, channels and hostmasks as
+	  arguments
+	* /addhost now accepts multiple hostmasks
+	* /addchannel now accepts multiple channels
+	* Rewrote /names (now works with latest epic)
+	* Removed CodingStyle :P
+	* Minor visual changes in loadbar
+
+0.23	* Changed all if's to use "} else {" instead of "} {"
+	* Fixed file closing bug in h.tld()
+	* New loadbar =)
+	* Minor changes in darkcyan-theme
+	* Added /showversion (requested by [Scotty])
+	* Renamed ChangeLog to CHANGES
+	* The module system is now much simpler (uses /stub) and less
+	  functional (unloading is now done after 5 mins of loading, no timer
+	  reset if some of the commands were used). Also modules must now
+	  begin with "module ..." instead of "package ..."
+	* Cleanups & optimizations in format-module
+
+0.22	* Fixed typos in etc/config, all options in "server stuff" now work
+	* Userlist! Done in 2 sleepless nights ;) Since i don't have help
+	  system yet, the feature is described in ./TECH
+	* Added WHOIS_USERLIST to themes
+	* Major visual changes in /config
+	* 0.21 had stupid bug in /away and /back (fixed)
+	* New option: default usermode
+	* Moved text-files to doc/ (also added CodingStyle)
+	* Major cleanup in core/
+	* removed /reload and added /hienoa (which can be used to
+	  reload or unload hienoa
+
+0.21	* New option: disable /list
+	* New command: /country (also integrated to /whois)
+	* Added flexible nick handling in /names (> 9 chars)
+
+0.20	* Cleanups & optimizations..
+	* Fixed a typo(->bug) in /banstat
+	* /banstat doesn't show time anymore (compatible with any network)
+	* Minor theme modifications
+	* Fixed file-descriptor-leak (some fd's never got
+	  closed -> hang if more than 1000 files were open)
+	  hrm. this was a stupid bug.
+	* ~/.hienoarc is now ~/.hienoa/config. in future, ~/.hienoa/ will
+	  contain stuff like userlist ...
+	* "loading"-thing
+	* VERSION reply is now the same as before 0.18 (no fancy underline)
+	* Workaround in away module, /away $quit() was possible
+	* Rewrote the config module (three times!)
+	* Added /mass
+	* Theme changing is now integrated to /config
+	* win_lev_none, set window levels to none after connected
+
+0.19	* Away log
+	* Very small bugfixes :P
+	* Added "h." to the beginning of most variables
+
+0.18	* Minor bugfix with ctcp
+	* Minor change in VERSION reply
+	* Minor bugfix with nick completion
+
+0.17	* ChangeLog started...
+	* Fixed crash with /away
+	* Added /wj and /wc (thanks to jups & scotty)
+	  I might add more /w? commands later..
+	* gzip'd most scripts
+	* Made /bans more compatible with shi.. ircnet (still needs testing)
+
+# vim: set tw=76 ai:

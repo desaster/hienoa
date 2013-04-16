@@ -1,0 +1,13 @@
+Synopsis:
+   op <nick> [nick] ...
+
+Description:
+   This command gives channel operator status to one or more users on current
+   channel.
+
+Aliases:
+   +o
+
+See Also:
+   deop(9); mode(1)
+

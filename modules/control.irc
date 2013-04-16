@@ -1,0 +1,23 @@
+# Copyright (c) 2000, 2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package control
+
+alias hienoa (h.command) {
+    if (!h.command) {
+	xecho -b Usage: /hienoa <unload>
+	return
+    }
+    switch ($h.command) {
+	(reload) { xecho -b This feature is no longer available }
+	(unload) { h.unload }
+    }
+}
+
+alias h.unload {
+    ^dump all
+    timer -d all
+    xecho -say $G hienoa unloaded
+}
+
+# vim: set ai tw=75 sw=4:

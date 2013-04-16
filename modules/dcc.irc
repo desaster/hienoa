@@ -1,0 +1,48 @@
+# Copyright (c) 2000, 2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package dcc
+
+config_title "DCC settings"
+config_entry "DCC timeout in seconds" type "itext" var "dcc_timeout"
+config_entry "DCC store path" type "itext" var "dcc_store_path"
+config_entry "Auto-accept DCC file transfers" type "check" var "h.cfg.dcc_auto_get" def "0"
+config_entry "Auto-accept DCC chat requests" type "check" var "h.cfg.dcc_auto_chat" def "0"
+config_entry "Nicks/hostmasks to enable auto-accept for" type "wordlist" var "h.cfg.dcc_accept_list"
+config_entry "Use gateway address for DCC" type "icheck" var "dcc_use_gateway_addr"
+config_entry "Append sender's nick to the DCC store path" type "check" var "h.cfg.dcc_append_nick"
+
+alias h.dcc.accept_send {
+    //dcc get $decode($0)
+    ^bind ^[a nothing
+    ^bind ^[r nothing
+}
+
+alias h.dcc.reject_send {
+    //dcc close get $decode($0)
+    ^bind ^[a nothing
+    ^bind ^[r nothing
+}
+
+alias h.dcc.accept_chat {
+    //dcc chat $decode($0)
+    ^bind ^[a nothing
+    ^bind ^[r nothing
+}
+
+alias h.dcc.reject_chat {
+    //dcc close chat $decode($0)
+    ^bind ^[a nothing
+    ^bind ^[r nothing
+}
+
+alias h.dcc.auto_accept (h.type, h.nick) {
+    @ :h.user = h.userlist.getuser($h.nick!$h.uh($h.nick))
+    if (h.user && h.userlist.hasflag(d $h.user)) {
+	//dcc $h.type $h.nick
+	return 1
+    }
+    return 0
+}
+
+# vim: set ai tw=75 sw=4:

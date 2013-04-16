@@ -1,0 +1,23 @@
+Things to do
+
+* Statusbar features like the number of ops/voices/nonops
+* Rethink config-sections (they are now confusing)
+* regexp matching in text highlighting (Che_Fox)
+* urlgrab on specified channels only (Tombe)
+* Make themes look better on transparent backgrounds (DanielS)
+* Netsplit stuff
+* Perhaps use epic's AUTO_UNMARK_AWAY
+* clean log-code
+* Ban protection in userlist
+* bug when receiving multiple dcc requests? (do some heavy testing)
+* <liiwi> joku 3/s paste ja se pist‰is lukon p‰‰lle
+* Ignoring features - save, ignore by content, timeout, etc!
+* epic's mask() generates some braindead masks. reimplement and
+  extend (Thorstein)
+* Support server groups in /session + fix all the bugs!
+* == XQUOTE: Server 4 is not connected ?!??!?!?!??!?!1 (skankke)
+* Make keyword search in /help optional (add other config entries too?)
+* Autocorrect words :(
+* Show userlist channel flags in /whois
+* Save & restore usermodes in session
+* Save & restore channel keys in session

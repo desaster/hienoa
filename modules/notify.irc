@@ -1,0 +1,29 @@
+# Copyright (c) 2000, 2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package notify
+
+alias notify (h.nicks) {
+    if (h.nicks) {
+	//notify $h.nicks
+	if (h.cfg.config_save) { h.config.save }
+    } else {
+	@ :h.all = notify()
+	if (!#h.all) {
+	    xecho -b Notify list is empty
+	    return
+	}
+	fe ($myservers()) h.s {
+	    fe ($notify(on serv $servernum($h.s))) h.n {
+		push :h.list $h.n online $h.s
+	    }
+	}
+	fe ($notify(off)) h.n {
+	    push :h.list $h.n offline " "
+	}
+	h.table 3 NONE Nick Status Server $h.list
+	xecho -b Total $#h.all nicks in notify list
+    }
+}
+
+# vim: set ai tw=75 sw=4:

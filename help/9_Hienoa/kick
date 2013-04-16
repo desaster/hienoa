@@ -1,0 +1,14 @@
+Synopsis:
+   kick [#channel] <nick> [reason]
+
+Description:
+   This command kicks user from a channel.  If no channel is specified,
+   current will be used.  If no reason is given, a random reason will be
+   picked from etc/kick (warning: the reasons may be abusive)
+
+Aliases:
+   j
+
+See Also:
+   bankick(9); kickban(9)
+

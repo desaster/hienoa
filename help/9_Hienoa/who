@@ -1,0 +1,10 @@
+Synopsis:
+   who [#channel]
+
+Description:
+   This command is a wrapper to epic's WHO command.  The difference is
+   that if no channel is given, current is used.
+
+See Also:
+   who(1);
+

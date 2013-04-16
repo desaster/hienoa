@@ -1,0 +1,9 @@
+Synopsis:
+   wc
+
+Description:
+   This command creates a new hidden window.
+
+See Also:
+   wj(9); wk(9); window(4)
+

@@ -1,0 +1,10 @@
+Synopsis:
+   ignore <nick|hostmask>
+
+Description:
+   This command removes a nick or hostmask from the ignore list.
+   If given a nick, all entries matching the nick's hostmask will be removed.
+
+See Also:
+   ignore(1)
+

@@ -1,0 +1,20 @@
+# Copyright (c) 2000, 2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package xterm
+
+config_title "XTerm support"
+config_entry "Show channel & topic in xterm titlebar" type "check" var "h.cfg.xterm_enable" def "0"
+config_entry "Force xterm usage (don't detect xterm)" type "check" var "h.cfg.xterm_force" def "0"
+config_entry "Maximum length of titlebar text (0 = unlimited)" type "text" var "h.cfg.xterm_maxlen" def "0"
+
+alias h.xterm.set (h.text) {
+    if (getenv(WINDOWID) || h.cfg.xterm_force) {
+	if (h.cfg.xterm_maxlen) {
+	    @ :h.text = left($h.cfg.xterm_maxlen $h.text)
+	}
+	xecho -r $chr(27)]2$chr(59)$stripcrap(ALL,ALL_OFF $h.text)$chr(7)
+    }
+}
+
+# vim: set ai tw=75 sw=4:

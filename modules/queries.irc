@@ -1,0 +1,88 @@
+# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package queries
+
+alias wi whois
+alias ww whowas
+
+alias t topic
+alias topic {
+    # /topic - or /topic -#channel
+    if ((strlen($0) == 1 && [$0] == [-]) || \
+	    (strlen($0) && left(1 $0) == [-] && \
+	    ischannel($rest(1 $0))) && !strlen($1)) {
+	//topic $0
+    } elsif (strlen($*) && left(1 $0) == [-] && \
+	    !ischannel($rest(1 $0))) {
+	//topic $C $*
+    } else {
+	//topic $*
+    }
+}
+
+alias ctcp {
+    //ctcp $*
+    h.format.parse send_ctcp PRIVMSG $0 $toupper($1) $2-
+}
+
+alias ver {
+    if ([$0]) {
+	ctcp $0 version
+    } else {
+	xecho -b Usage: /ver <nick|#channel|*>
+    }
+}
+
+alias wii {
+    if ([$0]) {
+	fe ($*) h.aa { whois $h.aa $h.aa }
+    } else {
+	whois $N $N
+    }
+}
+
+alias who {
+    if ([$0]) { //who $* } else { if (C) //who * }
+}
+
+alias ping {
+    if ([$0]) {
+	//ping $*
+    } else {
+	xecho -b Usage: /ping <nick|#channel|*>
+    }
+}
+
+alias chat {
+    if ([$0]) {
+	dcc chat $0
+    } else {
+	xecho -b Usage: /chat <nick>
+    }
+}
+
+alias i invite
+alias invite {
+    if ([$0]) {
+	//invite $0 ${[$1] ? [$1] : [$C]}
+    } else {
+	xecho -b Usage: /invite <nick> [#channel]
+    }
+}
+
+alias nslookup dns
+alias dns (h.host) {
+    if (!h.host) {
+	xecho -b Usage: /dns <ip address|hostname>
+	return
+    }
+    @ :h.result = convert($h.host)
+    if (h.result) {
+	xecho -b $h.host is $h.result
+    } else {
+	xecho -b DNS lookup on "$h.host" failed
+    }
+}
+
+# vim: set ai tw=75 sw=4:

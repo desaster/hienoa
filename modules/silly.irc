@@ -1,0 +1,36 @@
+# Copyright (c) 2000, 2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package silly
+
+alias slap (h.nick, ...) {
+    if (h.nick) {
+	me slaps $h.nick around a bit with a large trout
+    } else {
+	xecho -b Usage: /slap <nick>
+    }
+}
+
+alias rot13 (h.args) {
+    if (!h.args) {
+	xecho -b Usage: /rot13 [-out|-msg <target>] <string>
+	return
+    }
+    switch ($word(0 $h.args)) {
+	(-out) (-ou) (-o) { @ :h.type = [out] }
+	(-msg) (-ms) (-m) { @ :h.type = [msg] }
+    }
+    switch ($h.type) {
+	(out) { send $h.rot13.encode($restw(1 $h.args)) }
+	(msg) { msg $word(1 $h.args) $h.rot13.encode($restw(2 $h.args)) }
+	(*) { xecho -b $h.rot13.encode($h.args) }
+    }
+}
+
+alias h.rot13.encode (h.string) {
+    @ :h.from = [abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]
+    @ :h.to = [nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM]
+    return $tr(/$h.from/$h.to/$h.string)
+}
+
+# vim: set ai tw=75 sw=4:

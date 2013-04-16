@@ -1,0 +1,12 @@
+Synopsis:
+   addchannel <user> <#channel(s)>
+
+Description:
+   This command adds one or more channels for user in userlist.
+
+Aliases:
+   +channel
+
+See Also:
+   delchannel(9); userlist(9)
+

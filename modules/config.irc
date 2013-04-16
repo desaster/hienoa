@@ -1,0 +1,270 @@
+# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package config
+
+config_title "General stuff"
+config_entry "Save configuration automatically" type "check" var "h.cfg.config_save" def "1"
+
+alias config {
+    h.config.create_window
+    do {
+	clear
+	h.config.show_title Configuration sections
+	@ :h.k = [a]
+	foreach h.config h.s {
+	    xecho -w config  [$toupper($h.k)] $decode($h.s)
+	    @ h.k = chr(${ascii($h.k) + 1})
+	}
+	@ :h.c = [$'Choose section: ']
+	@ :h.k = [a]
+	foreach h.config h.s {
+	    if (h.c == h.k) { h.subconfig $decode($h.s) }
+	    @ h.k = chr(${ascii($h.k) + 1})
+	}
+    } while (h.c != chr(10))
+    if (h.cfg.config_save) { h.config.save }
+    hook config_change
+    window kill
+}
+
+alias h.subconfig (h.s) {
+    do {
+	clear
+	h.config.show_title $h.s
+	@ :h.k = [a]
+	foreach h.config[$encode($h.s)] h.i {
+	    @ :h.type = h.config[$encode($h.s)][$h.i][type]
+	    @ :h.var = h.config[$encode($h.s)][$h.i][var]
+	    @ :h.entry = [h.config.$encode($h.s).$h.i]
+	    h.config.show $h.type $h.k $h.var $h.entry $decode($h.i)
+	    @ h.k = chr(${ascii($h.k) + 1})
+	}
+	@ :h.c = [$'Choose option: ']
+	@ :h.k = [a]
+	foreach h.config[$encode($h.s)] h.i {
+	    @ h.k = chr(${ascii($h.k) + 1})
+	    if (h.c != chr(${ascii($h.k) - 1})) { continue }
+	    @ :h.type = h.config[$encode($h.s)][$h.i][type]
+    	    @ :h.var = h.config[$encode($h.s)][$h.i][var]
+	    switch ([$h.type]) {
+		([text]) { ^h.config.change_text $h.var $decode($h.i) }
+		([itext]) { ^h.config.change_itext $h.var $decode($h.i) }
+		([check]) { ^h.config.change_check $h.var }
+		([icheck]) { ^h.config.change_icheck $h.var }
+		([exec]) { $h.config[$encode($h.s)][$h.i][exec] }
+		([wordlist]) { ^h.config.change_wordlist $h.var $decode($h.i) }
+		([select]) {
+		    ^h.config.change_select $h.var $encode($h.s) $decode($h.i)
+		}
+	    }
+	}
+    } while (h.c != chr(10))
+}
+
+alias h.config.create_window {
+    ^window new hide_others name config double off discon
+    ^window status_format $cparse(%0%N)
+    ^window status_format1 $cparse(%0%N)
+    ^window status_format2 $cparse(%0%N)
+}
+
+alias h.addconfig (h.args) {
+    @ h.config[$encode($shift(h.args))][$encode($shift(h.args))] = h.args
+    switch ([$word(0 $h.args)]) {
+	([text]) ([check]) ([wordlist]) {
+	    eval assign $word(1 $h.args) $word(2 $h.args)
+	}
+	([exec]) { eval assign $word(1 $h.args) $word(3 $h.args) }
+    }
+}
+
+alias h.config.show (h.type, h.args) {
+    switch ([$h.type]) {
+	([text]) ([itext]) ([exec]) { h.config.show_text $h.args }
+	([check]) { h.config.show_check $h.args }
+	([icheck]) { h.config.show_icheck $h.args }
+	([wordlist]) { h.config.show_wordlist $h.args }
+	([select]) { h.config.show_select $h.args }
+    }
+}
+
+alias h.config.show_title (h.title) {
+    if (h.cfg.xterm_enable) { h.xterm.set hienoa $h.version - $h.title }
+    @ :h.m = [hienoa $h.version - $h.title]
+    xecho -w config $h.format.parse(config_title $h.title)
+    xecho -w config
+}
+
+alias h.config.show_text {
+    @ :h.v = [$($1)]
+    @ :h.m1 = [ \[$toupper($0)\] $3- ]
+    if (strlen($stripcrap(ALL,ALL_OFF $h.m1)) + \
+	    strlen($h.v) + 5 > word(0 $geom())) {
+	@ :h.over = ((strlen($stripcrap(ALL,ALL_OFF $h.m1)) + \
+	    strlen($h.v) + 5)) - word(0 $geom())
+	@ :h.v = left(${strlen($h.v) - h.over + 3} $h.v) ## [...]
+    }
+    @ :h.m2 = [ \[$h.v\]]
+    @ :h.r = word(0 $geom()) - \
+	(strlen($strip( $h.m1)) + strlen($strip( $h.m2)) + 1)
+    xecho -w config $h.m1$repeat($h.r .)$h.m2
+}
+
+alias h.config.show_check {
+    @ :h.v = ([$($1)] == 1 ? [ON] : [OFF])
+    @ :h.m1 = [ \[$toupper($0)\] $3- ]
+    @ :h.m2 = [ \[$h.v\]]
+    @ :h.r = word(0 $geom()) - \
+	(strlen($strip( $h.m1)) + strlen($strip( $h.m2)) + 1)
+    xecho -w config $h.m1$repeat($h.r .)$h.m2
+}
+
+alias h.config.show_icheck {
+    @ :h.v = ([$($1)] == [ON] ? [ON] : [OFF])
+    @ :h.m1 = [ \[$toupper($0)\] $3- ]
+    @ :h.m2 = [ \[$h.v\]]
+    @ :h.r = word(0 $geom()) - \
+	(strlen($strip( $h.m1)) + strlen($strip( $h.m2)) + 1)
+    xecho -w config $h.m1$repeat($h.r .)$h.m2
+}
+
+alias h.config.show_wordlist {
+    @ :h.m1 = [ \[$toupper($0)\] $3- ]
+    @ :h.m2 = [ *List*]
+    @ :h.r = word(0 $geom()) - \
+	(strlen($strip( $h.m1)) + strlen($strip( $h.m2)) + 1)
+    xecho -w config $h.m1$repeat($h.r .)$h.m2
+}
+
+alias h.config.show_select {
+    @ :h.v = [$($1)]
+    @ :h.options = [$2.options]
+    foreach $h.options h.option {
+	if (h.v == [$(${h.options}.${h.option})]) {
+	    @ :h.v = decode($h.option)
+	    break
+	}
+    }
+    @ :h.m1 = [ \[$toupper($0)\] $3- ]
+    if (strlen($stripcrap(ALL,ALL_OFF $h.m1)) + \
+	    strlen($h.v) + 5 > word(0 $geom())) {
+	@ :h.over = ((strlen($stripcrap(ALL,ALL_OFF $h.m1)) + \
+	    strlen($h.v) + 5)) - word(0 $geom())
+	@ :h.v = left(${strlen($h.v) - h.over + 3} $h.v) ## [...]
+    }
+    @ :h.m2 = [ \($h.v\)]
+    @ :h.r = word(0 $geom()) - \
+	(strlen($strip( $h.m1)) + strlen($strip( $h.m2)) + 1)
+    xecho -w config $h.m1$repeat($h.r .)$h.m2
+}
+
+alias h.config.change_text (h.var, h.name) {
+    @ :h.m = [\($h.name\): ]
+    @ :h.v = [$"$h.m"]
+    if (strlen($h.v)) { @ aliasctl(assign set $h.var $h.v) }
+}
+
+alias h.config.change_itext (h.var, h.name) {
+    @ :h.m = [\($h.name\): ]
+    @ :h.v = [$"$h.m"]
+    if (strlen($h.v)) { set $h.var $h.v } else { set -$h.var }
+}
+
+alias h.config.change_check (h.var, ...) {
+    if ([$($h.var)] == 1) { assign $h.var 0 } else { assign $h.var 1 }
+}
+
+alias h.config.change_icheck (h.var, ...) {
+    if ([$($h.var)] == [ON]) { set $h.var OFF } else { set $h.var ON }
+}
+
+alias h.config.change_wordlist (h.var, h.name) {
+    do {
+	clear
+	h.config.show_title $h.name
+	fe ($($h.var)) h.w { xecho -w config  * $h.w }
+	@ :h.words = [$"Word(s) to add/remove: "]
+	fe ($h.words) h.w {
+	    if (findw($h.w $($h.var)) > -1) {
+		if (numwords($($h.var)) > 1) {
+		    assign $h.var $remw($h.w $($h.var))
+	       	} else {
+		    assign -$h.var
+		}
+	    } else {
+		push $h.var $h.w
+	    }
+	}
+    } while (h.words != [])
+}
+
+alias h.config.change_select (h.var, h.title, h.name) {
+    clear
+    h.config.show_title $h.name
+
+    @ :h.k = [a]
+    foreach h[config][$h.title][$encode($h.name)][options] h.o {
+	@ :h.oname = decode($h.o)
+	@ :h.value = h[config][$h.title][$encode($h.name)][options][$h.o]
+	h.config.show select_option $h.k $h.oname
+	@ :h.l = [ \[$toupper($h.k)\] $h.oname]
+	if ([$($h.var)] == h.value) { @ :h.l #= [ \(selected\)] }
+	xecho -w config $h.l
+	@ h.k = chr(${ascii($h.k) + 1})
+    }
+    @ :h.c = [$'Choose option: ']
+
+    @ :h.k = [a]
+    foreach h[config][$h.title][$encode($h.name)][options] h.o {
+	@ h.k = chr(${ascii($h.k) + 1})
+	if (h.c != chr(${ascii($h.k) - 1})) { continue }
+	assign $h.var $h[config][$h.title][$encode($h.name)][options][$h.o]
+    }
+}
+
+alias h.config.save {
+    @ unlink(~/.hienoa/config)
+    @ :h.fd = open(~/.hienoa/config W)
+    @ write($h.fd # hienoa config file \($stime($time())\)$chr(10))
+    @ write($h.fd //notify - $notify())
+    foreach h.config h.s {
+	foreach h.config[$h.s] h.i {
+	    @ :h.type = h.config[$h.s][$h.i][type]
+    	    @ :h.var = h.config[$h.s][$h.i][var]
+	    switch ([$h.type]) {
+		([text]) ([wordlist]) ([select]) {
+		    @ write($h.fd @ $h.var = [$($h.var)])
+		    continue
+		}
+		([itext]) {
+		    @ write($h.fd set $h.var $($h.var))
+		    continue
+		}
+		([check]) {
+		    @ write($h.fd @ $h.var = $($h.var))
+		    continue
+		}
+		([icheck]) {
+		    @ write($h.fd set $h.var $($h.var))
+		    continue
+		}
+		([exec]) {
+		    @ write($h.fd @ $h.var = [$($h.var)])
+		}
+	    }
+	}
+    }
+    @ close($h.fd)
+}
+
+alias save {
+    xecho -b Saving configuration to ~/.hienoa/config
+    h.config.save
+    @ :h.n = 0
+    foreach h.userlist h.user { @ :h.n++ }
+    xecho -b Saving userlist \($h.n users\) to ~/.hienoa/userlist
+    h.userlist.save
+}
+
+# vim: set ai tw=75 sw=4:

@@ -1,0 +1,28 @@
+Synopsis:
+   session [save|restore|delete] [session name]
+
+Description:
+   This command can be used to save and restore the current windows,
+   servers, channels and nicknames. There can be multiple saved sessions,
+   and if no session is specified as the last argument, "default" is used.
+
+   With no parameters given, the command will list all available sessions.
+
+Examples:
+   To save the current state as the default session
+      /session save
+
+   To save the current state to a session "foo":
+      /session save foo
+
+   To restore the session:
+      /session restore foo
+
+   To delete the session:
+      /session delete foo
+
+Bugs:
+   This feature saves the actual connected server address instead of the
+   user specified irc server address. This means the possible advantage
+   of round-robin dns entries that randomly choose a server, is lost. 
+

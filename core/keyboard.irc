@@ -1,0 +1,54 @@
+# Copyright (c) 1999-2002 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+bind ^I parse_command h.tabkey
+bind ^X parse_command h.switch_any
+
+bind -symbolic key_f1 parse_command hook key_f1
+bind -symbolic key_f2 parse_command hook key_f2
+bind -symbolic key_f3 parse_command hook key_f3
+bind -symbolic key_f4 parse_command hook key_f4
+bind -symbolic key_f5 parse_command hook key_f5
+bind -symbolic key_f6 parse_command hook key_f6
+bind -symbolic key_f7 parse_command hook key_f7
+bind -symbolic key_f8 parse_command hook key_f8
+bind -symbolic key_f9 parse_command hook key_f9
+bind -symbolic key_f10 parse_command hook key_f10
+bind -symbolic key_f11 parse_command hook key_f11
+bind -symbolic key_f12 parse_command hook key_f12
+bind -symbolic key_home beginning_of_line
+bind -symbolic key_end end_of_line
+
+bind ^wc parse_command wc
+bind ^wk parse_command wk
+bind ^wl parse_command window list
+bind ^wn parse_command window next
+bind ^wp parse_command window prev
+bind ^ws parse_command { window server $"Server: " }
+bind ^ww parse_command window back
+
+bind ^w1 parse_command hook switch_window 1
+bind ^w2 parse_command hook switch_window 2
+bind ^w3 parse_command hook switch_window 3
+bind ^w4 parse_command hook switch_window 4
+bind ^w5 parse_command hook switch_window 5
+bind ^w6 parse_command hook switch_window 6
+bind ^w7 parse_command hook switch_window 7
+bind ^w8 parse_command hook switch_window 8
+bind ^w9 parse_command hook switch_window 9
+bind ^w0 parse_command hook switch_window 0
+
+bind ^[1 parse_command hook switch_window 1
+bind ^[2 parse_command hook switch_window 2
+bind ^[3 parse_command hook switch_window 3
+bind ^[4 parse_command hook switch_window 4
+bind ^[5 parse_command hook switch_window 5
+bind ^[6 parse_command hook switch_window 6
+bind ^[7 parse_command hook switch_window 7
+bind ^[8 parse_command hook switch_window 8
+bind ^[9 parse_command hook switch_window 9
+bind ^[0 parse_command hook switch_window 10
+
+bind ^[t parse_command h.paste toggle
+
+# vim: set ai tw=75 sw=4:

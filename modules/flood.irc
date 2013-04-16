@@ -1,0 +1,49 @@
+# Copyright (c) 2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package flood
+
+config_title "Flood protection"
+config_entry "Number of messages to receive before triggering flood" type "itext" var "flood_after"
+config_entry "Message rate (per second) that will trigger flood" type "itext" var "flood_rate"
+config_entry "Enable MSG flood protection" type "check" var "h.cfg.msg_flood" def "0"
+config_entry "Enable CTCP flood protection" type "check" var "h.cfg.ctcp_flood" def "0"
+config_entry "Enable NOTICE flood protection" type "check" var "h.cfg.notice_flood" def "0"
+config_entry "Seconds to unignore flooders (0 to disable)" type "text" var "h.cfg.flood_ignore" def "120"
+
+on ^flood "* NOTICES *" {
+    if (h.cfg.msg_flood && rmatch($0 NickServ ChanServ) < 1) {
+	^ignore $0 NOTICES
+	xecho -b Added $0 to ignore list (NOTICE flood)
+	if (h.cfg.flood_ignore > 0) {
+	    timer $h.cfg.flood_ignore {
+	       	^ignore $0 -NOTICES
+		xecho -b Removed $0 from ignore list after $h.cfg.flood_ignore seconds \(NOTICES\)
+	    }
+	}
+    }
+}
+on ^flood "* MSGS *" {
+    if (h.cfg.msg_flood && rmatch($0 NickServ ChanServ) < 1) {
+	xecho -b Added $0 to ignore list (MSG flood)
+	^ignore $0 MSGS
+	if (h.cfg.flood_ignore > 0) {
+	    timer $h.cfg.flood_ignore {
+	       	^ignore $0 -MSGS
+		xecho -b Removed $0 from ignore list after $h.cfg.flood_ignore seconds \(MSGS\)
+	    }
+	}
+    }
+}
+on ^flood "* CTCPS *" {
+    if (h.cfg.msg_flood) {
+	xecho -b Added $0 to ignore list (CTCP flood)
+	^ignore $0 CTCPS
+	if (h.cfg.flood_ignore > 0) {
+	    timer $h.cfg.flood_ignore {
+	       	^ignore $0 -CTCPS
+		xecho -b Removed $0 from ignore list after $h.cfg.flood_ignore seconds \(CTCPS\)
+	    }
+	}
+    }
+}

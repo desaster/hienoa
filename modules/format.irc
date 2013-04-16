@@ -1,0 +1,148 @@
+# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package format
+
+eval on #-hook $hash_32bit(format) "post_load" {
+    h.lagmeter.refresh
+}
+
+alias h.format.set (h.name, h.data) {
+    if (h.name && h.data) {
+	assign h[formats][$h.name] $h.data
+    }
+    if (left(1 $h.name) == [-] && !h.data) {
+	assign -h[formats][$rest(1 $h.name)]
+    }
+}
+
+alias h.format.parse (h.name, ...) {
+    @ :h.data = h[formats][$h.name]
+    @ sar(gr/%/%%/h[data])
+    @ sar(gr/&/%/h[data])
+    @ :h.data = cparse($restw(0 $h[data]))
+    if (h[formats][$h.name]) {
+	if (functioncall()) {
+	    eval return $h[data]
+	} else {
+	    eval echo $h[data]
+	}
+    }
+}
+
+alias h.format.value (h.name) {
+    @ :h.data = h[formats][$h.name]
+    @ sar(gr/%/%%/h.data)
+    @ sar(gr/&/%/h.data)
+    eval return $h.data
+}
+
+alias rstamp {
+    if (h.cfg.timestamp_strftime) {
+	@ :h.ts = [$strftime($h.cfg.timestamp_strftime)]
+    } else {
+	@ :h.ts = [$Z]
+    }
+    return $h.ts
+}
+
+alias stamp h.format.stamp
+alias h.format.stamp {
+    if (h.cfg.timestamp_strftime) {
+	@ :h.ts = [$strftime($h.cfg.timestamp_strftime)]
+    } else {
+	@ :h.ts = [$Z]
+    }
+    if (h.cfg.timestamp) { return $cparse($h.format.parse(timestamp $h.ts)) }
+
+}
+
+alias nickstatus (h.nick, h.channel, ...) {
+    if (ischanop($h.nick $h.channel)) {
+	return @
+    } elsif (ischanvoice($h.nick $h.channel)) {
+	return +
+    }
+}
+
+alias h.lagmeter.refresh {
+    ^timer -delete lagmeter
+    if (!strlen($myservers())) { return }
+    fe ($myservers()) h.s {
+	@ h.lagmeter[$h.encode($h.s)][lag] = [?]
+	^xquote -server $servernum($h.s) ping :$h.s
+	@ h.lagmeter[$h.encode($h.s)][time] = time()
+    }
+    h.lagmeter.status_update $winnum()
+
+    ^on ^pong "*" {
+	@ :h.eserver = h.encode($0)
+	if (strlen($h.lagmeter[$h.eserver][time])) {
+	    @ h.lagmeter[$h.eserver][lag] = (time() - \
+		h.lagmeter[$h.eserver][time])
+	    h.lagmeter.status_update $winnum()
+	}
+    }
+    timer -refnum lagmeter 60 { h.lagmeter.refresh }
+}
+
+alias h.lagmeter.status_update (window, ...) {
+    @ :h.s = servername($winserv($window))
+    @ :h.lag = h[lagmeter][$h.encode($h.s)][lag]
+    if (!strlen($h.lag)) { @ :h.lag = [?] }
+    ^set status_user1 $sar(/%1/$h.lag/$cparse($h.format.value(status_lag)))
+}
+
+alias h.set.idle {
+    if (S) {
+	@ :h.it = tdiff2($h.idletime)
+	if (match(*s $h.it)) { @ pop(h.it) }
+	if (!numwords($h.it)) { @ :h.it = [0m] }
+	^set status_user3 $cparse($h.format.parse(status_idle $h.it))
+    } else {
+	^set status_user3 $cparse($h.format.parse(status_idle ?))
+    }
+}
+
+alias h.reset.idle {
+    @ h.idletime = 0
+    h.refresh.idle 1
+}
+
+alias h.refresh.idle (h.idle_reset) {
+    if (S) {
+	^timer -delete h.idle
+	if (!h.idle_reset) { @ h.idletime += 60 }
+	h.set.idle
+	^timer -refnum h.idle 60 h.refresh.idle
+    } else {
+	^timer -delete h.idle
+	h.set.idle
+    }
+}
+
+alias h.refresh.uptime {
+    @ :h[u] = tdiff2(${time() - F})
+    if (match(*s $h[u])) { @ pop(h[u]) }
+    if (!numwords($h[u])) { @ :h[u] = [0m] }
+    ^set status_user2 $cparse($h.format.parse(status_uptime $h[u])%N)
+}
+
+alias h.refresh.dcc {
+    @ :h.s = (h.dcc.sendcount ? h.dcc.sendcount : [0])
+    @ :h.g = (h.dcc.getcount ? h.dcc.getcount : [0])
+    ^set status_user4 $cparse($h.format.parse(status_dcc $h.s $h.g)%N)
+}
+
+alias h.refresh.away {
+    if (h.awaycount == []) { @ h.awaycount = 0 }
+    ^set status_away $cparse($h.format.parse(status_away $h.awaycount)%N)
+}
+
+alias colorifynick (h.nick, ...) {
+    @ :h.n = right(1 $hash_32bit($strip(@+ $h.nick)))
+    @ :h.c = [%r %R %g %G %b %B %m %M %c %C]
+    return $cparse($word($h.n $h.c)$h.nick$n)
+}
+
+# vim: set ai tw=75 sw=4:

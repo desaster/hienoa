@@ -1,0 +1,12 @@
+Synopsis:
+   delhost <user> <hostmask>
+
+Description:
+   This command removes a hostmask from user in userlist.
+
+Aliases:
+   hostdel; -host
+
+See Also:
+   addhost(9); userlist(9)
+

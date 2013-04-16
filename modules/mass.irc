@@ -1,0 +1,30 @@
+# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package mass
+
+alias mass {
+    switch ([$0]) {
+	([op]) ([+o]) { op $nochops() }
+	([deop]) ([dop]) ([-o]) { deop $remw($N $chops()) }
+	([voice]) ([+v]) {
+	    fe ($chanusers()) h.u {
+		if (!ischanvoice($h.u) && !ischanop($h.u)) {
+		    push :h.l $h.u
+		}
+	    }
+	    voice $h.l
+	}
+	([devoice]) ([devoice]) ([-v]) {
+	    fe ($chanusers()) h.u {
+		if (ischanvoice($h.u) && !ischanop($h.u)) {
+		    push :h.l $h.u
+		}
+	    }
+	    devoice $h.l
+	}
+	(*) { xecho -b Usage: /mass <op|deop|voice|devoice> }
+    }
+}
+
+# vim: set ai tw=75 sw=4:

@@ -1,0 +1,10 @@
+Synopsis:
+   slap <nick>
+
+Description:
+   This command does a "/me slaps <nick> around a bit with a large trout"
+   command on current channel.  The message is 100% compatible with mIRC :)
+
+See Also:
+   me(1)
+

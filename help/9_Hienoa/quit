@@ -1,0 +1,11 @@
+Synopsis:
+   quit [quit message]
+
+Description:
+   This command is identical to epic's QUIT command.  The only difference
+   is that if no quit message is given, a random will be picked from
+   "hienooa/etc/quit" or "~/.hienoa/quit" if available.
+
+Aliases:
+   exit; signoff; bye
+

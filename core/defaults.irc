@@ -1,0 +1,19 @@
+# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+set indent on
+set -continued_line
+set high_bit_escape 0
+eval set dcc_store_path $twiddle(~/)
+set mangle_logfiles all
+set new_server_lastlog_level none
+set auto_rejoin off
+set reverse_status_line off
+set flood_rate 3
+set flood_after 6
+set mode_stripper off
+
+# Don't break URLs
+eval set word_break $strip(. $word_break)
+
+# vim: set ai tw=75 sw=4:

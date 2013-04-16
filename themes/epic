@@ -1,0 +1,106 @@
+# hienoa theme file
+
+# Name:		epic
+# Author:	Upi Tamminen <desaster@dragonlight.fi>
+# Comments:	Ircii-EPIC4's default look.
+
+screenmode lowascii
+set status_no_repeat on
+
+format ACTION $stamp()* $0 $2-
+format BANNER ***
+format CHANNEL_SIGNOFF $G Signoff: $1 \($2-\)
+format CONFIG_TITLE &n  $pad(${word(0 $geom()) - 3} " " hienoa $h.version - $*)
+format CTCP_CHANNEL $G CTCP $3 from $0 to $2${[$4] ? [\: $4-] : []}
+format CTCP_REPLY $G CTCP $1 reply from $0: $2-
+format CTCP_USER $G CTCP $3 from $0${[$4] ? [\: $4-] : []}
+format DCC_CHAT =$0= $1-
+format DCC_COMPLETED $G DCC $1 \($2\) connection with $0 completed \($3 kb/s\)
+format DCC_CONNECT $G DCC $1 connection with $0[$2:$3] established
+format DCC_LOST $G DCC $1 connection with $0 lost${[$2] ? [\: $2-] : []}
+format DCC_OFFER_CHAT $G Sent DCC $1 request to $0
+format DCC_OFFER $G Sent DCC $1 request \($2 $3\) to $0
+format DCC_REQUEST $G DCC $1 \($5 $6\) request received from $0!$userhost() [$3:$4]
+format HILIGHT_NOTIFY $G Highlight in window #$0 by $2 \($4\)
+format INPUT_PROMPT > &N
+format INVITE $G $0 \($userhost()\) invites you to channel $1
+format JOIN $G $0 \($userhost()\) has joined channel $1
+format KICK $G $0 has been kicked off channel $2 by $1 \($3-\) $stamp()
+format KICK_USER $G $0 has been kicked off channel $2 by $1 \($3-\) $stamp()
+format KILL $G $1 was killed by $2 \($4-\) $stamp()
+format LEAVE $G $0 has left channel $1${[$3] ? [ [$3-]] : [ ]}$stamp()
+format MODE $G Mode change "$2-" on channel $1 by $0 $stamp()
+format MSG *$0* $1-
+format -NAMES_BOTTOM
+format NAMES_NONOP $0$chr(32)
+format NAMES_OP @$0$chr(32)
+format NAMES_ROW $G$chr(32)
+format NAMES_TOP $G Users on $0:
+format NAMES_VOICE +$0$chr(32)
+format NICK $G $0 is now known as $1
+format NOTICE -$0\- $1-
+format NOTIFY_SIGNOFF $G Signoff by $0 detected
+format NOTIFY_SIGNON $G Signon by $0 detected
+format PUBLIC_HL $stamp()<$0> $2-
+format PUBLIC_MSG_HL $stamp()\($0/$1\) $2-
+format PUBLIC_MSG $stamp()\($0/$1\) $2-
+format PUBLIC_NOTICE $stamp()-$0:${2}- $2-
+format PUBLIC_OTHER_HL $stamp()<$0:$1> $2-
+format PUBLIC_OTHER $stamp()<$0:$1> $2-
+format PUBLIC $stamp()<$0> $2-
+format SEND_ACTION $stamp()* $N $1-
+format SEND_CTCP $G Requesting a CTCP $2 from $1${[$3] ? [\: $3-] : []}
+format SEND_DCC_CHAT => =$0= $1-
+format SEND_MSG *$0*> $1-
+format SEND_NOTICE -$0\-> $1-
+format SEND_PUBLIC $stamp()> $2-
+format SERVER_NOTICE *** $2-
+format STATUS_AWAY &N \(Away\)
+format STATUS_CHANMODE &N \(+&+\)
+format STATUS_CHANNEL &N %C
+format STATUS_CHANOP @
+format STATUS_CLOCK &N %T
+format STATUS_CPU_SAVER &N \(%L\)
+format STATUS_DCC
+format STATUS_HOLD Held: &N
+format STATUS_HOLD_LINES %B
+format -STATUS_IDLE
+format STATUS_IRCOP *
+format STATUS_LAG &N lag %1
+format STATUS_LINE %T [%R] %*%=%@%N%#%S%H%B%Q%A%5%C%+%I%O%M%F%L %D %U %W
+format STATUS_LINE1 $h.format.value(status_line)
+format -STATUS_LINE2
+format STATUS_MAIL &N \(Mail: %M\)
+format STATUS_NICK %N
+format STATUS_NOTIFY &N \(W: %F\)
+format STATUS_OVERWRITE &N \(Overwrite\)
+format STATUS_PASTE &N PASTE
+format STATUS_QUERY &N \(Query: %Q\)
+format STATUS_SCROLLBACK &N \(Scroll\)
+format -STATUS_SERVER
+format STATUS_UMODE &N \(+%#\)
+format STATUS_UPTIME &N uptime $*
+format STATUS_VOICE +
+format TIMESTAMP [$*] &n
+format TOPIC_CHANGE $G $0 has changed the topic on channel $1 to $2-
+format TOPIC_EMPTY $G Topic for $1: $2-
+format TOPIC $G Topic for $1: $2-
+format TOPIC_SETBY $G The topic was set by $2 on $stime($3)
+format TOPIC_UNSET $G $0 has unset the topic on channel $1
+format WALLOP !$0:$1! $2-
+format -WHO_END
+format WHOIS_AWAY $G $0 is away: $1-
+format WHOIS_CHANNELS $G on channels: $2-
+format WHOIS_END $G $1 : End of WHOIS
+format -WHOIS_HEADER
+format WHOIS_IDLE $G $1 has been idle for $tdiff($2), signed on at $stime($3)
+format -WHOIS_IRCNAME
+format WHOIS_NICK $G $1 is $2@$3 \($5-\)
+format WHOIS_OPER $G $1-
+format WHOIS_SERVER $G on irc via server $2 \($3-\)
+format WHOIS_USERLIST $G $1 is in userlist as $2 with flags \($3\)
+format WHOWAS_END $G $1 : End of WHOWAS
+format -WHOWAS_HEADER
+format -WHOWAS_IRCNAME
+format WHOWAS_NICK $G $1 was $2@$3 \($5-\)
+format WHO $0	$1	$2	$3@$4 \($7-\)

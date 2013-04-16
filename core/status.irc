@@ -1,0 +1,28 @@
+# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+eval set status_away $cparse($h.format.value(status_away))
+eval set status_channel $cparse($h.format.value(status_channel))
+eval set status_chanop $cparse($h.format.value(status_chanop))
+eval set status_cpu_saver $cparse($h.format.value(status_cpu_saver))
+eval set status_format $cparse($h.format.value(status_line))
+eval set status_format1 $cparse($h.format.value(status_line1))
+eval set status_format2 $cparse($h.format.value(status_line2))
+eval set status_clock $cparse($h.format.value(status_clock))
+eval set status_hold $cparse($h.format.value(status_hold))
+eval set status_hold_lines $cparse($h.format.value(status_hold_lines))
+eval set status_mail $cparse($h.format.value(status_mail))
+eval set status_mode $cparse($h.format.value(status_chanmode))
+eval set status_nickname $cparse($h.format.value(status_nick))
+eval set status_notify $cparse($h.format.value(status_notify))
+eval set status_oper $cparse($h.format.value(status_ircop))
+eval set status_overwrite $cparse($h.format.value(status_overwrite))
+eval set status_paste $cparse($h.format.value(status_paste))
+eval set status_query $cparse($h.format.value(status_query))
+eval set status_scrollback $cparse($h.format.value(status_scrollback))
+eval set status_server $cparse($h.format.value(status_server))
+eval set status_umode $cparse($h.format.value(status_umode))
+eval set status_voice $cparse($h.format.value(status_voice))
+eval set input_prompt $cparse($h.format.value(input_prompt))
+
+# vim: set ai tw=75 sw=4:

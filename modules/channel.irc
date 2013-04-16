@@ -1,0 +1,175 @@
+# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package channel
+
+config_title "Channel stuff"
+config_entry "Sort names alphabetically" type "check" var "h.cfg.names_sort_alpha" def "1"
+
+alias j join
+alias join {
+    switch ($*) {
+	(*,*) {
+	    @ :h.c = (ischannel($0) ? [$0] : [#$0])
+	    if (:h.w = winbound($h.c)) { ^window $h.w unbind }
+	    //join $before(, $h.c)
+	    //join $after(, $h.c)
+	}
+	() {
+	    @ :h.c = (ischannel($0) ? [$0] : [#$0])
+	    if (:h.w = winbound($h.c)) { ^window $h.w unbind }
+	    //join -i
+	    ^window bind $h.c
+	}
+	(*) {
+	    @ :h.c = (ischannel($0) ? [$0] : [#$0])
+	    if (:h.w = winbound($h.c) && \
+		    winbound($h.c) != winnum() && \
+		    winchan($C) != winnum()) {
+		^window $h.w unbind
+	    }
+	    //join $h.c $1-
+	    ^window bind $h.c
+	}
+    }
+}
+
+alias h.ijoin (h.chan) {
+    if (h.chan) {
+	join $h.chan
+	^bind ^[i nothing
+    }
+}
+
+alias sc names
+alias cs names
+alias n names
+alias names (h.channel) {
+    if (h.channel && ischannel($h.channel)) {
+	h.format.names $h.channel $msar(g/.//?//@+/@/$channel($h.channel))
+    } elsif (C) {
+	h.format.names $C $msar(g/.//?//@+/@/$channel())
+    } else {
+	xecho -b You're not on a channel!
+    }
+}
+
+alias h.format.names (h.channel, h.chanusers) {
+    @ :h.o = pattern(@* $h.chanusers)
+    @ :h.v = pattern(+* $h.chanusers)
+    @ :h.n = remws($sar(g/  / /$h.o $h.v) / $h.chanusers)
+    # a quick hax to fix halfops
+    @ :h.n = sar(g/%/%%/$h.n)
+    if (h.cfg.names_sort_alpha) {
+	@ :h.o = sort($h.o)
+	@ :h.v = sort($h.v)
+	@ :h.n = sort($h.n)
+    }
+    @ :h.chanusers = sar(g/  / /$h.o $h.v $h.n)
+    @ :h.maxsize = h.format.parse(names_op $repeat($maxlen($h.chanusers) a))
+    @ :h.cellsize = strlen($stripcrap(ALL,ALL_OFF $h.maxsize))
+    @ :h.v = ((word(0 $geom()) - \
+	strlen($stripcrap(ALL,ALL_OFF $cparse($h.format.value(banner))))) / \
+	(h.cellsize + 1)) - 2
+    if (!h.channel) { @ :h.channel = C }
+    h.format.parse names_top $h.channel
+    fe ($h.chanusers) h.nick {
+	if (left(1 $h.nick) == [@]) {
+	    @ :h.w = h.format.parse(names_op $rest(1 $h.nick))
+	} elsif (left(1 $h.nick) == [+]) {
+	    @ :h.w = h.format.parse(names_voice $rest(1 $h.nick))
+	} else {
+	    @ :h.w = h.format.parse(names_nonop $h.nick)
+	}
+	@ :h.w #= repeat(${h.cellsize - \
+	    strlen($stripcrap(ALL,ALL_OFF $h.w))}  )
+	push :h.r $h.w
+	if (:h.c++ >= h.v) {
+	    echo $h.format.parse(names_row)$cparse($h.r)
+	    @ :h.r = []
+	    @ :h.c = 0
+	}
+    }
+    if (h.r) { echo $h.format.parse(names_row)$cparse($h.r) }
+    @ :h.ops = 0 + count(@ $h.chanusers)
+    @ :h.voices = 0 + count(+ $h.chanusers)
+    h.format.parse names_bottom $h.channel $#h.chanusers $h.ops $h.voices
+}
+
+alias banstat showbans
+alias bans banstat
+alias showbans (h.channel default $C) {
+    if (!h.channel) {
+	xecho -level CRAP -b You are not on a channel in this window.
+	return
+    }
+    stack push on 367
+    stack push on 368
+    ^local h.bans
+    ^on ^367 * {
+	bless
+	if ([$3]) {
+	    push :h.bans $2-3
+	} else {
+	    push :h.bans $2 unknown
+	}
+    }
+    ^on ^368 * {
+	bless
+    	if (h.bans) {
+    	    h.table 2 CRAP Hostmask "Set by" $h.bans
+    	    xecho -level CRAP -b Total ${#h.bans / 2} bans on $h.channel
+       	} else {
+    	    xecho -level CRAP -b No bans on $h.channel
+       	}
+	stack pop on 367
+	stack pop on 368
+    }
+    wait
+    //mode $h.channel b
+    wait
+}
+
+alias leavejoin cycle
+alias cycle (h.c default $winchan()) {
+    @ :h.key = key($winchan())
+    part $h.c
+    wait
+    join $h.c ${strlen($h.key) ? h.key : []}
+}
+
+alias l part
+
+alias tt tedit
+alias te tedit
+alias tedit {
+    if (!C) {
+	xecho -b You're not on a channel!
+	return
+    }
+    if (aliasctl(assign exists h.topics.${h.encode($S)}.${h.encode($C)})) {
+	# JES! we have the topic cached
+	xtype -l ${K}topic $C $h.topics[$h.encode($S)][$h.encode($C)]
+    } else {
+	# we don't have it cached.. gotta call //topic
+	^on ^333 "$S $C *" {
+	    ^on ^333 -"$0 $1 *"
+	}
+	^on ^332 "$S $C *" {
+	    parsekey erase_line
+	    xtype -l ${K}topic $1 $2-
+	    ^on ^331 -"$0 $1 *"
+	    ^on ^332 -"$0 $1 *"
+	}
+	^on ^331 "$S $C *" {
+	    parsekey erase_line
+	    xtype -l ${K}topic $1$chr(32)
+	    ^on ^331 -"$0 $1 *"
+	    ^on ^332 -"$0 $1 *"
+	    ^on ^333 -"$0 $1 *"
+	}
+	//topic
+    }
+}
+
+# vim: set ai tw=75 sw=4:

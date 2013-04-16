@@ -1,0 +1,107 @@
+# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package tabkey
+
+config_title "General stuff"
+config_entry "Max nicks in tabkey list" type "text" var "h.cfg.tab_max_nicks" def "5"
+
+alias h.tabkey {
+    @ :h.nicklist = h.tabkey.nicklist[$hash_32bit($tolower($servername()))]
+    if ((!L || (L =~ [/msg * ] && #L == 2)) && strlen($h.nicklist)) {
+	@ :h.gotnick = h.tabkey.getnick()
+	parsekey erase_line
+	xtype -l /msg ${h.gotnick ? h.gotnick ## chr(32) : []}
+    } elsif (L && curpos() == @L) {
+	h.tabkey.parseline
+    }
+}
+
+alias h.tabkey.parseline {
+    if (left(1 $L) == [/] && numwords($L) == 1) {
+	@ :h.command_comp = 1
+	parsekey command_completion
+    } else {
+	if (right(1 $L) != [ ]) {
+	    @ :h.matches = pattern($rightw(1 $L)* $chanusers())
+	    if (#h.matches > 1) {
+		h.showmatches $h.matches
+		xtype -l $rest($@rightw(1 $L) $prefix($h.matches))
+	    } elsif (#h.matches == 1) {
+		@ :h.l = L
+		@ :h.end = (#L == 1) ? [$h.cfg.nickcomp_char ] : chr(32)
+		@ :h.prefix = leftw(${numwords($h.l) - 1} $h.l)
+		@ :h.prefix #= (#L == 1) ? [] : [ ]
+		parsekey erase_line
+		xtype -l $h.prefix$h.matches$h.end
+	    } else {
+		h.tabkey.shcomplete
+	    }
+	} else {
+	    h.showmatches $chanusers()
+	}
+    }
+}
+
+alias h.tabkey.shcomplete (h.root_dir,num) {
+    @ :tcomp = word(${numwords($h.root_dir$L) - 1} $h.root_dir$L)
+    @ :h.list = uniq($glob($h.root_dir$tcomp\*))
+    @ :matches = pattern($twiddle($h.root_dir$tcomp)\* $h.list)
+    @ :total_comps = numwords($matches)
+    if (total_comps > 1) {
+	fe ($matches) tmatch { xecho -b $tmatch }
+    }
+    @ :h.returns = total_comps ? prefix($matches) : [$0]
+    if (total_comps == 1 && !rmatch($h.returns */)) {
+	parsekey delete_to_previous_space
+	^type $h.returns$chr(32)
+    } else {
+	unless (!h.returns) {
+	    parsekey delete_to_previous_space
+	    ^type $h.returns
+	}
+    }
+}
+
+alias h.tabkey.addnick {
+    if (strlen($servername())) {
+	@ :h.servers = hash_32bit($tolower($servername()))
+    } else {
+	if (!strlen($myservers())) { return }
+	fe ($myservers()) h.server {
+	    push :h.servers $hash_32bit($tolower($h.server))
+	}
+    }
+    fe ($h.servers) h.s {
+	@ h.tabkey.nicklist[$h.s] = remw($0 $h.tabkey.nicklist[$h.s])
+	@ h.tabkey.nicklist[$h.s] #= \
+	    (h.tabkey.nicklist[$h.s] == [] ? [] : [ ]) ## [$0]
+	if (numwords($h.tabkey.nicklist[$h.s]) > h.cfg.tab_max_nicks) {
+	    @ h.tabkey.nicklist[$h.s] = remw($word(0 $h.tabkey.nicklist[$h.s]))
+	}
+    }
+}
+
+alias h.tabkey.getnick {
+    @ :h.h = hash_32bit($tolower($servername()))
+    @ :h.retval = word(${numwords($h.tabkey.nicklist[$h.h]) \
+	- 1} $h.tabkey.nicklist[$h.h])
+    @ h.tabkey.nicklist[$h.h] = remw($h.retval $h.tabkey.nicklist[$h.h])
+    @ h.tabkey.nicklist[$h.h] #~ h.retval ## [ ]
+    return $h.retval
+}
+
+alias h.showmatches (h.nicks) {
+    @ :h.len = maxlen($h.nicks) + 1
+    @ :h.break = word(0 $geom()) / h.len - 1
+    for (@ :h.a = 0, h.a < numwords($h.nicks), @ h.a++) {
+	@ :h.l #= pad($h.len " " $word($h.a $h.nicks))
+	if (#h.l > h.break) {
+	    xecho -current -banner $h.l
+	    @ :h.l = []
+	}
+    }
+    if (strlen($h.l)) { xecho -current -banner $h.l }
+}
+
+# vim: set ai tw=75 sw=4:

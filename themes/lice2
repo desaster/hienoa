@@ -1,0 +1,106 @@
+# hienoa theme file
+
+# Name:		lice2
+# Author:	Upi Tamminen <desaster@dragonlight.fi>
+# Comments:	Based on "LICE2" script made by srfrog.
+
+screenmode lowascii
+set status_no_repeat on
+
+format ACTION $stamp()* $0 $2-
+format BANNER ***
+format CHANNEL_SIGNOFF $G Signoff: $1 \($2-\)
+format CONFIG_TITLE &n [ $pad(${word(0 $geom()) - 5} " " hienoa $h.version - $*)]
+format CTCP_CHANNEL $G CTCP $3${[$4] ? [ $4] : []} request: $0 \($1\) to $2
+format CTCP_REPLY $G CTCP $1 reply from $0: $2-
+format CTCP_USER $G CTCP $3${[$4] ? [ $4] : []} request: $0 \($1\) to You
+format DCC_CHAT =$0= $1-
+format DCC_COMPLETED $G DCC $1:$2 from $0 completed $3 kb/sec
+format DCC_CONNECT $G DCC $1 connection with $0[$2,$3] established
+format DCC_LOST $G DCC $1 connection with $0 lost${[$3] ? [\: $3-] : []}
+format DCC_OFFER_CHAT $G Sent DCC $1 request to $0
+format DCC_OFFER $G Sent DCC $1 request \($2 $3\) to $0
+format DCC_REQUEST $G DCC $1 \($5 $6\) request received from $0
+format HILIGHT_NOTIFY $G Highlight in window #$0 by $2 \($4\)
+format -INPUT_PROMPT
+format INVITE $G $0 \($userhost()\) invites you to $1
+format JOIN $G $0 \($userhost()\) joined $1 at $Z
+format KICK $G $0 has been kicked off channel $2 by $1 \($3-\) $stamp()
+format KICK_USER $G $0 has been kicked off channel $2 by $1 \($3-\) $stamp()
+format KILL ### [ Kill ] \($0\) $1. by $2 $4-
+format LEAVE $G $0 \($userhost()\) left $1 at $Z
+format MODE $G Mode change "$2-" on $1 by $0
+format MSG  $0!$userhost()  $1-
+format -NAMES_BOTTOM
+format NAMES_NONOP $0$chr(32)
+format NAMES_OP @$0$chr(32)
+format NAMES_ROW $G$chr(32)
+format NAMES_TOP $G Names $0: [$#chanusers()]
+format NAMES_VOICE +$0$chr(32)
+format NICK $G $0 is now known as $1
+format NOTICE [$0!$USERHOST()] $1-
+format NOTIFY_SIGNOFF $G Signoff: $0 at $Z
+format NOTIFY_SIGNON $G Signon: $0 \($1\) at $Z
+format PUBLIC_HL $stamp()<$0> $2-
+format PUBLIC_MSG_HL $stamp()\($0/$1\) $2-
+format PUBLIC_MSG $stamp()\($0/$1\) $2-
+format PUBLIC_NOTICE $stamp()[$0!$userhost():$1] $2-
+format PUBLIC_OTHER_HL $stamp()<$0:$1> $2-
+format PUBLIC_OTHER $stamp()<$0:$1> $2-
+format PUBLIC $stamp()<$0> $2-
+format SEND_ACTION $stamp()* $N $1-
+format SEND_CTCP $G Requesting a CTCP $2 from $1${[$3] ? [\: $3-] : []}
+format SEND_DCC_CHAT =>$0<= $1-
+format SEND_MSG >  $0  $1-
+format SEND_NOTICE > [$0] $1-
+format SEND_PUBLIC $stamp()<$1> $2-
+format SERVER_NOTICE ### [ Misc ] \($0\) $2-
+format STATUS_AWAY A
+format STATUS_CHANMODE \(+&+\)
+format STATUS_CHANNEL %C
+format STATUS_CHANOP @
+format STATUS_CLOCK [%T]
+format -STATUS_CPU_SAVER
+format -STATUS_DCC
+format STATUS_HOLD_LINES %B
+format STATUS_HOLD More:
+format -STATUS_IDLE
+format STATUS_IRCOP *
+format STATUS_LAG %1s
+format STATUS_LINE %T %*%N%# %@%C%+ %A%5%W %H%B %F%M%Q %>[%2]  %1 &n
+format -STATUS_LINE1
+format -STATUS_LINE2
+format STATUS_MAIL mail:%M
+format STATUS_NICK %N
+format STATUS_NOTIFY +%F &N
+format STATUS_OVERWRITE \(overtype\)
+format STATUS_PASTE &N PASTE
+format STATUS_QUERY &N /query:%Q
+format -STATUS_SCROLLBACK
+format -STATUS_SERVER
+format STATUS_UMODE \(+%#\)
+format STATUS_UPTIME $0
+format STATUS_VOICE +
+format TIMESTAMP $* &n
+format TOPIC_CHANGE $G $0 has changed the topic on channel $1 to $2-
+format TOPIC_EMPTY $G Topic on $1 is not set.
+format TOPIC $G Topic on $1: $2-
+format TOPIC_SETBY $G Topic on $1 set by $2 at $stime($3)
+format TOPIC_UNSET $G $0 has changed the topic on channel $1 to
+format WALLOP ### [ Wall ] <$0> $2-
+format -WHO_END
+format WHOIS_AWAY : away     : $1-
+format WHOIS_CHANNELS : channels : $2-
+format -WHOIS_END
+format -WHOIS_HEADER
+format WHOIS_IDLE : idle set : $tdiff($2)
+format WHOIS_IRCNAME : ircname  : $2-
+format WHOIS_NICK [ Whois $1!$2@$3 ]
+format WHOIS_OPER : operator : $1-
+format WHOIS_SERVER : server   : $2 [$3-]
+format WHOIS_USERLIST : userlist : $2 \($3\)
+format -WHOWAS_END
+format -WHOWAS_HEADER
+format WHOWAS_IRCNAME : ircname  : $*
+format WHOWAS_NICK [ Whowas $1!$2@$3 ]
+format WHO $0	$1	$2	$3@$4 \($7-\)

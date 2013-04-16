@@ -1,0 +1,113 @@
+# hienoa theme file
+
+# Name:			something
+# Author:		cthulhain <lordzork@lordzork.com>
+# Comments:		Based on Upi Tamminen's "echoes" 
+#			theme for hienoa, which in turn 
+#			was based on whitefang's "echoes" 
+#			theme for LiCe (which was based
+#			on trey's echoes theme for rain).
+#
+#			and it's weeping in my heart, 
+#			like it's raining in the town.
+
+screenmode lowascii
+set status_no_repeat off
+
+format ACTION 		$stamp()&B*&b*&K*&W $0&B $2-&n
+format BANNER		&B-&b-&K-
+format CHANNEL_SIGNOFF	$G &nquit&K/&W$0&K:&W $1&K\(&n$2-&K\) &nat &K[&W$Z&K]
+format CONFIG_TITLE	&K +[&n $pad(${word(0 $geom()) - 2} " " hienoa $h.version &K-&n $*)&K]+
+format CTCP_CHANNEL	$G ctcp&K/&W$tolower($3)${[$4] ? [ $4-] : []}&K: &nto&W $2&n from&W $0&K[&c$before(@ $1)&n@&c$after(@ $1)&K]
+format CTCP_REPLY	$G CTCP &W$1 &nreply from &W$0: &c$2-
+format CTCP_USER	$G ctcp&K/&W$tolower($3)${[$4] ? [ $4-] : []}&K: &nto $2&n from&W $0&K[&c$before(@ $1)&n@&c$after(@ $1)&K]
+format DCC_CHAT		$stamp()$G chat&K/&W$0&c:&n $1- &K[&W$Z&K]
+format DCC_COMPLETED	$G DCC $1&K: &W$2 &nwith &W$0 &ncompleted &K\(&c$3 kb/s&K\)
+format DCC_CONNECT	$G DCC $1 connection to &W$0&K[&c$2&n:&c$3&K]&n established
+format DCC_LOST		$G DCC $1 connection with &W$0&n lost${[$2] ? [\: $2-] : []}
+format DCC_OFFER_CHAT	$G Sent DCC $1 request &K\(&W$2 &n$3&K\)&n to &c$0
+format DCC_OFFER	$G Sent DCC $1 request &K\(&W$2 &n$3&K\)&n to &c$0
+format DCC_REQUEST	$G DCC $1${[$5] ? [ &K\(&W$5-7&K\)] : []} &nrequest received from &c$0&W!&c$userhost() &K[&W$3&K:&W$4&K]
+format HILIGHT_NOTIFY	$G Highlight in window &W#$0&n by &W$2&n \($4\)
+format INPUT_PROMPT	&n &B+&b-&K->&w &n
+format INVITE 		$G invite&K/&W$0&K:&W $1 $userhost() &nat &K[&W$Z&K]
+format JOIN 		$G join&K/&W$1&K:&W $0&K\(&c$before(@ $2)&W@&c$after(@ $2)&K\) &nat &K[&W$Z&K]
+format KICK 		$G kick&K/&W$2&K:&W $1&n kicked&W $0&K\(&r$3-&K\)
+format KICK_USER 	$G kick&K/&W$2&K:&W $1&n kicked&W $0&K\(&r$3-&K\)
+format KILL 		$G $1 was killed by $2 \($4-\)
+format LEAVE 		$G part&K/&W$1&K:&W $0&K\(&c$before(@ $2)&W@&c$after(@ $2)&K\)${[$3] ? [ &K\(&n$3-&K\)] : []} &nat &K[&W$Z&K]
+format MODE 		$G mode&K/&W$1&K:&W $0&K\(&c$2-&K\)
+format MSG		$stamp() &W> &K\(&W$0&K\)&n: $1-
+format NAMES_BOTTOM	&B+&b-&K-&n> &c+o&K\(&C$2&K\)&n &c-o&K\(&C${[$1] - [$2]}&K\)&n &ctotal&K\(&C$1&K\)
+format NAMES_NONOP 	&K[&n $pad(9 " " $0)&K ]&n
+format NAMES_OP 	&K[&B @&W$pad(8 " " $0)&K ]&n
+format NAMES_ROW 	&b| &n
+format NAMES_TOP 	&B+&b-------&K-[&nusers&K/&W$0&K]-&b---------------------&K+
+format NAMES_VOICE 	&K[&c+&n$pad(8 " " $0)&K ]&n
+format NICK 		$G &W$0&n is now known as &B$1
+format NOTICE		$G &K+&W$0&K[&c$before(@ $userhost())&W@&c$after(@ $userhost())&K]+&n $1-
+format NOTIFY_SIGNOFF	$G notify&K/&Woff&n:&W $0&n at &K[&W$Z&K]
+format NOTIFY_SIGNON	$G notify&K/&Won&n:&W $0&K[&c$1&K] &nat &K[&W$Z&K]
+format PUBLIC_HL		$stamp()&K\(&B&W$0&K\)&n $2-
+format PUBLIC_MSG_HL 		$stamp()&b\(&n$0&K/&W$1&b\)&n $2-
+format PUBLIC_MSG 		$stamp()&b\(&n$0&K/&n$1&b\)&n $2-
+format PUBLIC_NOTICE 		$stamp()&K-&W$0&K[&n$1&K]-&n $2-
+format PUBLIC_OTHER_HL 		$stamp()&K\(&B&W$0&K/&n$1&K\)&n $2-
+format PUBLIC_OTHER 		$stamp()&K\(&B&n$0&K/&n$1&K\)&n $2-
+format PUBLIC 			$stamp()&K\(&B&n$0&K\)&n $2-
+format SEND_ACTION 	$stamp()&W*&w*&K*&W $N&w $1-&n
+format -SEND_CTCP
+format SEND_DCC_CHAT	$G &K->&n chat&K[&W$0&K]&c:&n $1-
+format SEND_MSG		$stamp() > &wmsg&K\(&w$0&K\)&n:&K $1-
+format SEND_NOTICE	$G &K->&n not&K[&W$0&K]&c:&n $1-
+format SEND_PUBLIC		$stamp()&b\(&W&n$1&b\)&n $2-
+format SERVER_NOTICE	$G &K!&n$0&K!&n $2-
+format STATUS_AWAY	&K+[&W away: $0 &K]+
+format STATUS_CHANMODE	&K\(&C+%+&K\)
+format STATUS_CHANNEL	&n &c%C
+format STATUS_CHANOP	&W@
+format STATUS_CLOCK	&c time&K\(&C%T&K\)
+format STATUS_CPU_SAVER	{%L Save Mode}
+format -STATUS_DCC
+format STATUS_HOLD	&K\(&nmore&K\)
+format -STATUS_HOLD_LINES
+format STATUS_IDLE	&c idle&K\(&C$*&K\)
+format STATUS_IRCOP	*
+format STATUS_LAG	&c lag&K\(&C%1&K\)
+format -STATUS_LINE
+format STATUS_LINE1	%A&n &C%D &n%>%5
+format STATUS_LINE2	&K+[&c %=%@&c%N&n%#&c%C%+%Q&K ]-%>&K[%F%1%3&c win&K\(&C%R&K\) &K]+
+format STATUS_MAIL	&c mail&K\(&C%M&K\)
+format STATUS_NICK	%N
+format STATUS_NOTIFY	&c act&K\(&C%F&K\)
+format -STATUS_OVERWRITE
+format STATUS_PASTE	&K+[&W paste &K]+
+format STATUS_QUERY	&n &cquery&K\(&C%Q&K\)
+format -STATUS_SCROLLBACK
+format STATUS_SERVER	&c \(&W%S&c\)
+format STATUS_UMODE	&K\(&C+%#&K\)
+format STATUS_UPTIME	&c up&K\(&C$*&K\)&n
+format STATUS_VOICE	&W+
+format TIMESTAMP	&K[&w$*&K] &n
+format TOPIC_CHANGE	$G topic&K/&W$1&K:&W $0&K\(&c$2-&K\)
+format TOPIC_EMPTY	$G topic&K/&W$1&K:&n $2-
+format TOPIC		$G topic&K/&W$1&K:&c $2-
+format TOPIC_SETBY	$G topic&K/&W$2&K:&n created &K\(&W$tolower($stime($time()))&K\)
+format TOPIC_UNSET	$G topic&K/&W$1&K:&n unset &K\(&n$0&K\)
+format WALLOP 		$G &K!&n$0:$1&K!&n $2-
+format WHO_END		$G &w$*
+format WHO		$G &C$0&W $pad(9 " " $[9]1)&n $pad(3 " " $2) &c$3&W@&c$4 &K\(&n$7-&K\)
+format WHOIS_AWAY	&b| &K+[     &Wa&cway&K] &W=&n $1-
+format WHOIS_CHANNELS	&b| &K+[ &Wc&channels&K] &W=&n $sar(g/@#/&B@&n#/$2-)
+format WHOIS_END	&B+&b-----------------------------------------------------&K+
+format WHOIS_HEADER	&B+&b-----------------------------------------------------&K+
+format WHOIS_IDLE	&b| &K+[     &Wi&cdle&K] &W=&n $tdiff($2)
+format WHOIS_IRCNAME	&b| &K+[  &Wi&crcname&K] &W=&n $2-
+format WHOIS_NICK	&b| &K+[&W$repeat(${9 - strlen($1)}  )$left(9 $1)&K] &W= &K\(&c$2&W@&c$3&K\) [&n$h.tld($after(-1 . $3))&K]
+format WHOIS_OPER	&b| &K+[ &Wo&cperator&K] &W=&n $1-
+format WHOIS_SERVER	&b| &K+[   &Ws&cerver&K] &W=&n $2 &K\(&c$3-&K\)
+format WHOIS_USERLIST	&b| &K+[ &Wu&cserlist&K] &W$2&n \($3\) [$4-]
+format WHOWAS_END	&B+&b-----------------------------------------------------&K+
+format WHOWAS_HEADER	&B+&b-----------------------------------------------------&K+
+format WHOWAS_IRCNAME	&b| &K+[  &Wi&crcname&K] &W=&n $*
+format WHOWAS_NICK	&b| &K+[&W$repeat(${9 - strlen($1)}  )$left(9 $1)&K] &W= &K[&c$2&W@&c$3&K] \(&n$h.tld($after(-1 . $3))&K\)

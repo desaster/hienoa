@@ -1,0 +1,109 @@
+# hienoa theme file
+
+# Name:		boring
+# Author:	soren <soren@lordzork.com>
+# Comments:	i stole a few things from cthulhain's "something" 
+#		theme...but mine's better anyways...
+#		well, if you have bad tastes and hate colors that is.
+#		whatever, hope you like it.
+
+screenmode lowascii
+set status_no_repeat off
+
+format ACTION           $stamp()&w-&W $0&n $2-&n
+format BANNER           &W-
+format CHANNEL_SIGNOFF  $G &nquit\ &W$0&n:&W $1\ &n\(&n$2-&n\)
+format CONFIG_TITLE	&K -&n hienoa $h.version &K-&n $* &K-
+format CTCP_CHANNEL     $G ctcp\ &W$tolower($3)${[$4] ? [ $4-] : []}&n: &nto&W $2&n from&W $0&n[&w$before(@ $1)&n@&w$after(@ $1)&n]
+format CTCP_REPLY	$G CTCP &W$1 &nreply from &W$0&n: &n$2-
+format CTCP_USER        $G ctcp\ &W$tolower($3)${[$4] ? [ $4-] : []}&n: &nto&W $2&n from&W $0&n[&w$before(@ $1)&n@&w$after(@ $1)&n]
+format DCC_CHAT         $stamp()$G chat&K/&W$0&w:&n $1- &K[&W$Z&K]
+format DCC_COMPLETED    $G DCC $1&n: &W$2 &nwith &W$0 &ncompleted &n\(&w$3 kb/s&n\)
+format DCC_CONNECT      $G DCC $1 connection to &W$0&n[&w$2&n:&w$3&n]&n established
+format DCC_LOST         $G DCC $1 connection with &W$0&n lost${[$2] ? [\: $2-] : []}
+format DCC_OFFER_CHAT   $G Sent DCC $1 request to $0
+format DCC_OFFER        $G Sent DCC $1 request &n\(&W$2 &n$3&n\)&n to &w$0
+format DCC_REQUEST      $G DCC $1${[$5] ? [ &n\(&W$5-7&n\)] : []} &nrequest received from &w$0&W!&w$userhost() &n[&W$3&n:&W$4&n]
+format HILIGHT_NOTIFY	$G Highlight in window &W#$0&w by &W$2&n \($4\)
+format INPUT_PROMPT     &n &W=>&w &n
+format INVITE           $G invite&K/&W$0&K:&W $1 $userhost()
+format JOIN             $G join&K/&W$1&K:&W $0&K\(&w$before(@ $2)&w@&w$after(@ $2)&K\)
+format KICK             $G kick&K/&W$2&K:&W $1&n kicked&W $0&K\(&w$3-&K\)
+format KICK_USER        $G kick&K/&W$2&K:&W $1&n kicked&W $0&K\(&w$3-&K\)
+format KILL             $G $1 was killed by $2 \($4-\)
+format LEAVE            $G part&K/&W$1&K:&W $0&K\(&w$before(@ $2)&w@&w$after(@ $2)&K\)
+format MODE             $G mode&K/&W$1&K:&W $0&K\(&w$2-&K\)
+format MSG              $stamp()&W\[&W$0&W\]&n $1-
+format -NAMES_BOTTOM
+format NAMES_NONOP      &K[&n $pad(9 " " $0)&K ]&n
+format NAMES_OP         &K[&W @&n$pad(8 " " $0)&K ]&n
+format NAMES_ROW        $G &w| &n
+format NAMES_TOP        $G &w-------&K-[&nusers&K/&W$0&K]-&w---------------------
+format NAMES_VOICE      &K[&+&n$pad(8 " " $0)&K ]&n
+format NICK             $G &W$0&n is now known as &W$1
+format NOTICE           $G &K&W$0&K[&w$before(@ $userhost())&W@&w$after(@ $userhost())&K]&n $1-
+format NOTIFY_SIGNOFF   $G notify&K/&Woff&n:&W $0
+format NOTIFY_SIGNON    $G notify&K/&Won&n:&W $0&K[&w$1&K]
+format PUBLIC_HL $stamp()&W<&n$0&W>&n $2-
+format PUBLIC_MSG_HL $stamp()&W\(&n$0&W/&n$1&W\)&n $2-
+format PUBLIC_MSG $stamp()\($0/$1\) $2-
+format PUBLIC_NOTICE $stamp()-$0:${2}- $2-
+format PUBLIC_OTHER_HL $stamp()&W<&n$0&W:&n$1&W>&n $2-
+format PUBLIC_OTHER $stamp()<$0:$1> $2-
+format PUBLIC $stamp()<$0> $2-
+format SEND_ACTION      $stamp()&w-&W $N&w $1-&n
+format SEND_CTCP $G Requesting a CTCP $2 from $1${[$3] ? [\: $3-] : []}
+format SEND_DCC_CHAT    $G &K->&n chat&K[&W$0&K]&w:&n $1-
+format SEND_MSG         $stamp()\[&w$0\]&n&w $1-
+format SEND_NOTICE -$0\-> $1-
+format SEND_PUBLIC             $stamp()&w\<&W&n$1&w\>&n $2-
+format SERVER_NOTICE    $G &K!&n$0&K!&n $2-
+format STATUS_AWAY      &w\(&Waway&w\)
+format STATUS_CHANMODE  &w\(&W+%+&w\)
+format STATUS_CHANNEL   &n &W
+format STATUS_CHANOP    &W@
+format STATUS_CLOCK     &K&w%T&K
+format STATUS_CPU_SAVER {%L Save Mode}
+format -STATUS_DCC
+format STATUS_HOLD      &K\(&nmore&K\)
+format STATUS_HOLD_LINES %B
+format -STATUS_IDLE
+format STATUS_IRCOP *
+format STATUS_LAG	&w lag&K\(&W%1&K\) 
+format STATUS_LINE      &K&w %@&w%N&n%#&w%C%+%Q&K -%>%5&K%F%M&w \(&W%R&w\) &K
+format STATUS_LINE1 $h.format.value(status_line)
+format -STATUS_LINE2
+format STATUS_MAIL &N &w\(&wm:&W%M&w\)&N
+format STATUS_NICK %N
+format STATUS_NOTIFY &N &K\(&ww:&W%F&K\)
+format -STATUS_OVERWRITE 
+format STATUS_PASTE &N &nPASTE
+format STATUS_QUERY &N \(q:&W%Q&w\)
+format -STATUS_SCROLLBACK 
+format STATUS_SERVER    &w \(&W%S&w\)
+format STATUS_UMODE     &w\(&W+%#&w\)
+format STATUS_UPTIME &N uptime $*
+format STATUS_VOICE +
+format TIMESTAMP        &K[&w$*&K] &n
+format TOPIC_CHANGE $G $0 has changed the topic on  $1 to $2-
+format TOPIC_EMPTY $G Topic for $1: $2-
+format TOPIC $G topic&K/&W$1&K:&w $2-
+format TOPIC_SETBY $G The topic was set by $2 on $stime($3)
+format TOPIC_UNSET $G $0 has unset the topic on channel $1
+format WALLOP           $G &K!&n$0:$1&K!&n $2-
+format WHO_END          $G &w$*
+format WHO              $G &W$0&W $pad(9 " " $[9]1)&n $pad(3 " " $2) &w$3&W@&w$4 &K\(&n$7-&K\)
+format WHOIS_AWAY       $G &K     &waway &W=&n $1-
+format WHOIS_CHANNELS   $G &K &wchannels &W=&n $sar(g/@#/&W@&n#/$2-)
+format WHOIS_END        $G &W&w-----------------------------------------------------
+format WHOIS_HEADER     $G &W&w-----------------------------------------------------
+format WHOIS_IDLE       $G &K     &widle &W=&n $tdiff($2)
+format WHOIS_IRCNAME    $G &K     &wname &W=&n $2-
+format WHOIS_NICK       $G &K&W$repeat(${9 - strlen($1)}  )$left(9 $1) &W= &K\(&w$2&W@&w$3&K\) [&n$h.tld($after(-1 . $3))&K]
+format WHOIS_OPER       $G &K &woperator &W=&n $1-
+format WHOIS_SERVER     $G &K   &wserver &W=&n $2 &K\(&w$3-&K\)
+format WHOIS_USERLIST   $G &K &wuserlist &W$2&n \($3\) [$4-]
+format WHOWAS_END       $G &w-----------------------------------------------------
+format WHOWAS_HEADER    $G &w-----------------------------------------------------
+format WHOWAS_IRCNAME   $G &K  &Wi&wrcname &W=&n $*
+format WHOWAS_NICK      $G &K&W$repeat(${9 - strlen($1)}  )$left(9 $1) &W= &w$2&W@&w$3 \(&n$h.tld($after(-1 . $3))&K\)

@@ -1,0 +1,9 @@
+Synopsis:
+   mass <op|deop|voice|devoice>
+
+Description:
+   This command does a mass op/deop/voice/devoice operation on current channel.
+
+See Also:
+   op(9); deop(9); voice(9); devoice(9)
+

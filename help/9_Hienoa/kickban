@@ -1,0 +1,14 @@
+Synopsis:
+   kickban [#channel] <nick> [reason]
+
+Description:
+   This command works just like KICK, but also bans the user.
+
+NOTE:
+   KICKBAN bans AFTER kicking the user, so if the server is lagged, the
+   user might be fast enough to rejoin back to the channel before the ban is
+   added.  *USE BANKICK INSTEAD*.
+
+See Also:
+   bankick(9); ban(9); kick(9)
+

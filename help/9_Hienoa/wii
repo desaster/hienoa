@@ -1,0 +1,10 @@
+Synopsis:
+   wii <nick> [nick] ...
+
+Description:
+   This command does /whois on given nick(s), and additionally shows their
+   idle information.
+
+See Also:
+   whois(1)
+

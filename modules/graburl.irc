@@ -1,0 +1,92 @@
+# Copyright (c) 2000, 2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package graburl
+
+config_title "URL grabbing"
+config_entry "Grab public and private messages if they contain URLs" type "check" var "h.cfg.url_grab" def "0"
+config_entry "URL storage" type "text" var "h.cfg.url_grab_file" def "~/.hienoa/url"
+config_entry "URL command (%s subtitutes the url)" type "text" var "h.cfg.url_command" def "mozilla -remote openurl(%s)"
+
+alias gourl {
+    if (strlen($h.lasturl)) {
+	@ :h.urlcmd = h.cfg.url_command
+	@ :h.pos = substr(%s $h.urlcmd)
+	if (h.pos != -1) {
+	    @ :h.urlcmd = left($h.pos $h.urlcmd) ## h.lasturl ## \
+	       	rest(${h.pos + 2} $h.urlcmd)
+	}
+	@ :h.name = [gourl] ## rand(100)
+	^on ^exec_exit "$h.name *" on exec_exit -"$h.name *"
+	exec -name $h.name -direct $h.urlcmd
+    }
+}
+
+alias h.url_underline (h.string) {
+    ^local h.text
+    fe ($h.string) h.word {
+	if (rmatch("$h.word" *://* *.com* *.net* *.edu* *.org* *www.*)) {
+	    push :h.text $chr(31)$h.word$chr(31)
+	} else {
+	    push :h.text $h.word
+	}
+    }
+    return $h.text
+}
+
+alias h.store_last_url (h.string) {
+    ^local h.text
+    fe ($stripcrap(ALL,ALL_OFF $h.string)) h.word {
+	if (rmatch("$h.word" *://* *.com* *.net* *.edu* *.org* *www.*)) {
+	    @ h.lasturl = h.word
+	}
+    }
+}
+
+alias h.graburl (h.nick, h.target, h.string) {
+    if (!h.cfg.url_grab_file) { return }
+    @ :h.string = stripcrap(ALL,ALL_OFF $h.string)
+    if (rmatch("$h.string" *://* *.com* *.net* *.edu* *.org*)) {
+	@ :h.f = open($h.cfg.url_grab_file W)
+	if (ischannel($h.target)) {
+	    @ write($h.f <$h.nick/$h.target> $h.url_underline($h.string))
+	} else {
+	    @ write($h.f *$h.nick* $h.url_underline($h.string))
+	}
+	@ close($h.f)
+    }
+}
+
+alias h.read.url (arg, ...) {
+    if (:h.f = open($h.cfg.url_grab_file R)) {
+	while (!eof($h.f)) {
+	    @ :h.l = read($h.f)
+	    if (count($arg $h.l) != 0) { xecho -b $h.l }
+	}
+	@ close($h.f)
+    }
+}
+
+alias url (arg) {
+    switch ($arg) {
+	(-c) {
+	    if (unlink($h.cfg.url_grab_file)) {
+		xecho -b URL list is empty
+	    } else {
+		xecho -b URL list cleared
+	    }
+	    return
+	}
+    }
+    if (!strlen($arg)) {
+	if (strlen($h.lasturl)) { echo $h.lasturl }
+	return
+    }
+    if (fexist($h.cfg.url_grab_file) == 1) {
+	h.read.url $arg
+    } else {
+	xecho -b URL list is empty
+    }
+}
+
+# vim: set ai tw=75 sw=4:

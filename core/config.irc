@@ -1,0 +1,32 @@
+# Copyright (c) 2001 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+alias config_title (h.title) { @ h.cfgtitle = shift(h.title) }
+
+alias config_entry (h.l) {
+    if (!h.cfgtitle) { return }
+    @ :h.cfgname = shift(h.l)
+    @ :h.t = []
+    while ((h.t = shift(h.l)) && strlen(${(h.v = shift(h.l))})) {
+	@ h.config[$encode($h.cfgtitle)][$encode($h.cfgname)][$h.t] = h.v
+	@ :h.c[$h.t] = h.v
+    }
+    if (h.c.var && strlen($h.c.def)) { assign $h.c.var $h.c.def }
+}
+
+alias config_selection (h.l) {
+    if (!h.cfgtitle) { return }
+    @ :h.cfgname = shift(h.l)
+    @ :h.t = []
+    while ((h.t = shift(h.l)) && strlen(${(h.v = shift(h.l))})) {
+	@ :h.c[$h.t] = h.v
+    }
+    @ :h.oname = encode($h.c.name)
+    @ :h.cname = encode($h.cfgname)
+    @ :h.ctitle = encode($h.cfgtitle)
+    @ h.config[$h.ctitle][$h.cname][options][$h.oname] = h.c.value
+}
+
+eval load $h.path/etc/config
+
+# vim: set ai tw=75 sw=4:

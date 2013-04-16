@@ -1,0 +1,106 @@
+# hienoa theme file
+
+# Name:		splitfire
+# Author:	Upi Tamminen <desaster@dragonlight.fi>
+# Comments:	Based on "splitfire" script made by Nuke.
+
+screenmode lowascii
+set status_no_repeat on
+
+format ACTION $stamp()&m* &C$0&n $2-
+format BANNER &R#&W#&R#
+format CHANNEL_SIGNOFF $stamp()&y*** &YQuits: &n$1&K:&g$0 &K[&B$userhost()&K]&n \($2-\)
+format CONFIG_TITLE &W &4 $pad(${word(0 $geom()) - 3} " " hienoa $h.version - $*)
+format CTCP_CHANNEL $stamp()&R[&n$0 &B$3 &n$2&R] &B$4-
+format CTCP_REPLY $stamp()&R[&n$0 &C$1 &nreply&R] &C$2-
+format CTCP_USER $stamp()&R[&n$0 &B$3&R] &B$4-
+format DCC_CHAT $stamp()&B=&G$0&B= &n$1-
+format DCC_COMPLETED $stamp()$G DCC $1 with $0 complete: $2 at $3kbps
+format DCC_CONNECT $stamp()$G DCC $1 with $0&K[&B$2&K:&C$3&K]&n established${[$4] ? [ - $4 \($5 bytes\)] : []}
+format DCC_LOST $stamp()$G Lost DCC $1 to $0${[$3] ? [\: $3-] : []}
+format DCC_OFFER_CHAT $stamp()$G Sent DCC $1 request to $0
+format DCC_OFFER $G $stamp()Sent DCC $1 request \($2 $3\) to $0
+format DCC_REQUEST $stamp()$G DCC $1 \($5 $6\) request received from $0!$userhost() [$3:$4]
+format HILIGHT_NOTIFY $G &1&w[&W=&w]&n Highlight in window #&W$0&n by &W$2&n \($4\)
+format -INPUT_PROMPT
+format INVITE $stamp()&B[&W$0&B]&n invites you to $1
+format JOIN $stamp()&g*** &GJoins: &n$0 &K[&B$userhost()&K] has joined &G$1
+format KICK $stamp()&r*** &R$0 &rhas been kicked from &R$2 &rby &n$1 &K[&B$userhost()&K] &n\($3-\)
+format KICK_USER $stamp()$G You have been kicked off channel $2 by $1 \($3-\)
+format KILL $stamp()$G $1 was killed by $2 \($4-\)
+format LEAVE $stamp()&g*** &GParts: &n$0 &K[&B$userhost()&K] has left &G$1${[$3] ? [ &K\(&n$3-&K\)] : []}
+format MODE $stamp()&c*** &CMode &cchange for $1 by $0: &C$2-
+format MSG $stamp()&K[&R$0&b!&B$userhost()&K] &n$1-
+format -NAMES_BOTTOM
+format NAMES_NONOP &K[ &B$pad(9 " " $0)&K ]
+format NAMES_OP &K[&C@&B$pad(9 " " $0)&K ]
+format -NAMES_ROW
+format NAMES_TOP $stamp()&B[&W$0&B] &nNames: \($#chanusers() total\)
+format NAMES_VOICE &K[&Mv&B$pad(9 " " $0)&K ]
+format NICK $stamp()&b*** &B$0 &bis now known as &B$1
+format NOTICE $stamp()&K-&R$0&b!&B$userhost()&K- &n$1-
+format NOTIFY_SIGNOFF $stamp()$G &n$0 has left IRC
+format NOTIFY_SIGNON $stamp()$G &n$0&K[&B$1&K] &nis on IRC
+format PUBLIC_HL $stamp()&m<&Y$0&m> &n$2-
+format PUBLIC_MSG_HL $stamp()&m<&Y$0&r:&g$1&m> &n$2-
+format PUBLIC_MSG $stamp()&m<&G$0&r:&g$1&m> &n$2-
+format PUBLIC_NOTICE $stamp()&K-&R$0&K:&g$1&K- &n$2-
+format PUBLIC_OTHER_HL $stamp()&m<&Y$0&R:&g$1&m> &n$2-
+format PUBLIC_OTHER $stamp()&m<&B$0&R:&g$1&m> &n$2-
+format PUBLIC $stamp()&m<&C$0&m> &n$2-
+format SEND_ACTION $stamp()&m* &W$N &n$1-
+format -SEND_CTCP
+format SEND_DCC_CHAT $stamp()&K\(&n->&B=&G$0&B=&K\) &n$1-
+format SEND_MSG $stamp()&K\(&n->&B$0&K\) &n$1-
+format SEND_NOTICE $stamp()&K-&n->&B$0&K- &n$1-
+format SEND_PUBLIC $stamp()&m<&W$1&m> &n$2-
+format SERVER_NOTICE $stamp()&B-&n$2-&B-
+format STATUS_AWAY &N$chr(32)\<Away: $0\>
+format STATUS_CHANMODE &N$chr(32)+%+]
+format STATUS_CHANNEL &N$chr(32)[%C
+format STATUS_CHANOP &N@
+format STATUS_CLOCK &N%T
+format STATUS_CPU_SAVER &N$chr(32)\(%L\)
+format -STATUS_DCC
+format STATUS_HOLD_LINES &N%B
+format STATUS_HOLD &NBuffer:
+format -STATUS_IDLE
+format STATUS_IRCOP &N*
+format -STATUS_LAG
+format STATUS_LINE1 $h.format.value(status_line)
+format -STATUS_LINE2
+format STATUS_LINE &4&W %T [W:%R] [%*%=%@%N%#%A]%C%+%F%H%B%Q%5%I%O %D %W%>
+format STATUS_MAIL &N$chr(32)[Mail: %M]
+format STATUS_NICK &N%N
+format STATUS_NOTIFY &N$chr(32)[Active: %F]
+format STATUS_OVERWRITE &N$chr(32)\(Ovr\)
+format STATUS_PASTE &N$chr(32)PASTE
+format STATUS_QUERY &N$chr(32)[Q: %Q]
+format STATUS_SCROLLBACK &N$chr(32)\(Scroll\)
+format -STATUS_SERVER
+format STATUS_UMODE &N$chr(32)+%#
+format -STATUS_UPTIME
+format STATUS_VOICE &N+
+format TIMESTAMP &K[&G$*&K] &n
+format TOPIC_CHANGE $stamp()&B*** &CTopic &cchange by &C$0 &con &C$1&c: &n$2-
+format TOPIC_EMPTY $stamp()&B[&W$1&B] &nNo topic is set.
+format TOPIC_SETBY $stamp()&B[&W$1&B] &ntopic set by &W$2 &non &W$stime($3)
+format TOPIC $stamp()&B[&W$1&B] &nTopic: $2-
+format TOPIC_UNSET $stamp()&B*** &CTopic &cchange by &C$0 &con &C$1&c:
+format WALLOP !$0:$1! $2-
+format -WHO_END
+format WHOIS_AWAY $stamp()&B[&W$0&B]&n is away: $1-
+format WHOIS_CHANNELS $stamp()&B[&W$1&B]&n on $2-
+format WHOIS_END $stamp()&B[&W$1&B]&n ---------------------
+format -WHOIS_HEADER
+format WHOIS_IDLE $stamp()&B[&W$1&B]&n idle $tdiff2($2), signed on $stime($3)
+format -WHOIS_IRCNAME
+format WHOIS_NICK $stamp()&B[&W$1&B]&n is $2@$3 $5-
+format WHOIS_OPER $stamp()&B[&W$1&B]&n $2-
+format WHOIS_SERVER $stamp()&B[&W$1&B]&n using $2 \($3-\)
+format WHOIS_USERLIST $stamp()&B[&W$1&B]&n is in userlist as $2 with flags \($3\)
+format WHOWAS_END $stamp()&B[&W$1&B]&n End of WHOWAS
+format -WHOWAS_HEADER
+format -WHOWAS_IRCNAME
+format WHOWAS_NICK $stamp()&B[&W$1&B]&n $2@$3 $5-
+format WHO $0	$1	$2	$3@$4 \($7-\)

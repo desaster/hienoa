@@ -1,0 +1,10 @@
+Synopsis:
+   country <topleveldomain>
+
+Description:
+   This command takes a toplevel domain as an argument and returns its
+   country name and phone code
+
+Example:
+   "/country .fi" would return "FI = Finland (+358)"
+

@@ -1,0 +1,178 @@
+# Copyright (c) 2000 lordzork industries <lzi@lordzork.com>
+# See the COPYRIGHT file for more information
+
+package log
+
+config_title "Logging"
+config_entry "Automatic channel logging" type "check" var "h.cfg.log_chan" def "0"
+config_entry "Prefix channel log entries with timestamp" type "check" var "h.cfg.log_chan_timestamp" def "1"
+config_entry "Strip # from channel log filenames" type "check" var "h.cfg.log_strip_hash" def "1"
+config_entry "Automatic msg logging" type "check" var "h.cfg.log_msg" def "0"
+config_entry "Prefix msg log entries with timestamp" type "check" var "h.cfg.log_msg_timestamp" def "1"
+config_entry "Strftime format for msg log timestamps" type "text" var "h.cfg.log_msg_strftime" def "%x %X"
+config_entry "Prefix all log files with server name" type "check" var "h.cfg.log_prefix" def "1"
+config_entry "Directory where logs are kept" type "text" var "h.cfg.log_dir" def "~/.hienoa/logs"
+
+config_entry "Store logs in directories by year" type "check" var "h.cfg.log_store_yearly" def "0"
+config_entry "Store logs in directories by month" type "check" var "h.cfg.log_store_monthly" def "0"
+config_entry "Store logs in directories by day" type "check" var "h.cfg.log_store_daily" def "0"
+
+config_entry "Prefix log files with year" type "check" var "h.cfg.log_file_prefix_year" def "0"
+config_entry "Prefix log files with year and month" type "check" var "h.cfg.log_file_prefix_month" def "0"
+config_entry "Prefix log files with year, month and day" type "check" var "h.cfg.log_file_prefix_day" def "0"
+
+on #-msg 1 * {
+    @ h.cfg.log_msg ? h.log_append($0 $h.mts()\<$0> $1-) : []
+}
+on #-send_msg 1 * {
+    @ h.cfg.log_msg ? h.log_append($0 $h.mts()\<$servernick()> $1-) : []
+}
+on #-notice 1 * { @ log_notices ? h.log_append($0 -$0- $1-) : [] }
+on #-send_notice 1 * { @ log_notices ? h.log_append($0 >-$servernick()- $1-) : [] }
+
+on #-dcc_chat 1 * { @ log.dcc_chat ? h.log_append($0.chat <$0> $1-) : [] }
+on #-send_dcc_chat 2 * { @ log.dcc_chat ? h.log_append($0.chat \($servernick()\) $1-) : [] }
+
+on #-public_other 1 * {
+    @ h.cfg.log_chan ? h.log_append($1 $h.cts()\<$0> $2-) : []
+}
+on #-public 1 * {
+    if (ischanop($0)) { ^assign h.log_nick @$0 } else { ^assign h.log_nick $0 }
+    @ h.cfg.log_chan ? h.log_append($1 $h.cts()\<$h.log_nick> $2-) : []
+}
+on #-send_public 1 * {
+    if (ischanop($servernick())) { ^assign h.log_nick @$servernick() } else { ^assign h.log_nick $servernick() }
+    @ h.cfg.log_chan ? h.log_append($0 $h.cts()\<$h.log_nick> $1-) : []
+}
+on #-action 1 * {
+    @ h.cfg.log_chan ? h.log_append($1 $h.cts()\*** $0 $2-) : []
+}
+on #-send_action 1 * {
+    @ h.cfg.log_chan ? h.log_append($0 $h.cts()\*** $servernick() $1-) : []
+}
+on #-kick 1 * {
+    @ h.cfg.log_chan ? h.log_append($2 $h.cts()\*** $1 has kicked $0 \($3-\)) : [] 
+}
+on #-leave 1 * {
+    @ h.cfg.log_chan ? h.log_append($1 $h.cts()\*** $0 has left $1 \($2\) ${[$3] ? [\($3-\)] : []}) : []
+    if ([$0] == servernick() && h.cfg.log_chan) {
+	h.log_append $1 ----- IRC log ended $strftime(%c) -----
+    }
+}
+on #-join 1 * {
+    h.log_chan_timestamp
+    if ([$0] == servernick() && h.cfg.log_chan) {
+	h.log_append $1 ----- IRC log started $strftime(%c) -----
+    }
+    @ h.cfg.log_chan ? h.log_append($1 $h.cts()\*** $0 has joined $1 \($2\)) : []
+}
+on #-topic 1 * {
+    h.log_chan_timestamp
+    @ h.cfg.log_chan ? h.log_append($1 $h.cts()\*** $0 has changed topic to \"$2-\") : [] 
+}
+on #-channel_nick 1 * {
+    h.log_chan_timestamp
+    @ h.cfg.log_chan ? h.log_append($0 $h.cts()\*** $1 is now know as $2) : [] 
+}
+on #-channel_signoff 1 * {
+    if ([$1] != servernick()) {
+	h.log_chan_timestamp
+	@ h.cfg.log_chan ? h.log_append($0 $h.cts()\*** $1 has quit IRC \($2-\) \($userhost()\)) : []
+    }
+}
+on #-mode 1 * {
+    h.log_chan_timestamp
+    if (h.cfg.log_chan) { @ ischannel($1) ? h.log_append($1 $h.cts()\*** $0 sets channel mode\: $2-) : [] }
+}
+
+alias h.mts {
+    if (h.cfg.log_msg_timestamp) {
+	if (h.cfg.log_msg_strftime) {
+	    eval return [$strftime($h.cfg.log_msg_strftime)]$chr(32)
+	} else {
+	    eval return [$rstamp()]$chr(32)
+	}
+    }
+}
+
+alias h.cts {
+    if (h.cfg.log_chan_timestamp) { eval return [$rstamp()]$chr(32) }
+}
+
+alias h.log_end (h.qm) {
+    if (!h.cfg.log_chan) return
+    fe ($mychannels()) h.c {
+	h.log_append $h.c $h.cts()\*** $N has quit IRC \($h.qm\) \($userhost($N)\)
+	h.log_append $h.c ----- IRC log ended $strftime(%c) -----
+    }
+}
+
+alias h.log_append {
+    unless (rmatch($0 nickserv chanserv aimserv *AIM-*)) {
+	@ :h.logdir = h.log_gendir()
+	if (h.cfg.log_strip_hash) {
+	    @ :h.log_name = sar(g/&/LOCAL-/$strip(# $tolower($0)))
+	} else {
+	    @ :h.log_name = sar(g/&/LOCAL-/$tolower($0))
+	}
+	if (fexist($h.logdir) != 1) { return }
+	@ :h.logfile = h.log_name ## [.log]
+	if (h.cfg.log_prefix) {
+	    if (strlen($status_user29)) {
+		@ :h.logfile #~ status_user29 ## [-]
+	    } else {
+		@ :h.logfile #~ servername() ## [-]
+	    }	
+	}
+	if (h.cfg.log_file_prefix_day) {
+	    @ :h.logfile #~ strftime(%Y-%m-%d) ## [-]
+	} elsif (h.cfg.log_file_prefix_month) {
+	    @ :h.logfile #~ strftime(%Y-%m) ## [-]
+	} elsif (h.cfg.log_file_prefix_year) {
+	    @ :h.logfile #~ strftime(%Y) ## [-]
+	}
+	@ :h.f = open($h.logdir/$h.logfile W)
+	@ write($h.f $1-)
+	@ close($h.f)	
+    }
+}
+
+alias h.log_mkdir (dir) {
+    @ :dir = left(${strlen($dir) - 1} $dir)
+    if (fexist($dir) != 1) {
+	if (mkdir($dir) != 0) {
+	    xecho -b Couldn't create $dir Using ~/.hienoa/logs/
+	    return 0
+	}
+    }
+    return 1
+}
+
+alias h.log_gendir {
+    @ :dir = [$h.cfg.log_dir/]
+    if (!strlen($h.cfg.log_dir)) {
+	xecho -b Empty log directory! Using ~/.hienoa/logs/
+	return ~/.hienoa/logs/
+    }
+    if (h.cfg.log_store_yearly) {
+	@ :dir #= strftime(%Y) ## [/]
+	if (!h.log_mkdir($dir)) return ~/.hienoa/logs
+    }
+    if (h.cfg.log_store_monthly) {
+	if (!h.cfg.log_store_yearly) @ :dir #= strftime(%Y-)
+	@ :dir #= strftime(%m) ## [/]
+	if (!h.log_mkdir($dir)) return ~/.hienoa/logs
+    }
+    if (h.cfg.log_store_daily) {
+	if (!h.cfg.log_store_yearly && !h.cfg.log_store_monthly) {
+	    @ :dir #= strftime(%Y-%m-)
+	} elsif (!h.cfg.log_store_monthly) {
+	    @ :dir #= strftime(%m-)
+	}
+	@ :dir #= strftime(%d) ## [/]
+	if (!h.log_mkdir($dir)) return ~/.hienoa/logs
+    }
+    return $dir
+}
+
+# vim: set ai tw=75 sw=4:

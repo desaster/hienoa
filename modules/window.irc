@@ -1,0 +1,65 @@
+# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 2000 lordzork industries <lzi@lordzork.com>
+# See the COPYRIGHT file for more information
+
+package window
+
+alias wq (h.nick) {
+    if (!h.nick) {
+	xecho -b Usage: /wq <nick>
+	return
+    }
+    ^window new hide_others
+    ^query $h.nick
+    if (h.cfg.xterm_enable) { h.xterm.set $S - $0 }
+}
+
+alias wk {
+    if (C) { part $C }
+    ^window kill
+}
+
+alias wj (h.channel) {
+    if (h.channel) {
+	^window new hide_others
+	join $h.channel
+    } else {
+	xecho -b Usage: /wj <#channel>
+    }
+}
+
+alias ws (h.server, ...) {
+    if (h.server) {
+	^window new hide_others
+	^window server $h.server
+    } else {
+	xecho -b Usage: /ws <server>
+    }
+}
+
+alias wc { ^window new hide_others }
+alias wn { ^window next }
+
+alias h.switch_any {
+    if (C == 0) {
+	if (!strlen($myservers())) return
+	@ :h.myserv = :h.refnum = winserv()
+	while (1) {
+	    @ :h.refnum++
+	    @ :h.connected = serverctl(GET $h.refnum CONNECTED)
+	    if (!strlen($h.connected)) {
+		@ :h.refnum = 0
+		continue
+	    }
+	    if (h.refnum == h.myserv) { return }
+	    if (h.connected == 1) {
+		window server $h.refnum
+		break
+	    }
+	}
+    } else {
+	parsekey switch_channels
+    }
+}
+
+# vim: set ai tw=75 sw=4:

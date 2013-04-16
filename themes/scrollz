@@ -1,0 +1,107 @@
+# hienoa theme file
+
+# Name:		ScrollZ
+# Author:	Upi Tamminen <desaster@dragonlight.fi>
+# Credits:	Theme updated by Timothy Cava <timothy@thought-criminal.org>
+# Comments:	ScrollZ-look; not 100% identical (maybe 84%)
+
+screenmode highascii
+set status_no_repeat on
+
+format ACTION <&C$1&w> &W$chr(236)&c $0&w $2-
+format BANNER [E+H]
+format CHANNEL_SIGNOFF $G Signoff: &c$1&w \($2-\)
+format CONFIG_TITLE &n &7&b$pad(${word(0 $geom()) - 3} " " [ hienoa $h.version - $*)]
+format CTCP_CHANNEL $G &CCTCP $3${[$4] ? [ $toupper($4-)] : []}&w from &c$0 &W\(&m$before(@ $1)&W@&m$after(@ $1)&W\) &wto &C$2
+format CTCP_REPLY $G &CCTCP $1&w reply from &c$0&w: $2-
+format CTCP_USER $G &CCTCP $3${[$4] ? [ $toupper($4-)] : []}&w from &c$0 &W\(&m$before(@ $1)&W@&m$after(@ $1)&W\)
+format DCC_CHAT &W$chr(240)&R$0&W$chr(240)&w $1-
+format DCC_COMPLETED $G &YDCC &W$1 &w$2 ${[$1] == [GET] ? [from] : [to]} &c$0 completed &w$3 kb/sec
+format DCC_CONNECT $G &YDCC &W$1 &wconnection with &c$0&w[&c$2,$3&w]&c established
+format DCC_LOST $G &YDCC &W$1 &wconnection to &c$0&w lost${[$2] ? [\: $2-] : []}
+format DCC_OFFER_CHAT $G Sent DCC $1 request to $0
+format DCC_OFFER $G Sent DCC $1 request to $0
+format DCC_REQUEST $G &YDCC &W$1 &w\(&c$5 $6&w\) request &creceived &wfrom &c$0 &W\(&m$before(@ $userhost())&W@&m$after(@ $userhost())&W\) &w[$3:$4]
+format HILIGHT_NOTIFY $G Highlight in window #$0 by $2 \($4\)
+format -INPUT_PROMPT
+format INVITE $G &c$0 &W\(&m$before(@ $2)&W@&m$after(@ $2)&W\) &winvites you to channel &C$1
+format JOIN $G &c$0 &W\(&m$before(@ $2)&W@&m$after(@ $2)&W\) &whas joined channel &C$1
+format KICK $G &c$0 &whas been &Wkicked &wfrom channel &C$2 &wby &c$1 &w\($3-\)
+format KICK_USER $G &cYou &whave been &Wkicked &wfrom channel &C$2 &wby &c$1 &w\($3-\)
+format KILL $G &C$1 &wwas killed by &c$2 &w$4-
+format LEAVE $G &c$0 &whas left channel &C$1&w${[$3] ? [: [$3-]] : []}
+format MODE $G &WMode change &w"$2-" on channel &C$1 &wby &c$0
+format MSG &W$chr(249)&C$0&W$chr(249) &w$1-  &W\(&m$before(@ $userhost())&W@&m$after(@ $userhost())&W\) &w[&K$Z&w]
+format -NAMES_BOTTOM
+format NAMES_NONOP \ $0
+format NAMES_OP &G@&c$0&w
+format NAMES_ROW $G   &w
+format NAMES_TOP $G Users on &C$0 &w:
+format NAMES_VOICE &M+&m$0&w
+format NICK $G &c$0 &wis now known as &c$1
+format NOTICE &W-&G$0&W- &w$1-
+format NOTIFY_SIGNOFF $G Sign&WOff&w detected: &C$0 &w[&K$Z&w]
+format NOTIFY_SIGNON $G Sign&WOn&w detected: &C$0 &W\(&m$before(@ $1)&W@&m$after(@ $1)&W\) &w[&K$Z&w]
+format PUBLIC_HL $stamp()&c<$0> &w$2-
+format PUBLIC_MSG_HL &C\($0/$1\) &w$2-
+format PUBLIC_MSG \($0/$1\) $2-
+format PUBLIC_NOTICE -$0:$2\- $2-
+format PUBLIC_OTHER_HL $stamp()&c<$0:$1>&w $2-
+format PUBLIC_OTHER $stamp()&c<&w$0:&C$1&c>&w $2-
+format PUBLIC $stamp()&c<&w$0&c> &w$2-
+format SEND_ACTION &W$chr(236) &C$N &w$1-
+format -SEND_CTCP
+format SEND_DCC_CHAT &R[&W$chr(240)&r$0&W$chr(240)&R] &w$1-
+format SEND_MSG &C[&w$chr(249)&c$0&w$chr(249)&C] &w$1-
+format SEND_NOTICE &G<&w-&g$0&w-&G>&w $1-
+format SEND_PUBLIC $stamp()&c<$1>&w $2-
+format SERVER_NOTICE $G *** $2-
+format STATUS_AWAY &w \(&GzZzZ: $0&w\)&N
+format STATUS_CHANMODE &w [&c+&+&w]&N
+format STATUS_CHANNEL &w on &Y%C&N
+format STATUS_CHANOP @&N
+format STATUS_CLOCK [time &C%T&w]
+format -STATUS_CPU_SAVER
+format STATUS_DCC &w [g &c$0&w] [s &c$1&w]&N
+format STATUS_HOLD_LINES &w \(&G%B&w\)&N
+format STATUS_HOLD &w  [..more..]&N
+format -STATUS_IDLE
+format STATUS_IRCOP &G*&N
+format STATUS_LAG &w [lag &c%1&w]
+format STATUS_LINE1 &4&w[&G%R&w] &C%*&M%=%@&C%N%#%C%+%A%Q%S%O &M%W %F%5%H %>
+format STATUS_LINE2 &4&w%2&4&w%1&4%M%4&4%B%>%T
+format STATUS_LINE &4&w[&G%R&w] %* %B%H%A%S &M%W %F%5 %> &w[&G$S&w]
+format STATUS_MAIL &w [m &c%M&w]&N
+format STATUS_NICK %N&N
+format STATUS_NOTIFY &Y &3[a:%F&Y]&4&N
+format STATUS_OVERWRITE &w \(&Gow&w\)&N
+format STATUS_PASTE &w &RPASTE&N
+format STATUS_QUERY &w [&RQ&w/&R%Q&w]&N
+format STATUS_SCROLLBACK &N \(Scroll\)
+format STATUS_SERVER &w via &C%S&N
+format STATUS_UMODE &w \(&R+%#&w\)&N
+format STATUS_UPTIME [up &c$*&w]
+format STATUS_VOICE +&N
+format TIMESTAMP $*&c|&n
+format TOPIC_CHANGE $G $0 has changed the topic on channel $1 to $2-
+format TOPIC_EMPTY $G No topic is set for $1
+format TOPIC $G Topic for $1: $2-
+format TOPIC_SETBY $G Set by $2 on $stime($3)
+format TOPIC_UNSET $G $0 has unset the topic on channel $1
+format WALLOP !$0! $2-
+format WHO &C$pad(10 " " $0) &c$pad(9 " " $1) &w$pad(3 " " $2) &m$3&W@&m$4 &w\(&W$7-&w\)
+format -WHO_END
+format WHOIS_AWAY $G &BSetAway   &w: \($0\) $1-
+format WHOIS_CHANNELS $G &BChannels  &w: &C$2-
+format -WHOIS_END
+format -WHOIS_HEADER
+format WHOIS_IDLE $G &BSignOn    &w: $stime($3)    &BIdle &w: $tdiff2($2)
+format -WHOIS_IRCNAME
+format WHOIS_NICK $G &c$1$repeat(${9 - strlen($1)}  ) &w: &m$2&W@&m$3 &w\($5-\) [$h.tld($after(-1 . $3))]
+format WHOIS_OPER $G &BIrcOp     &w: $1-
+format WHOIS_SERVER $G &BServer    &w: &C$2 &w\($3-\)
+format WHOIS_USERLIST $G &BUserlist  &w: $2 [$3] &R$4-
+format -WHOWAS_END
+format -WHOWAS_HEADER
+format -WHOWAS_IRCNAME
+format WHOWAS_NICK $G &c$1$repeat(${9 - strlen($1)}  ) &w: &m$2&W@&m$3 &w\($5-\) [$h.tld($after(-1 . $3))]

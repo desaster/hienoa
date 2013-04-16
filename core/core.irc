@@ -1,0 +1,101 @@
+# Copyright (c) 1999-2002 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package hienoa
+
+# Check things
+
+fe (~/.hienoa ~/.hienoa/themes ~/.hienoa/modules \
+	~/.hienoa/help ~/.hienoa/sessions) h.d {
+    if (fexist($h.d) != 1 && mkdir($h.d) != 0) {
+	echo !!! Failed to create $h.d
+	quit
+    }
+}
+
+# Clean up
+
+timer -d all
+
+# Load core stuff
+
+fe (aliases defaults keyboard events config) h.f {
+    load $h.path/core/${h.f}.irc
+    h.loadbar
+}
+
+# Load modules
+
+fe ($glob(${h.path}/modules/*.irc*) $glob(~/.hienoa/modules/*.irc*)) h.fn {
+    load $h.fn
+    h.loadbar
+}
+
+# Load userlist (disabled)
+
+if (fexist(~/.hienoa/userlist) == 1 && 0) {
+    @ :h.f = open(~/.hienoa/userlist R)
+    if (word(3 $read($h.f)) != [V2]) {
+	echo !!! Your userlist does not work with this version of hienoa
+	echo !!! Please remove (and backup) it (~/.hienoa/userlist)
+	quit
+    }
+    while (!eof($h.f) && (:h.l = read($h.f))) {
+	@ :h.user = word(0 $h.l)
+	@ h.userlist[$h.user].flags = decode($word(1 $h.l))
+	@ h.userlist[$h.user].channels = decode($word(2 $h.l))
+	@ h.userlist[$h.user].hosts = decode($word(3 $h.l))
+	@ h.userlist[$h.user].password = word(4 $h.l)
+    }
+    @ close($h.f)
+}
+
+# Initialize stuff
+
+@ h.default_theme = h.cfg.theme
+if (fexist(~/.hienoa/config) == 1) { load ~/.hienoa/config }
+hook config_change
+h.loadbar
+
+if (h.cfg.log_dir) {
+    if (fexist($h.cfg.log_dir) != 1 && mkdir($h.cfg.log_dir) != 0) {
+	xecho -b couldn't create ($h.cfg.log_dir). auto logging disabled.
+	^assign h.autolog 0
+    }
+}
+
+if (numwords($winrefs()) == 1) { window level none }
+
+# Load & initialize theme
+
+if (fexist(~/.hienoa/themes/$h.cfg.theme) == 1) {
+    ^load ~/.hienoa/themes/$h.cfg.theme
+} elsif (fexist($h.path/themes/$h.cfg.theme) == 1) {
+    ^load $h.path/themes/$h.cfg.theme
+} else {
+    load $h.path/themes/$h.default_theme
+}
+
+h.theme.init
+
+# Remove unneeded stuff
+
+assign -h.cfgtitle
+assign -h.loadbar
+alias -h.loadbar
+alias -config_title
+alias -config_entry
+
+hook post_load
+
+# Convert from old configuration
+if (strlen($h.cfg.hilight_ar)) {
+    @ h.cfg.hilight_notify = h.cfg.hilight_ar
+}
+
+# Say sumthin' !
+
+if (h.cfg.xterm_enable) { h.xterm.set hienoa $h.version }
+eval xecho -b hienoa $h.version loaded
+
+# vim: set ai tw=75 sw=4:

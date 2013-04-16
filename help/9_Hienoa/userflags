@@ -1,0 +1,29 @@
+Synopsis:
+   userflags <user> <+|-><flag(s)> [#channel(s)] [+|-][flag(s)]
+
+Description:
+   This command adds and removes flags for user in userlist.  The following
+   flags are currently implemented:
+
+      c - can use ctcp commands
+      d - auto-accept dcc requests from this user
+      o - can request op (requires c)
+      v - can request voice voice (requires c)
+      a - auto-op/voice (requires o or v flag) (DANGEROUS!)
+      b - auto-ban
+      k - auto-kick
+      p - protect op/voice
+      i - automatically join channel if invited
+   
+   All flags (except d and c) can be channel-specfic.
+   for example:
+       /userflags desaster +a #foo +o #bar +v
+   This means user has +o on #foo and +v on #bar and +a is a global flag,
+   which in this case makes +v and +o automatic (on-join).
+
+Aliases:
+   setflags; flags; chattr
+
+See Also:
+   userlist(9)
+

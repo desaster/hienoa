@@ -1,0 +1,17 @@
+Synopsis:
+   join <#channel[,#channel],...>
+
+Description:
+   This is a wrapper to epic's JOIN command.  The difference is that if the
+   channel name isn't a proper channel name, "#" will be added to the front
+   of it.
+
+   Also if you are invited by someone, you can join the channel by simply
+   calling /join without arguments.
+
+Aliases:
+   j
+
+See Also:
+   join(1)
+

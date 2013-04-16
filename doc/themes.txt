@@ -1,0 +1,442 @@
+### Color codes
+
+&k black    &K bold black    &0 black bg    &F flash on
+&r red      &R bold red      &1 red bg      &n all colors off
+&g green    &G bold green    &2 green bg    &N no clear-color at end
+&y yellow   &Y bold yellow   &3 yellow bg
+&b blue     &B bold blue     &4 blue bg
+&m magenta  &M bold magenta  &5 magenta bg
+&p magenta  &P bold magenta  &6 cyan bg
+&c cyan     &C bold cyan     &7 white bg
+&w white    &W bold white
+
+### Format descriptions
+
+ACTION = /me action (see also SEND_ACTION)
+    $0 = nickname of the ACTION sender
+    $1 = target of the ACTION (user's nickname or a channel)
+    $2- = message body of the ACTION
+
+HILIGHT_NOTIFY = the notification displayed on highlight
+    $0 = window number
+    $1 = channel name
+    $2 = nick
+    $3 = hostmask
+    $4 = the word that triggered the highlight
+
+BANNER = displayed in front of all informational messages
+
+CHANNEL_INFO = some channel information after joining a channel
+    $0 = current server
+    $1 = channel name
+    $2 = channel creation time in time() format
+
+CHANNEL_SIGNOFF = displayed when someone quits IRC
+    $0 = the channel the signoff was observed on
+    $1 = the nickname of the person leaving irc
+    $2- = signoff message
+
+CONFIG_TITLE = the title used by /config and /theme
+    $* = title text
+
+CTCP_CHANNEL = CTCP message sent to a channel
+    $0 = nickname of CTCP message sender
+    $1 = user@host of CTCP message sender
+    $2 = target of CTCP (channel)
+    $3 = type of CTCP
+    $4- = arguments to CTCP command, if any
+
+CTCP_REPLY = incoming CTCP REPLY
+    $0 = sender's nick
+    $1 = ctcp type (e.g. VERSION)
+    $2- = reply message
+
+CTCP_USER = CTCP message sent to YOU
+    $0 = nickname of CTCP message sender
+    $1 = user@host of CTCP message sender
+    $2 = target of CTCP (nick)
+    $3 = type of CTCP
+    $4- = arguments to CTCP command, if any
+
+DCC_CHAT = incoming DCC CHAT message
+    $0 = nickname of the message sender
+    $1- = message received
+
+DCC_COMPLETED = DCC completed
+    $0 = nickname of remote client
+    $1 = type of DCC connection
+    $2 = file name
+    $3 = transfer rate in kilobytes
+    $4- = completion message (varies)
+
+DCC_CONNECT = DCC connection established
+    $0 = nickname of remote client
+    $1 = type of DCC connection
+    $2 = ip address of remote client
+    $3 = port on the ip address the client is connected to
+    $4 = file name (SEND only)
+    $5 = file size (SEND only)
+
+DCC_LOST = DCC connection lost
+    $0 = nickname of the dcc connection
+    $1- = disconnection message (varies)
+
+DCC_OFFER = sent DCC request (see also DCC_OFFER_CHAT)
+    $0 = person who is being offered the DCC
+    $1 = type of DCC being offered
+    $2 = filename being offered (if type of DCC is 'SEND')
+    $3 = size of file being offered (if type of DCC is 'SEND')
+
+DCC_OFFER_CHAT = sent DCC CHAT request
+    $0 = person who is being offered the DCC
+    $1 = type of DCC being offered
+
+DCC_REQUEST = incoming DCC request
+    $0 = nickname of remote client
+    $1 = type of DCC connection
+    $2 = description of dcc connection
+    $3 = ip address of remote client
+    $4 = port on the ip address the client is connected to
+    $5 = file name (SEND only)
+    $6 = file size (SEND only)
+
+INPUT_PROMPT = displayed in input line
+
+INVITE = invite
+    $0 = nickname inviting the client to a channel
+    $1 = channel invited to
+    $2 = inviter's user@host
+
+JOIN = displayed when someone joins a channel
+    $0 = nickname of person joining channel
+    $1 = channel joined
+    $2 = address of person joining channel (same as $userhost())
+
+KICK = displayed when someone gets kicked
+    $0 = nickname of user kicked from channel
+    $1 = nickname of user kicking $0 from channel
+    $2 = channel kick observed on
+    $3- = kick message
+
+KICK_USER = displayed when YOU get kicked
+    $0 = nickname of user kicked from channel
+    $1 = nickname of user kicking $0 from channel
+    $2 = channel kick observed on
+    $3- = kick message
+
+KILL = displayed when someone gets killed
+    $0 = server who sent the message (your server)
+    $1 = the victim being killed
+    $2 = the oper who issued the kill
+    $3 = server path to the oper
+    $4- = reason for the kill
+
+LEAVE = displayed when someone leaves the channel
+    $0 = the nickname of the person leaving the channel
+    $1 = the channel left by the person
+    $2 = the user@host of the person leaving the channel
+    $3- = possible message (IRCnet servers)
+
+MODE = mode change
+    $0 = nickname of person issuing mode change
+    $1 = channel or nickname affected by mode change
+    $2 = modes changed
+    $3- = arguments to modes (if any)
+
+MSG = message received
+    $0 = nickname of message sender
+    $1- = text of message
+
+NAMES_BOTTOM = displayed after /names command
+    $0 = channel name
+    $1 = number of users on channel
+    $2 = number of ops on channel
+    $3 = number of voices on channel
+
+NAMES_NONOP = format of a person without channel operator status in /names
+    $0 = nickname
+
+NAMES_OP = format of a person with channel operator status in /names
+    $0 = nickname
+
+NAMES_ROW = displayed in front of /names output line
+    $* = names row data (must be!)
+
+NAMES_TOP = displayed in top of /names command
+    $0 = channel name
+
+NAMES_VOICE = format of a person with voice status in /names
+    $0 = nickname
+
+NICK = nick change
+    $0 = old nickname
+    $1 = new nickname
+
+NOTICE = received notice
+    $0 = nickname of the message sender
+    $1- = text of message
+
+NOTIFY_SIGNOFF = detected signoff of a person in notify list
+    $0 = nickname
+    $1 = user@host
+
+NOTIFY_SIGNON = detected signon of a person in notify list
+    $0 = nickname
+    $1 = user@host
+
+PASTE = text to display when in paste mode
+
+PUBLIC = displayed when someone sends public message to the current channel
+    $0 = nickname sending message
+    $1 = channel sent to
+    $2- = text of message
+
+PUBLIC_HL = displayed when someone sends public message containing a
+	    highlighted word the current channel
+    $0 = nickname sending message
+    $1 = channel sent to
+    $2- = text of message
+
+PUBLIC_MSG = public message from someone who is not in the channel
+    $0 = nickname sending message
+    $1 = channel sent to
+    $2- = text of message
+
+PUBLIC_MSG_HL = public message containing a highlighted word from someone who
+		is not in the channel
+    $0 = nickname sending message
+    $1 = channel sent to
+    $2- = text of message
+
+PUBLIC_NOTICE = public notice from someone who is not in the channel
+    $0 = nickname sending message
+    $1 = channel sent to
+    $2- = text of message
+
+PUBLIC_OTHER = public message sent to a channel which is not current
+    $0 = nickname sending message
+    $1 = channel sent to
+    $2- = text of message
+
+PUBLIC_OTHER_HL = public message containing a highlighted word sent to a
+		  channel which is not current
+    $0 = nickname sending message
+    $1 = channel sent to
+    $2- = text of message
+
+SEND_ACTION = displayed when the client sends a CTCP ACTION (/me)
+    $0 = target of the ACTION (nickname or channel)
+    $1- = text of message sent
+
+SEND_CTCP = displayed when the client sends a CTCP request
+    $0 = "PRIVMSG" for requests, "NOTICE" for replies
+    $1 = nick the CTCP is being sent to
+    $2 = type of CTCP being sent
+    $3- = optional arguments to the CTCP being sent
+
+SEND_DCC_CHAT = displayed when the client sends a DCC CHAT message
+    $0 = nickname of recipient of message sent
+    $1- = text of message sent
+
+SEND_MSG = displayed when the client sends a message to someone (/msg)
+    $0 = nickname message is sent to
+    $1- = text of message sent
+
+SEND_NOTICE = displayed when the client sends a notice
+    $0 = nickname or channel the NOTICE is sent to
+    $1- = text of message sent
+
+SEND_PUBLIC = displayed when the client sends a message to a channel
+    $0 = the channel the message is sent to
+    $1 = nickname with possible status prefix
+    $2- = text of message sent
+
+SERVER_NOTICE = displayed when a server sends the client a notice
+    $0 = server sending the message
+    $1 = first word of the actual message (usually "***")
+    $2- = remainder of message
+
+STATUS_AWAY (%A) = format of the away string in status line
+    $0 = number of saved messages in away log
+
+STATUS_CHANMODE (%+) = format of the channel mode string in status line
+
+STATUS_CHANNEL (%C) = format of the channel name string in status line
+
+STATUS_CHANOP (%@) = format of the channel operator string in status line
+
+STATUS_CLOCK (%T) = format of the clock string in status line
+
+STATUS_DCC (%4) = DCC send/receive count
+    $0 = number of DCC GETs
+    $1 = number of DCC SENDs
+
+STATUS_CPU_SAVER (%L) = format of the cpu saver string in status line
+
+STATUS_HOLD (%H) = format of the hold string in status line
+
+STATUS_HOLD_LINES (%B) = format of the hold lines string in status line
+
+STATUS_IDLE = (%3) = format of idle time clock in the status line
+    $* = idle string
+
+STATUS_IRCOP (%*) = format of the irc operator string in status line
+
+STATUS_LAG (%1) = format of the lag string in status line
+    $* = lag string
+
+STATUS_LINE = format of a single status line
+
+STATUS_LINE1 = format of the first status line
+    (only if you are using double status line)
+
+STATUS_LINE2 = format of the second status line
+    (set to zero if you want only one status line)
+
+STATUS_MAIL (%M) = format of the mail string in status line
+
+STATUS_NICK (%N) = format of the user's nick string in status line
+
+STATUS_NOTIFY (%F) = format of the activity string in status line
+
+STATUS_OVERWRITE (%O) = format of the overwrite string in status line
+
+STATUS_QUERY (%Q) = format of the query string in status line
+
+STATUS_SCROLLBACK (%K) = format of the scrollback string in status line
+
+STATUS_SERVER (%S) = format of the server string in status line
+
+STATUS_UMODE (%#) = format of the user mode string in status line
+
+STATUS_UPTIME (%2) = format of the uptime string in status line
+    $* = uptime string
+
+STATUS_VOICE (%=) = format of the channel voice string in status line
+
+TIMESTAMP = format of the timestamp string
+
+TOPIC = format of a topic
+    $0 = server
+    $1 = channel name
+    $2- = text of topic
+
+TOPIC_CHANGE = displayed when someone changes the topic
+    $0 = nickname of person changing topic
+    $1 = channel topic was changed on
+    $2- = text of topic
+
+TOPIC_EMPTY = format of an empty topic
+    $0 = server
+    $1 = channel name
+    $2- = text of topic (No topic is set.)
+
+TOPIC_SETBY = information about the topic
+    $0 = server
+    $1 = channel name
+    $2 = the nickname of the person who set the topic
+    $3 = the time when topic was set on (in time() format)
+
+TOPIC_UNSET = displayed when someone removes the topic
+    $0 = nickname of the person removing topic
+    $1 = channel topic was removed on
+
+WALLOP = displayed when the client receives a WALLOPS message
+    $0 = nickname of the message sender
+    $1 = a '+' if the sender is an operator, '-' if not, 'S' if a server
+    $2- = text of message
+
+WHO = displayed when the client receives output from the WHO command
+    $0 = channel the user is on, of '*' if none or if it is private
+    $1 = nickname of user
+    $2 = status of user: <G|H>[*][@|+]
+    $3 = username portion of user's address
+    $4 = hostname portion of user's address
+    $5 = user's server
+    $6 = server hopcount from user
+    $7- = user's ircname
+
+WHOIS_AWAY = format of the away line in WHOIS
+    $0 = nickname
+    $1- = away message
+
+WHOIS_CHANNELS = format of the channels line in WHOIS
+    $0 = server
+    $1 = nickname
+    $2- = channel list
+
+WHOIS_END = displayed at bottom of WHOIS
+    $0 = server
+    $1 = nickname
+    $2- = end message (:End of /WHOIS list.)
+
+WHOIS_HEADER = displayed at top of WHOIS
+    $0 = server
+    $1 = nickname
+    $2 = username portion of user's address
+    $3 = hostname portion of user's address
+    $5- = ircname
+
+WHOIS_IDLE = format of the idle line in WHOIS
+    $0 = server
+    $1 = nickname
+    $2 = seconds idle
+    $3 = signon time
+    $4- = message (seconds idle, signon time)
+
+WHOIS_IRCNAME = format of the ircname line in WHOIS
+    $0 = server
+    $1 = nickname
+    $2- = ircname
+
+WHOIS_NICK = format of the nickname line in WHOIS
+    $0 = server
+    $1 = nickname
+    $2 = username portion of user's address
+    $3 = hostname portion of user's address
+    $5- = ircname
+
+WHOIS_OPER = format of the irc operator line in WHOIS
+    $0 = server
+    $1 = nickname
+    $2- = message (is an IRC Operator)
+
+WHOIS_SERVER = format of the server line in WHOIS
+    $0 = server
+    $1 = nickname
+    $2 = server name
+    $3- = server description
+
+WHOIS_USERLIST = format of the userlist line in WHOIS
+    $0 = server
+    $2 = nickname
+    $3 = user name in userlist
+    $4 = flags
+    $5- = channels
+
+WHOWAS_END = displayed at bottom of WHOWAS
+    $0 = server
+    $1 = nickname
+    $2- = end message (:End of WHOWAS)
+
+WHOWAS_HEADER = displayed at top of WHOWAS
+    $0 = server
+    $1 = nickname
+    $2 = username portion of user's address
+    $3 = hostname portion of user's address
+    $5- = ircname
+
+WHOWAS_IRCNAME = format of the ircname line in WHOWAS
+    $* = ircname
+
+WHOWAS_NICK = format of the nickname line in WHOWAS
+    $0 = server
+    $1 = nickname
+    $2 = username portion of user's address
+    $3 = hostname portion of user's address
+    $5- = ircname
+
+WHO_END = displayed at bottom of WHO
+    $0 = server
+    $1 = channel
+    $2- = end message (:End of /WHO list.)

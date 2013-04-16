@@ -1,0 +1,29 @@
+# Copyright (c) 2002 Upi Tamminen <desaster@dragonlight.fi>
+# See the COPYRIGHT file for more information
+
+package ignore
+
+alias unignore (h.target, ...) {
+    if (!h.target) {
+	xecho -b Usage: /unignore <nick|hostmask>
+	return
+    }
+    if (match(*!*@* $h.target)) {
+	ignore $h.target none
+	return
+    }
+    userhost $h.target -cmd {
+	if ((:h.masks = rigmask($0\!$3\@$4)) &&
+		[$4] != [<UNKNOWN>]) {
+	    fe ($h.masks) h.mask {
+		//ignore $h.mask NONE
+	    }
+	} elsif ([$4] == [<UNKNOWN>]) {
+	    xecho -b No such nick!
+	} else {
+	    xecho -b $0 isn't ignored
+	}
+    }
+}
+
+# vim: set ai tw=75 sw=4:

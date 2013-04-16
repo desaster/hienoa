@@ -1,0 +1,10 @@
+Synopsis:
+   theme [theme]
+
+Description:
+   This command opens the theme selection window - unless a theme is
+   specified as argument, in which case the specified theme is loaded.
+
+See Also:
+   config(9)
+

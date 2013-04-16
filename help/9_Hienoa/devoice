@@ -1,0 +1,13 @@
+Synopsis:
+   devoice <nick> [nick] ...
+
+Description:
+   This command removes channel voice status from one or more users on the
+   current channel.
+
+Aliases:
+   dvoice; -v
+
+See Also:
+   voice(9); mode(1)
+
