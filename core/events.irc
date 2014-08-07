@@ -1,11 +1,11 @@
-# Copyright (c) 1999-2002 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 on ^301 * {
     if (h.full_whois) {
-	h.format.parse whois_away $*
+        h.format.parse whois_away $*
     } else {
-	xecho -b $0 is away: $1-
+        xecho -b $0 is away: $1-
     }
 }
 on ^305 *
@@ -40,10 +40,10 @@ on ^331 * {
 on ^332 * {
     h.format.parse topic $*
     if (h.topics[$h.encode($0)][$h.encode($1)] != [$2-]) {
-	@ h.topics[$h.encode($0)][$h.encode($1)] = [$2-]
+        @ h.topics[$h.encode($0)][$h.encode($1)] = [$2-]
     } else {
-	@ :h.l = h.topics[$h.encode($0)][$h.encode($1)].setby
-	if (h.l) { h.format.parse topic_setby $0 $1 $h.l }
+        @ :h.l = h.topics[$h.encode($0)][$h.encode($1)].setby
+        if (h.l) { h.format.parse topic_setby $0 $1 $h.l }
     }
     if (h.cfg.xterm_enable) { h.xterm.set $1 - $2- }
 
@@ -67,22 +67,22 @@ on ^482 * { xecho -b You're not channel operator on $1 }
 on ^action * {
     @ :h.m = [$2-]
     if (ischannel($1) && h.cfg.hilight_words) {
-	@ :h.m = h.hilight_words($h.m)
+        @ :h.m = h.hilight_words($h.m)
     }
     @ :h.match = h.hilight_match($h.m)
     if (ischannel($1) && strlen($h.match)) {
-	if (h.cfg.hilight_notify) { h.reply_action $userhost() $0-1 $h.match }
-	if (h.away && h.cfg.awaylog_hilight) {
-	    h.awaylog_append [$stime($time())] * $0:$1 $2- \($userhost()\)
-	}
+        if (h.cfg.hilight_notify) { h.reply_action $userhost() $0-1 $h.match }
+        if (h.away && h.cfg.awaylog_hilight) {
+            h.awaylog_append [$stime($time())] * $0:$1 $2- \($userhost()\)
+        }
     }
     h.format.parse action $0-1 $h.m
 }
 on ^channel_signoff * { h.format.parse channel_signoff $* }
 on #-connect 2 "*" {
     if (h.cfg.default_usermode) {
-	if (!match(+* $h.cfg.default_usermode)) @ h.cfg.default_usermode #~ [+]
-	//mode $servernick() $h.cfg.default_usermode
+        if (!match(+* $h.cfg.default_usermode)) @ h.cfg.default_usermode #~ [+]
+        //mode $servernick() $h.cfg.default_usermode
     }
     @ h.idletime = 0
     h.refresh.idle 2
@@ -90,10 +90,10 @@ on #-connect 2 "*" {
 }
 on #-connect 3 "*" {
     foreach h.topics[$h.encode($2)] h.a {
-	foreach h.topics[$h.encode($2)][$h.a] h.b {
-	    @ h.topics[$h.encode($2)][$h.a][$h.b] = []
-	}
-	@ h.topics[$h.encode($2)][$h.a] = []
+        foreach h.topics[$h.encode($2)][$h.a] h.b {
+            @ h.topics[$h.encode($2)][$h.a][$h.b] = []
+        }
+        @ h.topics[$h.encode($2)][$h.a] = []
     }
     @ h.topics[$h.encode($2)] = []
 }
@@ -102,9 +102,9 @@ on #-connect 4 "*" {
 }
 on ^ctcp "*" {
     if ([$1] == servernick()) {
-	h.format.parse ctcp_user $0 $userhost() $1-
+        h.format.parse ctcp_user $0 $userhost() $1-
     } else {
-	h.format.parse ctcp_channel $0 $userhost() $1-
+        h.format.parse ctcp_channel $0 $userhost() $1-
     }
 }
 on ^ctcp_reply * {
@@ -117,7 +117,7 @@ on ^ctcp_reply * {
 }
 on ^dcc_chat * {
     if (h.away && h.cfg.awaylog_dcc) {
-	h.awaylog_append [$stime($time())] dcc\($0\) $1-
+        h.awaylog_append [$stime($time())] dcc\($0\) $1-
     }
     h.format.parse dcc_chat $*
     h.tabkey.addnick =$0
@@ -125,22 +125,22 @@ on ^dcc_chat * {
 on ^dcc_connect * {
     if ([$1] == [CHAT]) { h.tabkey.addnick =$0 }
     if ([$1] != [RAW]) {
-	h.format.parse dcc_connect $*
-	if (h.away && h.cfg.awaylog_dcc) {
-	    h.awaylog_append [$stime($time())] DCC $1 connection with $0 established [$2:$3]
-	}
+        h.format.parse dcc_connect $*
+        if (h.away && h.cfg.awaylog_dcc) {
+            h.awaylog_append [$stime($time())] DCC $1 connection with $0 established [$2:$3]
+        }
     }
 }
 on ^dcc_lost "% \[SEND GET\] % % TRANSFER COMPLETE" {
     if ([$1] == [SEND]) {
-	@ h.dcc.sendcount += 1
+        @ h.dcc.sendcount += 1
     } elsif ([$1] == [GET]) {
-	@ h.dcc.getcount += 1
+        @ h.dcc.getcount += 1
     }
     h.refresh.dcc
     h.format.parse dcc_completed $*
     if (h.away && h.cfg.awaylog_dcc) {
-	h.awaylog_append [$stime($time())] DCC $1-2 with $0 complete
+        h.awaylog_append [$stime($time())] DCC $1-2 with $0 complete
     }
 }
 on ^dcc_lost "% RAW *" #
@@ -148,47 +148,47 @@ on ^dcc_lost "% RAW_LISTEN *" #
 on ^dcc_lost "*" {
     h.format.parse dcc_lost $0-1 $tolower($3-)
     if (h.away && h.cfg.awaylog_dcc) {
-	h.awaylog_append [$stime($time())] DCC connection with $0 with lost \($3-\)
+        h.awaylog_append [$stime($time())] DCC connection with $0 with lost \($3-\)
     }
 }
 on ^dcc_offer "*" { h.format.parse ${[$3] ? [dcc_offer] : [dcc_offer_chat]} $* }
 on ^dcc_request * {
     h.format.parse dcc_request $*
     if (h.away && h.cfg.awaylog_dcc) {
-	h.awaylog_append [$stime($time())] DCC $1${[$5-6] ? \
-	    [ $5-6] : []} request by $0!$userhost() [$3:$4]
+        h.awaylog_append [$stime($time())] DCC $1${[$5-6] ? \
+            [ $5-6] : []} request by $0!$userhost() [$3:$4]
     }
     if ([$1] == [CHAT]) {
-	if (!h.dcc.auto_accept(chat $0)) {
-	    xecho -b Hit ALT-A to accept or ALT-R to reject
-	    bind ^[a parse_command h.dcc.accept_chat $encode($0)
-    	    bind ^[r parse_command h.dcc.reject_chat $encode($0)
-	}
+        if (!h.dcc.auto_accept(chat $0)) {
+            xecho -b Hit ALT-A to accept or ALT-R to reject
+            bind ^[a parse_command h.dcc.accept_chat $encode($0)
+            bind ^[r parse_command h.dcc.reject_chat $encode($0)
+        }
     }
     if ([$1] == [SEND]) {
-	if (h.cfg.dcc_append_nick) {
-	    @ :h.dcc_store_path = DCC_STORE_PATH ## \
-		(right(1 $DCC_STORE_PATH) == [/] ? [] : [/]) ## [$0]
-	    if (strlen($glob($h.dcc_store_path/)) || \
-		    mkdir($h.dcc_store_path) == 0) {
-		dcc rename $0 $2 $h.dcc_store_path/$2
-	    } else {
-		xecho -b Warning: Can't save the file in "$h.dcc_store_path/"
-	    }
-	}
-	if (!h.dcc.auto_accept(get $0)) {
-	    xecho -b Hit ALT-A to accept or ALT-R to reject
-	    bind ^[a parse_command h.dcc.accept_send $encode($0)
-    	    bind ^[r parse_command h.dcc.reject_send $encode($0)
-	}
+        if (h.cfg.dcc_append_nick) {
+            @ :h.dcc_store_path = DCC_STORE_PATH ## \
+                (right(1 $DCC_STORE_PATH) == [/] ? [] : [/]) ## [$0]
+            if (strlen($glob($h.dcc_store_path/)) || \
+                    mkdir($h.dcc_store_path) == 0) {
+                dcc rename $0 $2 $h.dcc_store_path/$2
+            } else {
+                xecho -b Warning: Can't save the file in "$h.dcc_store_path/"
+            }
+        }
+        if (!h.dcc.auto_accept(get $0)) {
+            xecho -b Hit ALT-A to accept or ALT-R to reject
+            bind ^[a parse_command h.dcc.accept_send $encode($0)
+            bind ^[r parse_command h.dcc.reject_send $encode($0)
+        }
     }
 }
 on #-disconnect 1 "*" {
     foreach h.topics[$h.encode($2)] h.a {
-	foreach h.topics[$h.encode($2)][$h.a] h.b {
-	    @ h.topics[$h.encode($2)][$h.a][$h.b] = []
-	}
-	@ h.topics[$h.encode($2)][$h.a] = []
+        foreach h.topics[$h.encode($2)][$h.a] h.b {
+            @ h.topics[$h.encode($2)][$h.a][$h.b] = []
+        }
+        @ h.topics[$h.encode($2)][$h.a] = []
     }
     @ h.topics[$h.encode($2)] = []
     h.refresh.idle
@@ -204,9 +204,9 @@ on ^hook "key_f1" { help }
 on ^hook "key_f2" { names }
 on ^hook "switch_window %" {
     if (winnum() == [$1]) {
-	^window swap ${[$1] + 10}
+        ^window swap ${[$1] + 10}
     } else {
-	^window swap $1
+        ^window swap $1
     }
 }
 on #-hook 1 "config_change" {
@@ -217,9 +217,9 @@ on ^input "*" {
     @ :h.line = [$*]
 
     if (h.paste_state) {
-    	@ :h.line = h.trim_line($h.line)
-	send $h.line
-	return
+        @ :h.line = h.trim_line($h.line)
+        send $h.line
+        return
     }
     sendline $h.line
 
@@ -229,23 +229,23 @@ on ^input "/%/*" {
     @ :h.line = [$*]
 
     if (h.paste_state) {
-    	@ :h.line = h.trim_line($h.line)
-	send $h.line
-	return
+        @ :h.line = h.trim_line($h.line)
+        send $h.line
+        return
     }
 
     if ([$*] =~ [//*]) {
-	sendline $h.line
+        sendline $h.line
     } else {
-	send $h.line
+        send $h.line
     }
 }
 on ^input "%: *" {
     if (h.cfg.nickcomp && T == C && count(: $0) == 1 && strlen($0) > 1 && \
-	(:h.w = match($before(: $0)* $chanusers()))) {
-	sendline $word(${h.w - 1} $chanusers())$h.cfg.nickcomp_char $1-
+        (:h.w = match($before(: $0)* $chanusers()))) {
+        sendline $word(${h.w - 1} $chanusers())$h.cfg.nickcomp_char $1-
     } else {
-	sendline $*
+        sendline $*
     }
 }
 on ^invite "*" {
@@ -258,10 +258,10 @@ on ^kick * {
     @ h.topics[$encode($servername())][$encode($2)] = []
     @ h.topics[$encode($servername())][$encode($2)].setby = []
     if ([$0] == servernick()) {
-       	h.format.parse kick_user $*
-	if (!C && h.cfg.xterm_enable) { h.xterm.set $servername() }
+        h.format.parse kick_user $*
+        if (!C && h.cfg.xterm_enable) { h.xterm.set $servername() }
     } else {
-	h.format.parse kick $*
+        h.format.parse kick $*
     }
 }
 on ^kill * { h.format.parse kill $* }
@@ -274,7 +274,7 @@ on ^msg * {
     h.format.parse msg $*
     h.tabkey.addnick $0
     if (h.away && h.cfg.awaylog_msg) {
-	h.awaylog_append [$stime($time())] msg\($0\) $1- \($userhost()\)
+        h.awaylog_append [$stime($time())] msg\($0\) $1- \($userhost()\)
     }
     h.store_last_url $1-
     if (h.cfg.url_grab) { h.graburl $0 $servernick() $1- }
@@ -283,7 +283,7 @@ on ^msg_group * { h.format.parse msg $* }
 on ^notice * {
     h.format.parse notice $*
     if (h.away && h.cfg.awaylog_notice) {
-	h.awaylog_append [$stime($time())] notice\($0\) $1- \($userhost()\)
+        h.awaylog_append [$stime($time())] notice\($0\) $1- \($userhost()\)
     }
     h.store_last_url $1-
     if (h.cfg.url_grab) { h.graburl $0 $servernick() $1- }
@@ -294,7 +294,7 @@ on ^nick * {
     h.format.parse nick $*
     # added by ljb@devco.net: change nick in query windows too
     fe ($winrefs()) r {
-	if ([$0] == winnicklist($r)) { ^window $r query $1 }
+        if ([$0] == winnicklist($r)) { ^window $r query $1 }
     }
 }
 
@@ -302,19 +302,24 @@ on ^public * {
     @ :h.m = [$2-]
     @ :h.nick = [$0]
 
-    if (h.cfg.hilight_words) { @ :h.m = h.hilight_words($h.m) }
+    if (h.cfg.hilight_words) {
+        @ :h.m = h.hilight_words($h.m)
+    }
+
+    # @ :h.m = h.urlmem.colorify_urls($h.m)
+
     if (h.cfg.show_nick_status) { @ :h.nick = nickstatus($0 $1) ## h.nick }
     if (h.cfg.colorify_nicks) { @ :h.nick = colorifynick($h.nick) }
 
     @ :h.match = h.hilight_match($h.m)
     if (strlen($h.match)) {
-	h.format.parse public_hl $h.nick $1 $h.m
-	if (h.cfg.hilight_notify) { h.reply_action $userhost() $0-1 $h.match }
-	if (h.away && h.cfg.awaylog_hilight) {
-	    h.awaylog_append [$stime($time())] \($0:$1\) $2- \($userhost()\)
-	}
+        h.format.parse public_hl $h.nick $1 $h.m
+        if (h.cfg.hilight_notify) { h.reply_action $userhost() $0-1 $h.match }
+        if (h.away && h.cfg.awaylog_hilight) {
+            h.awaylog_append [$stime($time())] \($0:$1\) $2- \($userhost()\)
+        }
     } else {
-	h.format.parse public $h.nick $1 $h.m
+        h.format.parse public $h.nick $1 $h.m
     }
     h.store_last_url $2-
     if (h.cfg.url_grab) { h.graburl $* }
@@ -328,13 +333,13 @@ on ^public_msg * {
 
     @ :h.match = h.hilight_match($h.m)
     if (strlen($h.match)) {
-	h.format.parse public_msg_hl $h.nick $1 $h.m
-	if (h.cfg.hilight_notify) { h.reply_action $userhost() $0-1 $h.match }
-	if (h.away && h.cfg.awaylog_hilight) {
-	    h.awaylog_append [$stime($time())] \($0:$1\) $2- \($userhost()\)
-	}
+        h.format.parse public_msg_hl $h.nick $1 $h.m
+        if (h.cfg.hilight_notify) { h.reply_action $userhost() $0-1 $h.match }
+        if (h.away && h.cfg.awaylog_hilight) {
+            h.awaylog_append [$stime($time())] \($0:$1\) $2- \($userhost()\)
+        }
     } else {
-	h.format.parse public_msg $h.nick $1 $h.m
+        h.format.parse public_msg $h.nick $1 $h.m
     }
     h.store_last_url $2-
     if (h.cfg.url_grab) { h.graburl $* }
@@ -349,13 +354,13 @@ on ^public_other * {
 
     @ :h.match = h.hilight_match($h.m)
     if (strlen($h.match)) {
-	h.format.parse public_other_hl $h.nick $1 $h.m
-	if (h.cfg.hilight_notify) { h.reply_action $userhost() $0-1 $h.match }
-	if (h.away && h.cfg.awaylog_hilight) {
-	    h.awaylog_append [$stime($time())] \($0:$1\) $2- \($userhost()\)
-	}
+        h.format.parse public_other_hl $h.nick $1 $h.m
+        if (h.cfg.hilight_notify) { h.reply_action $userhost() $0-1 $h.match }
+        if (h.away && h.cfg.awaylog_hilight) {
+            h.awaylog_append [$stime($time())] \($0:$1\) $2- \($userhost()\)
+        }
     } else {
-	h.format.parse public_other $h.nick $1 $h.m
+        h.format.parse public_other $h.nick $1 $h.m
     }
     h.store_last_url $2-
     if (h.cfg.url_grab) { h.graburl $* }
@@ -363,7 +368,7 @@ on ^public_other * {
 on ^raw_irc "*!* PRIVMSG % :VERSION" {
     notice $before(! $0) VERSION $h.version_reply()
     h.format.parse ${[$2] == [$N] ? \
-	[ctcp_user] : [ctcp_channel]} $before(! $0) $after(! $0) $2 VERSION
+        [ctcp_user] : [ctcp_channel]} $before(! $0) $after(! $0) $2 VERSION
 }
 on ^send_action * {
     h.format.parse send_action $*
@@ -381,15 +386,15 @@ on ^send_msg * {
 on ^send_notice * { h.format.parse send_notice $* }
 on ^send_public * {
     if (h.cfg.show_nick_status) {
-	@ :h.nick = nickstatus($servernick() $0) ## servernick()
+        @ :h.nick = nickstatus($servernick() $0) ## servernick()
     } else {
-	@ :h.nick = servernick()
+        @ :h.nick = servernick()
     }
 
     if ([$0] != C) {
-	h.format.parse send_public_other $0 $h.nick $1-
+        h.format.parse send_public_other $0 $h.nick $1-
     } else {
-	h.format.parse send_public $0 $h.nick $1-
+        h.format.parse send_public $0 $h.nick $1-
     }
     if (h.cfg.auto_back && A) { back }
     h.store_last_url $*
@@ -401,50 +406,50 @@ on ^server_notice * {
 }
 on #-switch_windows 1 * {
     if (h.cfg.xterm_enable) {
-	if (:h.chan = winchan($3)) {
-	    @ :h.s = servername($winserv($3))
-	    @ :h.topic = h.topics[$h.encode($h.s)][$h.encode($h.chan)]
-	    h.xterm.set $h.chan${h.topic ? [ - $h.topic] : []}
-	} elsif (Q) {
-	    h.xterm.set $servername() - $Q
-	} elsif (S) {
-	    h.xterm.set $servername()
-	} else {
-	    h.xterm.set hienoa $h.version
-	}
+        if (:h.chan = winchan($3)) {
+            @ :h.s = servername($winserv($3))
+            @ :h.topic = h.topics[$h.encode($h.s)][$h.encode($h.chan)]
+            h.xterm.set $h.chan${h.topic ? [ - $h.topic] : []}
+        } elsif (Q) {
+            h.xterm.set $servername() - $Q
+        } elsif (S) {
+            h.xterm.set $servername()
+        } else {
+            h.xterm.set hienoa $h.version
+        }
     }
     h.lagmeter.status_update $3
 }
 on #-switch_channels 1 * {
     #if (ischannel($2)) { ^window $0 bind $2 }
     if (h.cfg.xterm_enable) {
-	@ :h.topic = h.topics[$h.encode($servername($0))][$h.encode($2)]
-	if ([$2] != 0) {
-	    h.xterm.set $2${h.topic ? [ - $h.topic] : []}
-	} else {
-	    h.xterm.set $servername()
-	}
+        @ :h.topic = h.topics[$h.encode($servername($0))][$h.encode($2)]
+        if ([$2] != 0) {
+            h.xterm.set $2${h.topic ? [ - $h.topic] : []}
+        } else {
+            h.xterm.set $servername()
+        }
     }
 }
 on #-timer 1 "%:%" { h.refresh.uptime }
 on #-timer 1 "00:00*" {
     fe ($myservers(1)) h.s {
-	fe ($mychannels($h.s)) h.c {
-	    @ h.cfg.log_chan ? h.log_append($h.c ----- New shiny day begins! $strftime(%c) -----) : []
-	}
+        fe ($mychannels($h.s)) h.c {
+            @ h.cfg.log_chan ? h.log_append($h.c ----- New shiny day begins! $strftime(%c) -----) : []
+        }
     }
 }
 on ^topic * {
     if ([$2]) {
-	h.format.parse topic_change $*
-	@ h.topics[$h.encode($servername())][$h.encode($1)] = [$2-]
-	@ h.topics[$h.encode($servername())][$h.encode($1)].setby = [$0 $time()]
-	if (h.cfg.xterm_enable && (C == [$1])) { h.xterm.set $1 - $2- }
+        h.format.parse topic_change $*
+        @ h.topics[$h.encode($servername())][$h.encode($1)] = [$2-]
+        @ h.topics[$h.encode($servername())][$h.encode($1)].setby = [$0 $time()]
+        if (h.cfg.xterm_enable && (C == [$1])) { h.xterm.set $1 - $2- }
     } else {
-	h.format.parse topic_unset $*
-	@ h.topics[$h.encode($servername())][$h.encode($1)] = []
-	@ h.topics[$h.encode($servername())][$h.encode($1)].setby = []
-	if (h.cfg.xterm_enable && (C == [$1])) { h.xterm.set $1 }
+        h.format.parse topic_unset $*
+        @ h.topics[$h.encode($servername())][$h.encode($1)] = []
+        @ h.topics[$h.encode($servername())][$h.encode($1)].setby = []
+        if (h.cfg.xterm_enable && (C == [$1])) { h.xterm.set $1 }
     }
 }
 on ^wallop * { h.format.parse wallop $* }
@@ -455,4 +460,4 @@ on #-window_create 1 "*" {
     if (h.format.value(status_line2)) { ^window $0 double on }
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

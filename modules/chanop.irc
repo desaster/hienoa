@@ -1,4 +1,4 @@
-# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 package chanop
@@ -6,140 +6,140 @@ package chanop
 config_title "General stuff"
 config_entry "Seconds to remove ban set by /zap" type "text" var "h.cfg.zaptime" def "10"
 
-alias k kick
+alias k kick $*
 alias kick {
     if (![$0]) {
-	xecho -b Usage: /kick [#channel] <nick> [reason]
-	return
+        xecho -b Usage: /kick [#channel] <nick> [reason]
+        return
     }
     if ([$[1]0] == [#] || [$0] == [*]) {
-    	@ :h.channel = [$0]
-	@ :h.nick = [$1]
-	@ :h.reason = [$2-]
+        @ :h.channel = [$0]
+        @ :h.nick = [$1]
+        @ :h.reason = [$2-]
     } else {
-	@ :h.channel = [*]
-	@ :h.nick = [$0]
-	@ :h.reason = [$1-]
+        @ :h.channel = [*]
+        @ :h.nick = [$0]
+        @ :h.reason = [$1-]
     }
     if (h.reason) {
-	//kick $h.channel $h.nick $h.reason
+        //kick $h.channel $h.nick $h.reason
     } elsif (h.cfg.random_kick) {
-	if (fexist(~/.hienoa/kick) == 1) {
-	    //kick $h.channel $h.nick $randread(~/.hienoa/kick)
-	} elsif (fexist($h.path/etc/kick) == 1) {
-	    //kick $h.channel $h.nick $randread($h.path/etc/kick)
-	} else {
-	    //kick $h.channel $h.nick $h.nick
-	}
+        if (fexist(~/.hienoa/kick) == 1) {
+            //kick $h.channel $h.nick $randread(~/.hienoa/kick)
+        } elsif (fexist($h.path/etc/kick) == 1) {
+            //kick $h.channel $h.nick $randread($h.path/etc/kick)
+        } else {
+            //kick $h.channel $h.nick $h.nick
+        }
     } else {
-	//kick $h.channel $h.nick $h.nick
+        //kick $h.channel $h.nick $h.nick
     }
 }
 
 alias mode {
     if ((index(#&* $0) == 0) || ([$0] == N)) {
-	//mode $*
+        //mode $*
     } else {
-	//mode $C $*
+        //mode $C $*
     }
 }
 
-alias +o op
+alias +o op $*
 alias op {
     @ :h.c = 0
     fe ($*) h.a {
-	@ h.c++
-	@ :h.l = (h.l ? [$h.l ] : []) ## h.a
-	if (h.c == h.cfg.max_modes) {
-	    mode * +$repeat($h.cfg.max_modes o) $h.l
-	    @ h.l = []
-	    @ h.c = 0
-	}
+        @ h.c++
+        @ :h.l = (h.l ? [$h.l ] : []) ## h.a
+        if (h.c == h.cfg.max_modes) {
+            mode * +$repeat($h.cfg.max_modes o) $h.l
+            @ h.l = []
+            @ h.c = 0
+        }
     }
     if (h.c > [0]) { mode * +$repeat($h.c o) $h.l }
 }
 
-alias -o deop
-alias dop deop
+alias -o deop $*
+alias dop deop $*
 alias deop {
     @ :h.c = 0
     fe ($*) h.a {
-	@ h.c++
-	@ :h.l = (h.l ? [$h.l ] : []) ## h.a
-	if (h.c == h.cfg.max_modes) {
-	    mode * -$repeat($h.cfg.max_modes o) $h.l
-	    @ h.l = []
-	    @ h.c = 0
-	}
+        @ h.c++
+        @ :h.l = (h.l ? [$h.l ] : []) ## h.a
+        if (h.c == h.cfg.max_modes) {
+            mode * -$repeat($h.cfg.max_modes o) $h.l
+            @ h.l = []
+            @ h.c = 0
+        }
     }
     if (h.c > [0]) { mode * -$repeat($h.c o) $h.l }
 }
 
-alias v voice
-alias +v voice
+alias v voice $*
+alias +v voice $*
 alias voice {
     @ :h.c = 0
     fe ($*) h.a {
-	@ h.c++
-	@ :h.l = (h.l ? [$h.l ] : []) ## h.a
-	if (h.c == h.cfg.max_modes) {
-	    mode * +$repeat($h.cfg.max_modes v) $h.l
-	    @ h.l = []
-	    @ h.c = 0
-	}
+        @ h.c++
+        @ :h.l = (h.l ? [$h.l ] : []) ## h.a
+        if (h.c == h.cfg.max_modes) {
+            mode * +$repeat($h.cfg.max_modes v) $h.l
+            @ h.l = []
+            @ h.c = 0
+        }
     }
     if (h.c > [0]) { mode * +$repeat($h.c v) $h.l }
 }
 
-alias -v devoice
-alias dvoice devoice
+alias -v devoice $*
+alias dvoice devoice $*
 alias devoice {
     @ :h.c = 0
     fe ($*) h.a {
-	@ h.c++
-	@ :h.l = (h.l ? [$h.l ] : []) ## h.a
-	if (h.c == h.cfg.max_modes) {
-	    mode * -$repeat($h.cfg.max_modes v) $h.l
-	    @ h.l = []
-	    @ h.c = 0
-	}
+        @ h.c++
+        @ :h.l = (h.l ? [$h.l ] : []) ## h.a
+        if (h.c == h.cfg.max_modes) {
+            mode * -$repeat($h.cfg.max_modes v) $h.l
+            @ h.l = []
+            @ h.c = 0
+        }
     }
     if (h.c > [0]) { mode * -$repeat($h.c v) $h.l }
 }
 
-alias bk bankick
+alias bk bankick $*
 alias bankick {
     if (![$0] || ([$0] == [*] && ![$1])) {
-	xecho -b Usage: /bankick [#channel] <nick> [reason]
-	return
+        xecho -b Usage: /bankick [#channel] <nick> [reason]
+        return
     }
     if (ischannel($0) || [$0] == [*]) {
-    	@ :h.channel = [$0]
-	@ :h.nick = [$1]
-	@ :h.reason = [$2-]
+        @ :h.channel = [$0]
+        @ :h.nick = [$1]
+        @ :h.reason = [$2-]
     } else {
-	@ :h.channel = [*]
-	@ :h.nick = [$0]
-	@ :h.reason = [$1-]
+        @ :h.channel = [*]
+        @ :h.nick = [$0]
+        @ :h.reason = [$1-]
     }
     ban $h.channel $h.nick
     kick $h.channel $h.nick $h.reason
 }
 
-alias kb kickban
+alias kb kickban $*
 alias kickban {
     if (![$0] || ([$0] == [*] && ![$1])) {
-	xecho -b Usage: /kickban [#channel] <nick> [reason]
-	return
+        xecho -b Usage: /kickban [#channel] <nick> [reason]
+        return
     }
     if (ischannel($0) || [$0] == [*]) {
-    	@ :h.channel = [$0]
-	@ :h.nick = [$1]
-	@ :h.reason = [$2-]
+        @ :h.channel = [$0]
+        @ :h.nick = [$1]
+        @ :h.reason = [$2-]
     } else {
-	@ :h.channel = [*]
-	@ :h.nick = [$0]
-	@ :h.reason = [$1-]
+        @ :h.channel = [*]
+        @ :h.nick = [$0]
+        @ :h.reason = [$1-]
     }
     kick $h.channel $h.nick $h.reason
     ban $h.channel $h.nick
@@ -147,34 +147,34 @@ alias kickban {
 
 alias zap (h.args) {
     if (isdigit($word(0 $h.args))) {
-	@ :h.zaptime = shift(h.args)
+        @ :h.zaptime = shift(h.args)
     } else {
-	@ :h.zaptime = h.cfg.zaptime
+        @ :h.zaptime = h.cfg.zaptime
     }
     if (ischannel($word(0 $h.args))) {
-	@ :h.channel = shift(h.args)
+        @ :h.channel = shift(h.args)
     } else {
-	@ :h.channel = C
+        @ :h.channel = C
     }
     @ :h.nick = shift(h.args)
     @ :h.reason = h.args
     if (!strlen($h.nick)) {
-	xecho -b Usage: /zap [seconds] [#channel] <nick> [reason]
-	return
+        xecho -b Usage: /zap [seconds] [#channel] <nick> [reason]
+        return
     }
     if (!ischanop($servernick() $h.channel)) {
-	xecho -b You're not channel operator on $h.channel
-	return
+        xecho -b You're not channel operator on $h.channel
+        return
     }
     if (findw($h.nick $chanusers($h.channel)) == -1) {
-	xecho -b $h.nick is not in $h.channel
-	return
+        xecho -b $h.nick is not in $h.channel
+        return
     }
     bankick $h.channel $h.nick $h.reason
     userhost $h.nick -cmd {
-	bless
-	timer $h.zaptime //mode $h.channel -b $mask(3 $0\!$3\@$4)
+        bless
+        timer $h.zaptime //mode $h.channel -b $mask(3 $0\!$3\@$4)
     }
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

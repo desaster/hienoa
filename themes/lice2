@@ -1,8 +1,8 @@
 # hienoa theme file
 
-# Name:		lice2
-# Author:	Upi Tamminen <desaster@dragonlight.fi>
-# Comments:	Based on "LICE2" script made by srfrog.
+# Name:         lice2
+# Author:       Upi Tamminen <desaster at gmail>
+# Comments:     Based on "LICE2" script made by srfrog.
 
 screenmode lowascii
 set status_no_repeat on

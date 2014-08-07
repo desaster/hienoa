@@ -1,8 +1,8 @@
 # hienoa theme file
 
-# Name:		bright
-# Author:	Upi Tamminen <desaster@dragonlight.fi>
-# Comments:	This script avoids using dark colors.
+# Name:         bright
+# Author:       Upi Tamminen <desaster at gmail>
+# Comments:     This script avoids using dark colors.
 
 screenmode lowascii
 set status_no_repeat on

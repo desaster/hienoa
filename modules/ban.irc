@@ -1,4 +1,4 @@
-# Copyright (c) 2000, 2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 package ban
@@ -22,52 +22,52 @@ config_selection "Ban mask to use by default" name "nick!*user@host.domain" valu
 
 alias ban {
     if (![$0] || ([$0] == [*] && ![$1])) {
-	xecho -b Usage: /ban [#channel] <nick|nick!user@host>
-	return
+        xecho -b Usage: /ban [#channel] <nick|nick!user@host>
+        return
     }
     if ((ischannel($0) || [$0] == [*]) && [$1]) {
-    	@ :h.channel = [$0]
-	@ :h.target = [$1]
+        @ :h.channel = [$0]
+        @ :h.target = [$1]
     } else {
-	@ :h.channel = [*]
-	@ :h.target = [$0]
+        @ :h.channel = [*]
+        @ :h.target = [$0]
     }
     if (count(@ $h.target) == 0) {
-	userhost $h.target -cmd {
-	    if ([$4] != [<UNKNOWN>]) {
-		@ :h.mask = ((isnumber($h.cfg.banmask) && \
-			h.cfg.banmask >= 0 && h.cfg.banmask <= 13) ? \
-			h.cfg.banmask : 3)
-		mode $h.channel +b $mask($h.mask $0\!$3\@$4)
-	    } else {
-		xecho -b No such nick!
-	    }
-	}
+        userhost $h.target -cmd {
+            if ([$4] != [<UNKNOWN>]) {
+                @ :h.mask = ((isnumber($h.cfg.banmask) && \
+                        h.cfg.banmask >= 0 && h.cfg.banmask <= 13) ? \
+                        h.cfg.banmask : 3)
+                mode $h.channel +b $mask($h.mask $0\!$3\@$4)
+            } else {
+                xecho -b No such nick!
+            }
+        }
     } else {
-	mode $h.channel +b $h.target
+        mode $h.channel +b $h.target
     }
 }
 
 alias unban {
     if (![$0]) {
-	xecho -b Usage: /unban [#channel] <nick|nick!user@hostname>
-	return
+        xecho -b Usage: /unban [#channel] <nick|nick!user@hostname>
+        return
     }
     if ((ischannel($0) || [$0] == [*]) && [$1]) {
-	@ :h.channel = [$0]
-	@ :h.target = [$1]
+        @ :h.channel = [$0]
+        @ :h.target = [$1]
     } else {
-	@ :h.channel = [*]
-	@ :h.target = ([$0] == [*]) ? [*] : [$0]
+        @ :h.channel = [*]
+        @ :h.target = ([$0] == [*]) ? [*] : [$0]
     }
     unless (h.target == [*]) {
-	if (match(*!*@* $h.target)) {
-	    mode $h.channel -b $h.target
-	} else {
-	    h.unban $h.channel $h.target!$h.uh($h.target)
-	}
+        if (match(*!*@* $h.target)) {
+            mode $h.channel -b $h.target
+        } else {
+            h.unban $h.channel $h.target!$h.uh($h.target)
+        }
     } else {
-	h.unban $h.channel *
+        h.unban $h.channel *
     }
 }
 
@@ -77,16 +77,16 @@ alias h.unban (h.channel, h.hostmask) {
     stack push on 367
     stack push on 368
     ^on ^367 * {
-	bless
-	if ((rmatch($2 $h.hostmask) || rmatch($h.hostmask $2))) {
-	    push h.unbanlist $2
-	}
+        bless
+        if ((rmatch($2 $h.hostmask) || rmatch($h.hostmask $2))) {
+            push h.unbanlist $2
+        }
     }
     ^on ^368 * {
-	bless
-	stack pop on 367
-	stack pop on 368
-	h.unban.mode $h.channel $h.unbanlist
+        bless
+        stack pop on 367
+        stack pop on 368
+        h.unban.mode $h.channel $h.unbanlist
     }
     //mode $h.channel +b
     wait
@@ -94,17 +94,17 @@ alias h.unban (h.channel, h.hostmask) {
 
 alias h.unban.mode (h.channel, h.bans) {
     for (@ :h.c = 0, h.c < #h.bans, @ :h.c++) {
-	push :h.list $word($h.c $h.bans)
-	if (numwords($h.list) == h.cfg.max_modes) {
-	    //mode $h.channel -$repeat($h.cfg.max_modes b) $h.list
-	    wait
-	    @ :h.list = []
-	}
+        push :h.list $word($h.c $h.bans)
+        if (numwords($h.list) == h.cfg.max_modes) {
+            //mode $h.channel -$repeat($h.cfg.max_modes b) $h.list
+            wait
+            @ :h.list = []
+        }
     }
     if (strlen($h.list)) {
-	//mode $h.channel -$repeat($numwords($h.list) b) $h.list
-	wait
+        //mode $h.channel -$repeat($numwords($h.list) b) $h.list
+        wait
     }
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

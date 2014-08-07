@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (c) 2001-2003 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 2001-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 # hienoa (0.53) theme validator

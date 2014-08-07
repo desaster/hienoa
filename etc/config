@@ -27,3 +27,6 @@ config_entry "Max reconnects" type "itext" var "max_reconnects"
 config_entry "Seconds before reconnect" type "itext" var "auto_reconnect_delay"
 config_entry "Connect timeout" type "itext" var "connect_timeout"
 config_entry "Suppress server motd" type "icheck" var "suppress_server_motd"
+
+config_title "Debugging"
+config_entry "Save debug data to ~/.hienoa/debug.log" type "check" var "h.cfg.debug" def "0"

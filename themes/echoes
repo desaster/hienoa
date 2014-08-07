@@ -1,9 +1,9 @@
 # hienoa theme file
 
-# Name:		echoes
-# Author:	Upi Tamminen <desaster@dragonlight.fi>
-# Comments:	Based on whitefang's "echoes" theme for LiCe (which was based
-#		on trey's echoes theme for rain).
+# Name:         echoes
+# Author:       Upi Tamminen <desaster at gmail>
+# Comments:     Based on whitefang's "echoes" theme for LiCe (which was based
+#               on trey's echoes theme for rain).
 
 screenmode highascii
 set status_no_repeat on

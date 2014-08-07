@@ -1,4 +1,4 @@
-# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 package misc
@@ -18,25 +18,25 @@ alias signoff quit
 alias exit quit
 alias quit (h.qm) {
     if (h.qm) {
-	h.log_end $h.qm
-	//quit $h.qm
+        h.log_end $h.qm
+        //quit $h.qm
     } elsif (h.cfg.random_quit) {
-	@ :h.qm = h.get.quit.msg()
-	h.log_end $h.qm
-	//quit $h.qm
+        @ :h.qm = h.get.quit.msg()
+        h.log_end $h.qm
+        //quit $h.qm
     } else {
-	h.log_end $quit_message
-	//quit
+        h.log_end $quit_message
+        //quit
     }
 }
 
 alias h.get.quit.msg {
     if (fexist(~/.hienoa/quit) == 1) {
-	@ :h.quit = randread(~/.hienoa/quit)
+        @ :h.quit = randread(~/.hienoa/quit)
     } elsif (fexist($h.path/etc/quit) == 1) {
-	@ :h.quit = randread($h.path/etc/quit)
+        @ :h.quit = randread($h.path/etc/quit)
     } else {
-	@ :h.quit =
+        @ :h.quit = []
     }
     eval return $h.quit
 }
@@ -48,13 +48,13 @@ alias h.uh {
 
     @ h.uh1 = userhost($*)
     if (strlen($h.uh1) && h.uh2 != [<UNKNOWN>@<UNKNOWN>]) {
-	@ h.uh = h.uh1
-	return $h.uh1
+        @ h.uh = h.uh1
+        return $h.uh1
     }
 
     ^userhost $* -cmd {
-	bless
-	push h.uh2 $3@$4
+        bless
+        push h.uh2 $3@$4
     }
     wait
     return $h.uh2
@@ -63,59 +63,61 @@ alias h.uh {
 alias h.tld (h.tld) {
     @ :h.f = open($h.path/etc/countries R)
     while (!eof($h.f)) {
-	@ :h.l = read($h.f)
-	if (!h.l) { continue }
-	@ push(:h.code $word(0 $h.l))
-	@ push(:h.description "$restw(1 $h.l)")
+        @ :h.l = read($h.f)
+        if (!h.l) { continue }
+        @ push(:h.code $word(0 $h.l))
+        @ push(:h.description "$restw(1 $h.l)")
     }
     @ close($h.f)
-    @ :h.result = word($findw($h.tld $h.code) $h.description)
+    xdebug dword {
+        @ :h.result = word($findw($h.tld $h.code) $h.description)
+    }
     return ${h.result ? h.result : [Unknown]}
 }
 
 alias country (h.tld) {
     if (h.tld) {
-	xecho -b $toupper($sar(/.//$h.tld)) = $h.tld($sar(/.//$h.tld))
+        xecho -b $toupper($sar(/.//$h.tld)) = $h.tld($sar(/.//$h.tld))
     } else {
-	xecho -b Usage: /country <topleveldomain>
+        xecho -b Usage: /country <topleveldomain>
     }
 }
 
 alias sv sayversion
 alias sayversion (h.target, ...) {
     if (h.target) {
-	msg $h.target $h.version_reply()
+        msg $h.target $h.version_reply()
     } else {
-	send $h.version_reply()
+        send $h.version_reply()
     }
 }
 
 alias h.version_reply {
     @ :h.v = [$word(0 $info(v)) ] ## \
-	[$tr(/ /./$restw(1 $info(v))) \($info(r)\)] ## \
-	[ + hienoa $h.version] ## \
-	(h.cfg.show_os ? [ \($uname(%s %r %m)\)] : [])
+        [$tr(/ /./$restw(1 $info(v))) \($info(r)\)] ## \
+        [ + hienoa $h.version] ## \
+        (h.cfg.show_os ? [ \($uname(%s %r %m)\)] : [])
     return $h.v
 }
 
 alias h.reply_action {
     @ :h.win = chanwin($2)
     if (winnum() != h.win) {
-	xecho -C $h.format.parse(hilight_notify $h.win $2 $1 $0 $3)
+        xecho -C $h.format.parse(hilight_notify $h.win $2 $1 $0 $3)
     }
 }
 
 alias h.hilight_match (h.l) {
     fe ($h.cfg.hilight_words) h.w {
-	if (match(*$h.w* $h.l)) { return $h.w }
+        if (match(*$h.w* $h.l)) { return $h.w }
     }
 }
 
 alias h.hilight_words (h.m) {
     fe ($h.cfg.hilight_words) h.w {
-	if (!strlen(pattern(*$h.w* $h.m))) { continue }
-	@ :h.m = h.hilight_word($h.w $h.m)
-	@ :h.match = 1
+        if (!strlen($pattern(*$h.w* $h.m))) { continue }
+        @ :h.m = h.hilight_word($h.w $h.m)
+        @ :h.match = 1
     }
     return $h.m
 }
@@ -123,22 +125,22 @@ alias h.hilight_words (h.m) {
 alias h.hilight_word (h.word, h.string) {
     if ((:h.loc = substr($h.word $h.string)) == -1) { return $h.string }
     @ :h.newstring = left($h.loc $h.string) ## \
-	[$mid($h.loc $strlen($h.word) $h.string)] ## \
-	rest(${h.loc + strlen($h.word)} $h.string)
+        [$mid($h.loc $strlen($h.word) $h.string)] ## \
+        rest(${h.loc + strlen($h.word)} $h.string)
     return $h.newstring
 }
 
 alias cinfo {
     @ :h.uptime = tdiff(${time() - F})
     xecho -b $word(0 $info(v)) $tr(/ /./$restw(1 \
-	$info(v))) + hienoa $h.version, up for $h.uptime
+        $info(v))) + hienoa $h.version, up for $h.uptime
     if (myservers()) {
-	xecho -b $N has been idle for ${tdiff2($h.idletime) ? \
-	    tdiff2($h.idletime) : [0 minutes]}
-	fe ($myservers()) h.s {
-	    xecho -b ${mychannels($servernum($h.s)) ? \
-		mychannels($servernum($h.s)) ## [ ] : []}\($h.s\)
-	}
+        xecho -b $N has been idle for ${tdiff2($h.idletime) ? \
+            tdiff2($h.idletime) : [0 minutes]}
+        fe ($myservers()) h.s {
+            xecho -b ${mychannels($servernum($h.s)) ? \
+                mychannels($servernum($h.s)) ## [ ] : []}\($h.s\)
+        }
     }
 }
 
@@ -149,47 +151,47 @@ alias h.encode (h.string) {
 alias h.mode_stripper (h.nick, h.channel, h.modes, h.args) {
     @ :h.opr = [+]
     fec ($h.modes) h.mode {
-	if (strlen($pass(+- $h.mode))) {
-	    @ :h.opr = h.mode
-	    continue
-	}
-	if (strlen($pass(ovhkl $h.mode))) {
-	    hook mode_stripped $h.nick $h.channel $h.opr$h.mode $shift(h.args)
-	    continue
-	}
-	hook mode_stripped $h.nick $h.channel $h.opr$h.mode
+        if (strlen($pass(+- $h.mode))) {
+            @ :h.opr = h.mode
+            continue
+        }
+        if (strlen($pass(ovhkl $h.mode))) {
+            hook mode_stripped $h.nick $h.channel $h.opr$h.mode $shift(h.args)
+            continue
+        }
+        hook mode_stripped $h.nick $h.channel $h.opr$h.mode
     }
-    
+
 }
 
 alias h.paste (h.state, ...) {
     ^timer -d p_off
     switch ($h.state) {
-	(on) {
-	    @ h.paste_state = 1
-	}
-	(off) {
-	    @ h.paste_state = 0
-	}
-	(toggle) {
-	    @ h.paste_state = (h.paste_state == 1 ? 0 : 1)
-	}
+        (on) {
+            @ h.paste_state = 1
+        }
+        (off) {
+            @ h.paste_state = 0
+        }
+        (toggle) {
+            @ h.paste_state = (h.paste_state == 1 ? 0 : 1)
+        }
     }
     if (h.paste_state) {
-	^set status_user5 $cparse($h.format.parse(status_paste)%N)
-	if (h.cfg.paste_timeout) {
-	    timer -ref p_off $h.cfg.paste_timeout { h.paste off }
-	}
+        ^set status_user5 $cparse($h.format.parse(status_paste)%N)
+        if (h.cfg.paste_timeout) {
+            timer -ref p_off $h.cfg.paste_timeout { h.paste off }
+        }
     } else {
-	^set -status_user5
+        ^set -status_user5
     }
     xecho -b -say Paste mode is ${h.paste_state == 1 ? \
-	[ON, hit ALT-t to disable] : [OFF]}
+        [ON, hit ALT-t to disable] : [OFF]}
 
     if (h.paste_state) {
-	^bind ^I self_insert
+        ^bind ^I self_insert
     } else {
-	^bind ^I parse_command h.tabkey
+        ^bind ^I parse_command h.tabkey
     }
 }
 
@@ -197,9 +199,9 @@ alias h.paste (h.state, ...) {
 alias h.trim_line (h.line) {
     @ :h.newline = h.line
     while (right(1 $h.newline) == [ ]) {
-	@ :h.newline = left(${strlen($h.newline) - 1} $h.newline)
+        @ :h.newline = left(${strlen($h.newline) - 1} $h.newline)
     }
     return $h.newline
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

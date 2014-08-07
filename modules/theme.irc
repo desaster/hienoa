@@ -1,4 +1,4 @@
-# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 package theme
@@ -7,26 +7,26 @@ config_title "Look & feel"
 config_entry "Theme" type "exec" var "h.cfg.theme" exec "h.theme" def "bluecow"
 config_entry "Show nick status on public messages" type "check" var "h.cfg.show_nick_status" def "0"
 
-alias format h.format.set
+alias format h.format.set $*
 
 alias theme (h.theme, ...) {
     if (strlen($h.theme)) {
-	fe (~/.hienoa/themes/$h.theme $h.path/themes/$h.theme) h.loc {
-	    if (fexist($h.loc) == 1) {
-		@ :h.found = 1
-		^load $h.loc
-		^h.theme.init
-		if (h.cfg.theme != h.theme) { @ h.cfg.theme = h.theme }
-		break
-	    }
-	}
-	if (!h.found) {
-	    xecho -b Theme "$h.theme" not found!
-	}
+        fe (~/.hienoa/themes/$h.theme $h.path/themes/$h.theme) h.loc {
+            if (fexist($h.loc) == 1) {
+                @ :h.found = 1
+                ^load $h.loc
+                ^h.theme.init
+                if (h.cfg.theme != h.theme) { @ h.cfg.theme = h.theme }
+                break
+            }
+        }
+        if (!h.found) {
+            xecho -b Theme "$h.theme" not found!
+        }
     } else {
-	h.config.create_window
-	h.theme
-	window kill
+        h.config.create_window
+        h.theme
+        window kill
     }
     if (h.cfg.config_save) { h.config.save }
 }
@@ -40,28 +40,28 @@ alias h.theme {
     @ :h.k = [a]
     fe ($h.glob) h.aa { push :h.files $after(-1 / $h.aa) }
     fe ($h.files) h.aa {
-	if (h.cfg.theme == h.aa) {
-	    xecho -window config  \[$toupper($h.k)\] $h.aa (current)
-	} else {
-	    xecho -window config  \[$toupper($h.k)\] $h.aa
-	}
-	@ :h.k = chr(${ascii($h.k) + 1})
+        if (h.cfg.theme == h.aa) {
+            xecho -window config  \[$toupper($h.k)\] $h.aa (current)
+        } else {
+            xecho -window config  \[$toupper($h.k)\] $h.aa
+        }
+        @ :h.k = chr(${ascii($h.k) + 1})
     }
     @ :h.t = [$'Choose theme: ']
     @ :h.k = [a]
     fe ($h.files) h.aa {
-	if (h.t == h.k) {
-	    if (fexist(~/.hienoa/themes/$h.aa) == 1) {
-		^load ~/.hienoa/themes/$h.aa
-	    } elsif (fexist($h.path/themes/$h.aa) == 1) {
-		^load $h.path/themes/$h.aa
-	    } else {
-		^load $h.path/themes/$h.default_theme
-	    }
-	    ^h.theme.init
-	    unless (h.cfg.theme == h.aa) { @ h.cfg.theme = h.aa }
-	}
-	@ h.k = chr(${ascii($h.k) + 1})
+        if (h.t == h.k) {
+            if (fexist(~/.hienoa/themes/$h.aa) == 1) {
+                ^load ~/.hienoa/themes/$h.aa
+            } elsif (fexist($h.path/themes/$h.aa) == 1) {
+                ^load $h.path/themes/$h.aa
+            } else {
+                ^load $h.path/themes/$h.default_theme
+            }
+            ^h.theme.init
+            unless (h.cfg.theme == h.aa) { @ h.cfg.theme = h.aa }
+        }
+        @ h.k = chr(${ascii($h.k) + 1})
     }
 }
 
@@ -74,18 +74,18 @@ alias h.theme.init {
     h.lagmeter.status_update $winnum()
     h.set.idle
     if (h.format.value(status_line2)) {
-	fe ($winrefs()) h.w { ^window $h.w double on }
+        fe ($winrefs()) h.w { ^window $h.w double on }
     } else {
-	fe ($winrefs()) h.w { ^window $h.w double off }
+        fe ($winrefs()) h.w { ^window $h.w double off }
     }
 }
 
 alias screenmode (h.mode) {
     switch ($h.mode) {
-	(highascii) { xecho -r $chr(27)\(U }
-	(lowascii) { xecho -r $chr(27)\(B }
-	(*) { xecho -b Usage: /screenmode <highascii|lowascii> }
+        (highascii) { xecho -r $chr(27)\(U }
+        (lowascii) { xecho -r $chr(27)\(B }
+        (*) { xecho -b Usage: /screenmode <highascii|lowascii> }
     }
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

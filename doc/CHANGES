@@ -1,3 +1,7 @@
+2.0     * ported to epic5, added to github.
+        * this changelog will probably not be updated anymore, since
+          there will be no more versions, just git revisions
+
 0.53	* Implemented /help - works like the built-in /help, plus does a
 	  keyword search if no help file was found
 	* Added an option to append the sender's nick to DCC store path

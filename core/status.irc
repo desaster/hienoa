@@ -1,4 +1,4 @@
-# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 eval set status_away $cparse($h.format.value(status_away))
@@ -25,4 +25,4 @@ eval set status_umode $cparse($h.format.value(status_umode))
 eval set status_voice $cparse($h.format.value(status_voice))
 eval set input_prompt $cparse($h.format.value(input_prompt))
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:
