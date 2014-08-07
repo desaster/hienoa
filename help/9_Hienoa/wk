@@ -1,9 +1,0 @@
-Synopsis:
-   wk
-
-Description:
-   This command closes the current window.
-
-See Also:
-   wj(9); wc(9); window(4)
-

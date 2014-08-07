@@ -1,9 +1,0 @@
-Synopsis:
-   dns <hostname|ip>
-
-Description:
-   This command does a DNS lookup on the given address.
-
-Aliases:
-   nslookup
-

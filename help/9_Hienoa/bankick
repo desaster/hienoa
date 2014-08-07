@@ -1,9 +1,0 @@
-Synopsis:
-   bankick [#channel] <nick> [reason]
-
-Description:
-   This command works just like KICK, but bans the user first.
-
-See Also:
-   kickban(9); ban(9); kick(9)
-

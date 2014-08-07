@@ -1,9 +1,0 @@
-Synopsis:
-   ver <nick|#channel|*>
-
-Description:
-   This command does CTCP VERSION on given nick or channel.
-
-See Also:
-   ctcp(1)
-

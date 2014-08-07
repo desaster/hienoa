@@ -1,9 +1,0 @@
-Synopsis:
-   cinfo
-
-Description:
-   This command prints various information about the client
-
-See Also:
-   ver(9); sayversion(9)
-

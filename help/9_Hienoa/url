@@ -1,8 +1,0 @@
-Synopsis:
-   url [-c] [string]
-
-Description:
-   This command outputs all matches of [string] in the url log.
-   "/url -c" clears the log.  If no argument is given, the last seen url is
-   displayed
-
