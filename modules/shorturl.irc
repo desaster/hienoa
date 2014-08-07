@@ -1,4 +1,4 @@
-# Copyright (c) 2003 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 package shorturl
@@ -15,151 +15,151 @@ if (V < 20031201) {
     @ :h.myhash = hash_32bit(shorturl)
 
     eval on #-hook $h.myhash "config_change" {
-	if (h.shorturl.port) {
-	    h.shorturl.server_stop
-	} else {
-	    ^h.shorturl.server_stop
-	}
-	if (!h.cfg.shorturl_enabled) return
-    	h.shorturl.server_start
-	@ h.shorturl.last_urlid = 0
+        if (h.shorturl.port) {
+            h.shorturl.server_stop
+        } else {
+            ^h.shorturl.server_stop
+        }
+        if (!h.cfg.shorturl_enabled) return
+        h.shorturl.server_start
+        @ h.shorturl.last_urlid = 0
     }
 
-    eval ^on #-public $h.myhash "% % *http://*" {
-	h.shorturl.process_line $2-
+    eval ^on #-public $h.myhash "% % *://*" {
+        h.shorturl.process_line $2-
     }
 
-    eval ^on #-public_msg $h.myhash "% % *http://*" {
-	h.shorturl.process_line $2-
+    eval ^on #-public_msg $h.myhash "% % *://*" {
+        h.shorturl.process_line $2-
     }
 
-    eval ^on #-public_notice $h.myhash "% % *http://*" {
-	h.shorturl.process_line $2-
+    eval ^on #-public_notice $h.myhash "% % *://*" {
+        h.shorturl.process_line $2-
     }
 
-    eval ^on #-public_other $h.myhash "% % *http://*" {
-	h.shorturl.process_line $2-
+    eval ^on #-public_other $h.myhash "% % *://*" {
+        h.shorturl.process_line $2-
     }
 
-    eval ^on #-server_notice $h.myhash "% % *http://*" {
-	h.shorturl.process_line $2-
+    eval ^on #-server_notice $h.myhash "% % *://*" {
+        h.shorturl.process_line $2-
     }
 
-    eval ^on #-msg $h.myhash "% *http://*" {
-	h.shorturl.process_line $1-
+    eval ^on #-msg $h.myhash "% *://*" {
+        h.shorturl.process_line $1-
     }
 
-    eval ^on #-notice $h.myhash "% *http://*" {
-	h.shorturl.process_line $1-
+    eval ^on #-notice $h.myhash "% *://*" {
+        h.shorturl.process_line $1-
     }
 
     alias h.shorturl.process_line (line) {
-	if (!h.cfg.shorturl_enabled) return
-	fe ($stripcrap(ALL,ALL_OFF $line)) word {
-	    if (!rmatch("$word" *://*)) continue
-	    # the crude definition of a 'long' url:
-	    if (strlen($word) < (word(0 $geom()) - 10)) continue
-	    @ h.shorturl.last_urlid++
-	    if (h.shorturl.last_urlid > h.cfg.shorturl_maxnum) {
-		@ :h.remid = (h.shorturl.last_urlid - \
-		    h.cfg.shorturl_maxnum)
-		^assign -h.shorturl.urls[$h.remid]
-	    }
-	    @ h.shorturl.urls[$h.shorturl.last_urlid] = word
-	    @ :shorturl = [http://$h.cfg.shorturl_host:$h.shorturl.port/$h.shorturl.last_urlid]
-	    @ :used = (strlen($stripcrap(ALL,ALL_OFF $getset(BANNER))) + \
-		strlen($shorturl) + 8)
-	    @ :avail = (word(0 $geom()) - used)
-	    @ :str = [$shorturl \($left($avail $word)...\)]
-	    xecho -b $str
-	}
+        if (!h.cfg.shorturl_enabled) return
+        fe ($stripcrap(ALL,ALL_OFF $line)) word {
+            if (!rmatch("$word" *://*)) continue
+            # the crude definition of a 'long' url:
+            if (strlen($word) < (word(0 $geom()) - 10)) continue
+            @ h.shorturl.last_urlid++
+            if (h.shorturl.last_urlid > h.cfg.shorturl_maxnum) {
+                @ :h.remid = (h.shorturl.last_urlid - \
+                    h.cfg.shorturl_maxnum)
+                ^assign -h.shorturl.urls[$h.remid]
+            }
+            @ h.shorturl.urls[$h.shorturl.last_urlid] = word
+            @ :shorturl = [http://$h.cfg.shorturl_host:$h.shorturl.port/$h.shorturl.last_urlid]
+            @ :used = (strlen($stripcrap(ALL,ALL_OFF $getset(BANNER))) + \
+                strlen($shorturl) + 8)
+            @ :avail = (word(0 $geom()) - used)
+            @ :str = [$shorturl \($left($avail $word)...\)]
+            xecho -b $str
+        }
     }
 
     alias h.shorturl.server_start {
-	@ :port = listen($h.cfg.shorturl_port)
-	if (port != h.cfg.shorturl_port) {
-	    xecho -b The URL shortener web server failed to bind to port $h.cfg.shorturl_port
-	    return
-	}
-	@ h.shorturl.port = port
-	^on ^dcc_raw "% % % $h.cfg.shorturl_port" {
-	    ^on ^dcc_raw "$0 % D *" {
-		h.shorturl.handle_request $0 $3-
-	    }
-	    # timeout
-	    timer -ref web_$0 20 {
-		^dcc close raw $0
-		h.shorturl.connection_cleanup $0
-	    }
-	    # the client closed connection
-	    ^on ^dcc_raw "$0 % C" {
-		h.shorturl.connection_cleanup $0
-	    }
-	}
-	^on ^dcc_lost "$h.cfg.shorturl_port RAW_LISTEN raw_listen *" #
-	xecho -b URL shortener web server running on port $h.shorturl.port
+        @ :port = listen($h.cfg.shorturl_port)
+        if (port != h.cfg.shorturl_port) {
+            xecho -b The URL shortener web server failed to bind to port $h.cfg.shorturl_port
+            return
+        }
+        @ h.shorturl.port = port
+        ^on ^dcc_raw "% % % $h.cfg.shorturl_port" {
+            ^on ^dcc_raw "$0 % D *" {
+                h.shorturl.handle_request $0 $3-
+            }
+            # timeout
+            timer -ref web_$0 20 {
+                ^dcc close raw $0
+                h.shorturl.connection_cleanup $0
+            }
+            # the client closed connection
+            ^on ^dcc_raw "$0 % C" {
+                h.shorturl.connection_cleanup $0
+            }
+        }
+        ^on ^dcc_lost "$h.cfg.shorturl_port RAW_LISTEN raw_listen *" #
+        xecho -b URL shortener web server running on port $h.shorturl.port
     }
 
     alias h.shorturl.server_stop {
-	if (h.shorturl.port) {
-	    ^dcc close raw_listen $h.shorturl.port
-	    ^on ^dcc_lost -"$h.shorturl.port RAW_LISTEN raw_listen *"
-	    ^on ^dcc_raw -"% % % $h.shorturl.port"
-	    xecho -b URL shortener web server stopped
-	} else {
-	    # Try anyway
-	    ^dcc close raw_listen $h.cfg.shorturl_port
-	}
-	^assign -h.shorturl.port
+        if (h.shorturl.port) {
+            ^dcc close raw_listen $h.shorturl.port
+            ^on ^dcc_lost -"$h.shorturl.port RAW_LISTEN raw_listen *"
+            ^on ^dcc_raw -"% % % $h.shorturl.port"
+            xecho -b URL shortener web server stopped
+        } else {
+            # Try anyway
+            ^dcc close raw_listen $h.cfg.shorturl_port
+        }
+        ^assign -h.shorturl.port
     }
 
     alias h.shorturl.handle_request (fd, data) {
-	if (word(0 $data) == [GET]) {
-	    @ :path = word(1 $data)
-	    @ :urlid = pass(1234567890 $path)
-	    if (strlen($h.shorturl.urls[$urlid])) {
-		h.shorturl.send_url $fd $h.shorturl.urls[$urlid]
-	    } else {
-		h.shorturl.send_404 $fd $word(1 $data)
-	    }
-	    ^dcc close raw $fd
-	    h.shorturl.connection_cleanup $fd
-	}
+        if (word(0 $data) == [GET]) {
+            @ :path = word(1 $data)
+            @ :urlid = pass(1234567890 $path)
+            if (strlen($h.shorturl.urls[$urlid])) {
+                h.shorturl.send_url $fd $h.shorturl.urls[$urlid]
+            } else {
+                h.shorturl.send_404 $fd $word(1 $data)
+            }
+            ^dcc close raw $fd
+            h.shorturl.connection_cleanup $fd
+        }
     }
 
     alias h.shorturl.send_404 (fd, request) {
 
-	# the headers
-	msg =$fd HTTP/1.1 404 Not Found
-	msg =$fd Date: $strftime(%z)
-	msg =$fd Server: Hienoa
-	msg =$fd Connection: close
-	msg =$fd Content-Type: text/html\; charset=US-ASCII$chr(10)
+        # the headers
+        msg =$fd HTTP/1.1 404 Not Found
+        msg =$fd Date: $strftime(%z)
+        msg =$fd Server: Hienoa
+        msg =$fd Connection: close
+        msg =$fd Content-Type: text/html\; charset=US-ASCII$chr(10)
 
-	# the content
-	msg =$fd <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
-	msg =$fd <HTML><HEAD>
-	msg =$fd <TITLE>404 Not Found</TITLE>
-	msg =$fd </HEAD><BODY>
-	msg =$fd <H1>Not Found</H1>
-	msg =$fd The requested URL $request was not found on this server.<P>
-	msg =$fd <HR>
-	msg =$fd <ADDRESS>Hienoa/$h.version at Server $h.cfg.shorturl_host Port $h.shorturl.port</ADDRESS>
-	msg =$fd </BODY></HTML>
+        # the content
+        msg =$fd <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+        msg =$fd <HTML><HEAD>
+        msg =$fd <TITLE>404 Not Found</TITLE>
+        msg =$fd </HEAD><BODY>
+        msg =$fd <H1>Not Found</H1>
+        msg =$fd The requested URL $request was not found on this server.<P>
+        msg =$fd <HR>
+        msg =$fd <ADDRESS>Hienoa/$h.version at Server $h.cfg.shorturl_host Port $h.shorturl.port</ADDRESS>
+        msg =$fd </BODY></HTML>
     }
 
     alias h.shorturl.send_url (fd, url) {
-	msg =$fd HTTP/1.1 302 Found
-	msg =$fd Date: $strftime(%z)
-	msg =$fd Server: Hienoa
-	msg =$fd Location: $url$chr(10)
+        msg =$fd HTTP/1.1 302 Found
+        msg =$fd Date: $strftime(%z)
+        msg =$fd Server: Hienoa
+        msg =$fd Location: $url$chr(10)
     }
 
     alias h.shorturl.connection_cleanup (fd) {
-	on dcc_raw -"$fd % C"
-	on dcc_raw -"$fd % D *"
-	timer -d web_$fd
+        on dcc_raw -"$fd % C"
+        on dcc_raw -"$fd % D *"
+        timer -d web_$fd
     }
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

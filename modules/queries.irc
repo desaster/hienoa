@@ -1,4 +1,4 @@
-# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 package queries
@@ -6,18 +6,18 @@ package queries
 alias wi whois
 alias ww whowas
 
-alias t topic
+alias t topic $*
 alias topic {
     # /topic - or /topic -#channel
     if ((strlen($0) == 1 && [$0] == [-]) || \
-	    (strlen($0) && left(1 $0) == [-] && \
-	    ischannel($rest(1 $0))) && !strlen($1)) {
-	//topic $0
+            (strlen($0) && left(1 $0) == [-] && \
+            ischannel($rest(1 $0))) && !strlen($1)) {
+        //topic $0
     } elsif (strlen($*) && left(1 $0) == [-] && \
-	    !ischannel($rest(1 $0))) {
-	//topic $C $*
+        !ischannel($rest(1 $0))) {
+        //topic $C $*
     } else {
-	//topic $*
+        //topic $*
     }
 }
 
@@ -28,17 +28,17 @@ alias ctcp {
 
 alias ver {
     if ([$0]) {
-	ctcp $0 version
+        ctcp $0 version
     } else {
-	xecho -b Usage: /ver <nick|#channel|*>
+        xecho -b Usage: /ver <nick|#channel|*>
     }
 }
 
 alias wii {
     if ([$0]) {
-	fe ($*) h.aa { whois $h.aa $h.aa }
+        fe ($*) h.aa { whois $h.aa $h.aa }
     } else {
-	whois $N $N
+        whois $N $N
     }
 }
 
@@ -48,41 +48,41 @@ alias who {
 
 alias ping {
     if ([$0]) {
-	//ping $*
+        //ping $*
     } else {
-	xecho -b Usage: /ping <nick|#channel|*>
+        xecho -b Usage: /ping <nick|#channel|*>
     }
 }
 
 alias chat {
     if ([$0]) {
-	dcc chat $0
+        dcc chat $0
     } else {
-	xecho -b Usage: /chat <nick>
+        xecho -b Usage: /chat <nick>
     }
 }
 
-alias i invite
-alias invite {
+alias i invite $*
+alias invite (...) {
     if ([$0]) {
-	//invite $0 ${[$1] ? [$1] : [$C]}
+        //invite $0 ${[$1] ? [$1] : [$C]}
     } else {
-	xecho -b Usage: /invite <nick> [#channel]
+        xecho -b Usage: /invite <nick> [#channel]
     }
 }
 
-alias nslookup dns
+alias nslookup dns $*
 alias dns (h.host) {
     if (!h.host) {
-	xecho -b Usage: /dns <ip address|hostname>
-	return
+        xecho -b Usage: /dns <ip address|hostname>
+        return
     }
     @ :h.result = convert($h.host)
     if (h.result) {
-	xecho -b $h.host is $h.result
+        xecho -b $h.host is $h.result
     } else {
-	xecho -b DNS lookup on "$h.host" failed
+        xecho -b DNS lookup on "$h.host" failed
     }
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

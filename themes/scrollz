@@ -1,9 +1,9 @@
 # hienoa theme file
 
-# Name:		ScrollZ
-# Author:	Upi Tamminen <desaster@dragonlight.fi>
-# Credits:	Theme updated by Timothy Cava <timothy@thought-criminal.org>
-# Comments:	ScrollZ-look; not 100% identical (maybe 84%)
+# Name:         ScrollZ
+# Author:       Upi Tamminen <desaster at gmail>
+# Credits:      Theme updated by Timothy Cava <timothy@thought-criminal.org>
+# Comments:     ScrollZ-look; not 100% identical (maybe 84%)
 
 screenmode highascii
 set status_no_repeat on

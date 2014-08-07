@@ -1,4 +1,4 @@
-# Copyright (c) 2000, 2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 package table
@@ -8,32 +8,32 @@ alias h.table (h.columns, h.level, h.data) {
     @ :h.n = numwords($h.data)
     @ :h.lparam = (h.level != [NONE] ? [-level $h.level] : [])
     fe ($h.data) h.text {
-	if (count(" " $h.text)) {
-	    push :${[h.table.c] ## h.c} "$h.text"
-	} else {
-	    push :${[h.table.c] ## h.c} $h.text
-	}
-	@ :h.c++
-	if (h.c == h.columns) { @ :h.c = 0 }
+        if (count(" " $h.text)) {
+            push :${[h.table.c] ## h.c} "$h.text"
+        } else {
+            push :${[h.table.c] ## h.c} $h.text
+        }
+        @ :h.c++
+        if (h.c == h.columns) { @ :h.c = 0 }
     }
 
     @ :h.row = [.]
     for (@ :h.c = 0, h.c < h.columns, @ h.c++) {
-	@ :h.row #= [-$repeat($maxlen($(${[h.table.c] ## h.c})) -)-]
-	@ :h.row #= (h.c == h.columns - 1) ? [.] : [+]
+        @ :h.row #= [-$repeat($maxlen($(${[h.table.c] ## h.c})) -)-]
+        @ :h.row #= (h.c == h.columns - 1) ? [.] : [+]
     }
     xecho -b $h.lparam $h.row
 
     @ :h.row = [|]
     for (@ :h.c = 0, h.c < h.columns, @ :h.c++) {
-	@ :h.w = shift(h.data)
-	@ :h.row #= [ $pad($maxlen($(${[h.table.c] ## h.c})) " " $h.w) |]
+        @ :h.w = shift(h.data)
+        @ :h.row #= [ $pad($maxlen($(${[h.table.c] ## h.c})) " " $h.w) |]
     }
     xecho -b $h.lparam $h.row
 
     @ :h.row = [+]
     for (@ :h.c = 0, h.c < h.columns, @ h.c++) {
-	@ :h.row #= [-$repeat($maxlen($(${[h.table.c] ## h.c})) -)-+]
+        @ :h.row #= [-$repeat($maxlen($(${[h.table.c] ## h.c})) -)-+]
     }
     xecho -b $h.lparam $h.row
 
@@ -41,22 +41,22 @@ alias h.table (h.columns, h.level, h.data) {
     @ :h.row = [|]
     @ :h.w = shift(h.data)
     while (h.w) {
-	@ :h.row #= [ $pad($maxlen($(${[h.table.c] ## h.c})) " " $h.w) |]
-	@ :h.c++
-	if (h.c == h.columns) {
-	    xecho -b $h.lparam $h.row
-	    @ :h.row = [|]
-	    @ :h.c = 0
-	}
-	@ :h.w = shift(h.data)
+        @ :h.row #= [ $pad($maxlen($(${[h.table.c] ## h.c})) " " $h.w) |]
+        @ :h.c++
+        if (h.c == h.columns) {
+            xecho -b $h.lparam $h.row
+            @ :h.row = [|]
+            @ :h.c = 0
+        }
+        @ :h.w = shift(h.data)
     }
 
     @ :h.row = [`]
     for (@ :h.c = 0, h.c < h.columns, @ h.c++) {
-	@ :h.row #= [-$repeat($maxlen($(${[h.table.c] ## h.c})) -)-]
-	@ :h.row #= (h.c == h.columns - 1) ? ['] : [+]
+        @ :h.row #= [-$repeat($maxlen($(${[h.table.c] ## h.c})) -)-]
+        @ :h.row #= (h.c == h.columns - 1) ? ['] : [+]
     }
     xecho -b $h.lparam $h.row
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

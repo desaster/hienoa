@@ -1,15 +1,15 @@
-# Copyright (c) 1999-2002 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 ^dump all
 
-unless (word(0 $info(v)) != [epic4] || V < 20031201) {
-    @ h.version = [0.53]
+unless (word(0 $info(v)) != [epic5]) {
+    @ h.version = [2.0]
     @ h.path = realpath($before(-1 / $word(1 $loadinfo())))
     eval load $h.path/core/core.irc
 } else {
-    echo !!! ircII-EPIC4 1.2.0 or later is required for this script
+    echo !!! ircII-EPIC5 is required for this script
     echo !!! Visit http://www.epicsol.org and ftp://ftp.epicsol.org/pub/epic
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

@@ -1,8 +1,8 @@
 # hienoa theme file
 
-# Name:		epic
-# Author:	Upi Tamminen <desaster@dragonlight.fi>
-# Comments:	Ircii-EPIC4's default look.
+# Name:         epic
+# Author:       Upi Tamminen <desaster at gmail>
+# Comments:     Ircii-EPIC4's default look.
 
 screenmode lowascii
 set status_no_repeat on

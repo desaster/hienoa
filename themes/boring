@@ -1,11 +1,11 @@
 # hienoa theme file
 
-# Name:		boring
-# Author:	soren <soren@lordzork.com>
-# Comments:	i stole a few things from cthulhain's "something" 
-#		theme...but mine's better anyways...
-#		well, if you have bad tastes and hate colors that is.
-#		whatever, hope you like it.
+# Name:         boring
+# Author:       soren <soren@lordzork.com>
+# Comments:     i stole a few things from cthulhain's "something" 
+#               theme...but mine's better anyways...
+#               well, if you have bad tastes and hate colors that is.
+#               whatever, hope you like it.
 
 screenmode lowascii
 set status_no_repeat off
@@ -13,9 +13,9 @@ set status_no_repeat off
 format ACTION           $stamp()&w-&W $0&n $2-&n
 format BANNER           &W-
 format CHANNEL_SIGNOFF  $G &nquit\ &W$0&n:&W $1\ &n\(&n$2-&n\)
-format CONFIG_TITLE	&K -&n hienoa $h.version &K-&n $* &K-
+format CONFIG_TITLE     &K -&n hienoa $h.version &K-&n $* &K-
 format CTCP_CHANNEL     $G ctcp\ &W$tolower($3)${[$4] ? [ $4-] : []}&n: &nto&W $2&n from&W $0&n[&w$before(@ $1)&n@&w$after(@ $1)&n]
-format CTCP_REPLY	$G CTCP &W$1 &nreply from &W$0&n: &n$2-
+format CTCP_REPLY       $G CTCP &W$1 &nreply from &W$0&n: &n$2-
 format CTCP_USER        $G ctcp\ &W$tolower($3)${[$4] ? [ $4-] : []}&n: &nto&W $2&n from&W $0&n[&w$before(@ $1)&n@&w$after(@ $1)&n]
 format DCC_CHAT         $stamp()$G chat&K/&W$0&w:&n $1- &K[&W$Z&K]
 format DCC_COMPLETED    $G DCC $1&n: &W$2 &nwith &W$0 &ncompleted &n\(&w$3 kb/s&n\)
@@ -24,7 +24,7 @@ format DCC_LOST         $G DCC $1 connection with &W$0&n lost${[$2] ? [\: $2-] :
 format DCC_OFFER_CHAT   $G Sent DCC $1 request to $0
 format DCC_OFFER        $G Sent DCC $1 request &n\(&W$2 &n$3&n\)&n to &w$0
 format DCC_REQUEST      $G DCC $1${[$5] ? [ &n\(&W$5-7&n\)] : []} &nrequest received from &w$0&W!&w$userhost() &n[&W$3&n:&W$4&n]
-format HILIGHT_NOTIFY	$G Highlight in window &W#$0&w by &W$2&n \($4\)
+format HILIGHT_NOTIFY   $G Highlight in window &W#$0&w by &W$2&n \($4\)
 format INPUT_PROMPT     &n &W=>&w &n
 format INVITE           $G invite&K/&W$0&K:&W $1 $userhost()
 format JOIN             $G join&K/&W$1&K:&W $0&K\(&w$before(@ $2)&w@&w$after(@ $2)&K\)
@@ -69,7 +69,7 @@ format STATUS_HOLD      &K\(&nmore&K\)
 format STATUS_HOLD_LINES %B
 format -STATUS_IDLE
 format STATUS_IRCOP *
-format STATUS_LAG	&w lag&K\(&W%1&K\) 
+format STATUS_LAG       &w lag&K\(&W%1&K\) 
 format STATUS_LINE      &K&w %@&w%N&n%#&w%C%+%Q&K -%>%5&K%F%M&w \(&W%R&w\) &K
 format STATUS_LINE1 $h.format.value(status_line)
 format -STATUS_LINE2

@@ -1,8 +1,8 @@
 # hienoa theme file
 
-# Name:		splitfire
-# Author:	Upi Tamminen <desaster@dragonlight.fi>
-# Comments:	Based on "splitfire" script made by Nuke.
+# Name:         splitfire
+# Author:       Upi Tamminen <desaster at gmail>
+# Comments:     Based on "splitfire" script made by Nuke.
 
 screenmode lowascii
 set status_no_repeat on

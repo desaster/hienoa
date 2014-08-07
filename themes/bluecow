@@ -1,7 +1,7 @@
 # hienoa theme file
 
-# Name:		bluecow
-# Author:	Upi Tamminen <desaster@dragonlight.fi>
+# Name:         bluecow
+# Author:       Upi Tamminen <desaster at gmail>
 
 screenmode lowascii
 set status_no_repeat on

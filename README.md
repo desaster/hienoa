@@ -1,33 +1,25 @@
 Hienoa
 ============
 
-hienoa for ircII-EPIC4
-Copyright (c) 1999-2002 Upi Tamminen <desaster@dragonlight.fi>
+hienoa for ircII-EPIC5
+Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 See the COPYRIGHT file for more information
 
 About
 -----
 
-    Hienoa is a script for ircII-EPIC4. I started making hienoa because i
+    Hienoa is a script for ircII-EPIC5. I started making hienoa because I
     wasn't fully satisfied with any of the irc clients and scripts
     available. I can't guarantee that you will be satisfied with this
-    script, but i'm working on it.
+    script, but I'm working on it.
 
 
 Installation
 ------------
 
-    Method 1:
-
     (1) Unpack hienoa
     (2) Put "load ~/hienoa/hienoa.irc" (without quotes) to your .ircrc
     (3) Start epic
-
-    Method 2:
-
-    (1) Unpack hienoa
-    (2) Run ~/hienoa/hienoa.sh
-
 
 Usage
 -----
@@ -36,7 +28,3 @@ Usage
     how to use EPIC or IRC at all, start with "/help 7 New_User" and
     "/help 7 Introduction" (note that you need to have ircII-EPIC help
     files installed)
-
-
---
-Send all comments, ideas and bugreports to desaster@dragonlight.fi

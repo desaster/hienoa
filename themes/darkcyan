@@ -1,7 +1,7 @@
 # hienoa theme file
 
-# Name:		darkcyan
-# Author:	Upi Tamminen <desaster@dragonlight.fi>
+# Name:         darkcyan
+# Author:       Upi Tamminen <desaster at gmail>
 
 screenmode lowascii
 set status_no_repeat on

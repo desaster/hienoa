@@ -1,4 +1,4 @@
-# Copyright (c) 1999-2002 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 bind ^I parse_command h.tabkey
@@ -51,4 +51,6 @@ bind ^[0 parse_command hook switch_window 10
 
 bind ^[t parse_command h.paste toggle
 
-# vim: set ai tw=75 sw=4:
+bind ^r parse_command reload
+
+# vim: set ai tw=75 sw=4 et:

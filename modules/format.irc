@@ -1,4 +1,4 @@
-# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 package format
@@ -9,10 +9,10 @@ eval on #-hook $hash_32bit(format) "post_load" {
 
 alias h.format.set (h.name, h.data) {
     if (h.name && h.data) {
-	assign h[formats][$h.name] $h.data
+        assign h[formats][$h.name] $h.data
     }
     if (left(1 $h.name) == [-] && !h.data) {
-	assign -h[formats][$rest(1 $h.name)]
+        assign -h[formats][$rest(1 $h.name)]
     }
 }
 
@@ -22,11 +22,11 @@ alias h.format.parse (h.name, ...) {
     @ sar(gr/&/%/h[data])
     @ :h.data = cparse($restw(0 $h[data]))
     if (h[formats][$h.name]) {
-	if (functioncall()) {
-	    eval return $h[data]
-	} else {
-	    eval echo $h[data]
-	}
+        if (functioncall()) {
+            eval return $h[data]
+        } else {
+            eval echo $h[data]
+        }
     }
 }
 
@@ -39,9 +39,9 @@ alias h.format.value (h.name) {
 
 alias rstamp {
     if (h.cfg.timestamp_strftime) {
-	@ :h.ts = [$strftime($h.cfg.timestamp_strftime)]
+        @ :h.ts = [$strftime($h.cfg.timestamp_strftime)]
     } else {
-	@ :h.ts = [$Z]
+        @ :h.ts = [$Z]
     }
     return $h.ts
 }
@@ -49,9 +49,9 @@ alias rstamp {
 alias stamp h.format.stamp
 alias h.format.stamp {
     if (h.cfg.timestamp_strftime) {
-	@ :h.ts = [$strftime($h.cfg.timestamp_strftime)]
+        @ :h.ts = [$strftime($h.cfg.timestamp_strftime)]
     } else {
-	@ :h.ts = [$Z]
+        @ :h.ts = [$Z]
     }
     if (h.cfg.timestamp) { return $cparse($h.format.parse(timestamp $h.ts)) }
 
@@ -59,9 +59,9 @@ alias h.format.stamp {
 
 alias nickstatus (h.nick, h.channel, ...) {
     if (ischanop($h.nick $h.channel)) {
-	return @
+        return @
     } elsif (ischanvoice($h.nick $h.channel)) {
-	return +
+        return +
     }
 }
 
@@ -69,19 +69,19 @@ alias h.lagmeter.refresh {
     ^timer -delete lagmeter
     if (!strlen($myservers())) { return }
     fe ($myservers()) h.s {
-	@ h.lagmeter[$h.encode($h.s)][lag] = [?]
-	^xquote -server $servernum($h.s) ping :$h.s
-	@ h.lagmeter[$h.encode($h.s)][time] = time()
+        @ h.lagmeter[$h.encode($h.s)][lag] = [?]
+        ^xquote -server $servernum($h.s) ping :$h.s
+        @ h.lagmeter[$h.encode($h.s)][time] = time()
     }
     h.lagmeter.status_update $winnum()
 
     ^on ^pong "*" {
-	@ :h.eserver = h.encode($0)
-	if (strlen($h.lagmeter[$h.eserver][time])) {
-	    @ h.lagmeter[$h.eserver][lag] = (time() - \
-		h.lagmeter[$h.eserver][time])
-	    h.lagmeter.status_update $winnum()
-	}
+        @ :h.eserver = h.encode($0)
+        if (strlen($h.lagmeter[$h.eserver][time])) {
+            @ h.lagmeter[$h.eserver][lag] = (time() - \
+                h.lagmeter[$h.eserver][time])
+            h.lagmeter.status_update $winnum()
+        }
     }
     timer -refnum lagmeter 60 { h.lagmeter.refresh }
 }
@@ -95,12 +95,12 @@ alias h.lagmeter.status_update (window, ...) {
 
 alias h.set.idle {
     if (S) {
-	@ :h.it = tdiff2($h.idletime)
-	if (match(*s $h.it)) { @ pop(h.it) }
-	if (!numwords($h.it)) { @ :h.it = [0m] }
-	^set status_user3 $cparse($h.format.parse(status_idle $h.it))
+        @ :h.it = tdiff2($h.idletime)
+        if (match(*s $h.it)) { @ pop(h.it) }
+        if (!numwords($h.it)) { @ :h.it = [0m] }
+        ^set status_user3 $cparse($h.format.parse(status_idle $h.it))
     } else {
-	^set status_user3 $cparse($h.format.parse(status_idle ?))
+        ^set status_user3 $cparse($h.format.parse(status_idle ?))
     }
 }
 
@@ -111,13 +111,13 @@ alias h.reset.idle {
 
 alias h.refresh.idle (h.idle_reset) {
     if (S) {
-	^timer -delete h.idle
-	if (!h.idle_reset) { @ h.idletime += 60 }
-	h.set.idle
-	^timer -refnum h.idle 60 h.refresh.idle
+        ^timer -delete h.idle
+        if (!h.idle_reset) { @ h.idletime += 60 }
+        h.set.idle
+        ^timer -refnum h.idle 60 h.refresh.idle
     } else {
-	^timer -delete h.idle
-	h.set.idle
+        ^timer -delete h.idle
+        h.set.idle
     }
 }
 
@@ -141,8 +141,8 @@ alias h.refresh.away {
 
 alias colorifynick (h.nick, ...) {
     @ :h.n = right(1 $hash_32bit($strip(@+ $h.nick)))
-    @ :h.c = [%r %R %g %G %b %B %m %M %c %C]
-    return $cparse($word($h.n $h.c)$h.nick$n)
+    @ :h.c = [%r %R %g %G %B %B %m %M %c %C]
+    return $cparse($word($h.n $h.c)$h.nick)
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

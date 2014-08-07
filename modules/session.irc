@@ -1,4 +1,4 @@
-# Copyright (c) 2004 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 
 package session
 
@@ -17,30 +17,30 @@ alias h.debug {
 alias ssave session save
 alias session (command, session, ...) {
     switch ($command) {
-	(save) {
-	    h.session.save ${strlen($session) ? session : [default]}
-	    return
-	}
-	(restore) (load) {
-	    h.session.restore ${strlen($session) ? session : [default]}
-	    return
-	}
-	(delete) (remove) {
-	    h.session.delete ${strlen($session) ? session : [default]}
-	    return
-	}
+        (save) {
+            h.session.save ${strlen($session) ? session : [default]}
+            return
+        }
+        (restore) (load) {
+            h.session.restore ${strlen($session) ? session : [default]}
+            return
+        }
+        (delete) (remove) {
+            h.session.delete ${strlen($session) ? session : [default]}
+            return
+        }
     }
     xecho -b Usage: /session <save|restore|delete> [session name]
     @ :h.sessions = glob(~/.hienoa/sessions/*)
     if (!strlen($h.sessions)) {
-	xecho -b There are no saved sessions
+        xecho -b There are no saved sessions
     } else {
-	xecho -b Saved sessions:
-	fe ($h.sessions) h.sfile {
-	    @ :h.stat = stat($h.sfile)
-	    @ :h.sname = reverse($before(/ $reverse($h.sfile)))
-	    xecho -b  * $h.sname \($strftime($word(11 $h.stat) %c)\)
-	}
+        xecho -b Saved sessions:
+        fe ($h.sessions) h.sfile {
+            @ :h.stat = stat($h.sfile)
+            @ :h.sname = reverse($before(/ $reverse($h.sfile)))
+            xecho -b  * $h.sname \($strftime($word(11 $h.stat) %c)\)
+        }
     }
 }
 
@@ -49,12 +49,12 @@ alias h.session.delete (session, ...) {
     @ unlink(~/.hienoa/.session-debug)
 
     if (fexist(~/.hienoa/sessions/$session) != 1) {
-	xecho -b Session "$session" doesn't exist
-	return
+        xecho -b Session "$session" doesn't exist
+        return
     }
     if (unlink(~/.hienoa/sessions/$session) != 0) {
-    	xecho -b Couldn't remove session file ~/.hienoa/sessions/$session
-	return
+        xecho -b Couldn't remove session file ~/.hienoa/sessions/$session
+        return
     }
     xecho -b Session "$session" removed successfully
 }
@@ -67,30 +67,30 @@ alias h.session.restore (session, ...) {
     ^window hide_others
 
     foreach h.session.windows winref {
-	foreach h.session.windows.${winref} var {
-	    ^assign -h.session.windows.${winref}.${var}
-	}
-	^assign -h.session.windows.${winref}
+        foreach h.session.windows.${winref} var {
+            ^assign -h.session.windows.${winref}.${var}
+        }
+        ^assign -h.session.windows.${winref}
     }
     ^assign -h.session.windows
     ^assign -h.session
 
     if (fexist(~/.hienoa/sessions/$session) == -1) {
-	xecho -b Couldn't open session "$session"
-	return
+        xecho -b Couldn't open session "$session"
+        return
     }
     xecho -b Restoring session "$session"
     load ~/.hienoa/sessions/$session
 
     # create windows needed in session
     foreach h.session.windows swinrefnum {
-	h.debug Let's see if $swinrefnum exists..
-	if (winnum($swinrefnum) == -1) {
-	    h.debug  .. NOPE! will create it
-	    ^window new number $swinrefnum hide
-	} else {
-	    h.debug  .. YEP! \($winnum($swinrefnum)\)
-	}
+        h.debug Let's see if $swinrefnum exists..
+        if (winnum($swinrefnum) == -1) {
+            h.debug  .. NOPE! will create it
+            ^window new number $swinrefnum hide
+        } else {
+            h.debug  .. YEP! \($winnum($swinrefnum)\)
+        }
     }
 
     # swap/show windows
@@ -100,82 +100,82 @@ alias h.session.restore (session, ...) {
     ^window swap $h.win
 
     fe ($h.visible_windows) winref {
-	@ :h.winsize = h[session][windows][$winref][size]
-	h.debug Splitting a window: $winref size: $h.winsize
-	^window show $winref size $h.winsize
+        @ :h.winsize = h[session][windows][$winref][size]
+        h.debug Splitting a window: $winref size: $h.winsize
+        ^window show $winref size $h.winsize
     }
 
     # remove any windows that aren't in the session
     fe ($winrefs()) winref {
-	if (!strlen($aliasctl(assign match h.session.windows.${winref}.))) {
-	    h.debug Window $winref isn't in the session, will get rid of it!
-	    window $winref kill
-	}
+        if (!strlen($aliasctl(assign match h.session.windows.${winref}.))) {
+            h.debug Window $winref isn't in the session, will get rid of it!
+            window $winref kill
+        }
     }
 
     @ :h.postponed_winrefs = []
     fe ($winrefs()) winref {
 
-	# Set the window name
-	if (strlen($h[session][windows][$winref][name])) {
-	    ^window $winref name $h[session][windows][$winref][name]
-	}
+        # Set the window name
+        if (strlen($h[session][windows][$winref][name])) {
+            ^window $winref name $h[session][windows][$winref][name]
+        }
 
-	# Connect windows to servers, but only if we're already connected
-	# to that server already
-	if (h[session][windows][$winref][server] != \
-		servername($winserv($winref)) ## \
-		[:$word(1 $servports($winserv($winref)))]) {
-	    @ :h.sname = before(: $h[session][windows][$winref][server])
-	    if (findw($h.sname $myservers()) == -1) {
-		h.debug Postponing connecting window $winref to $h.sname
-		push :h.postponed_winrefs $winref
-		continue
-	    }
-	    h.debug Connecting window $winref to $h.sname
-	    ^window $winref server $h[session][windows][$winref][server]
-	}
+        # Connect windows to servers, but only if we're already connected
+        # to that server already
+        if (h[session][windows][$winref][server] != \
+                servername($winserv($winref)) ## \
+                [:$word(0 $servports($winserv($winref)))]) {
+            @ :h.sname = before(: $h[session][windows][$winref][server])
+            if (findw($h.sname $myservers()) == -1) {
+                h.debug Postponing connecting window $winref to $h.sname
+                push :h.postponed_winrefs $winref
+                continue
+            }
+            h.debug Connecting window $winref to $h.sname
+            ^window $winref server $h[session][windows][$winref][server]
+        }
 
-	@ :channels = h[session][windows][$winref][channels]
+        @ :channels = h[session][windows][$winref][channels]
 
-	# Leave channels that aren't in the session
-	fe ($mychannels(#$winref)) channel {
-	    xeval -window $winref ^local h.ref \$winchan\($channel\)
-	    if (h.ref != winref) continue
-	    if (findw($channel $channels) == -1) {
-		h.debug Leaving channel $channel in window $winref
-		xeval -window $winref part $channel
-	    }
-	}
+        # Leave channels that aren't in the session
+        fe ($mychannels(#$winref)) channel {
+            xeval -window $winref ^local h.ref \$winchan\($channel\)
+            if (h.ref != winref) continue
+            if (findw($channel $channels) == -1) {
+                h.debug Leaving channel $channel in window $winref
+                xeval -window $winref part $channel
+            }
+        }
 
-	# Join channels.
-	fe ($channels) channel {
-	    h.debug Joining $channel in window $winref 
-	    ^window $winref channel $channel
-	}
+        # Join channels.
+        fe ($channels) channel {
+            h.debug Joining $channel in window $winref
+            ^window $winref channel $channel
+        }
 
-	# Set the window levels
-	h.debug Setting level to $h[session][windows][$winref][level] \
-	    in $winref
-	^window $winref level $unsplit(, $h[session][windows][$winref][level])
-	if (strlen($channels)) {
-	    @ :h.bindchan = rightw(1 $channels)
-	    h.debug Binding to $channel in window $winref
-	    ^window $winref bind $h.bindchan
-	}
+        # Set the window levels
+        h.debug Setting level to $h[session][windows][$winref][level] \
+            in $winref
+        ^window $winref level $unsplit(, $h[session][windows][$winref][level])
+        if (strlen($channels)) {
+            @ :h.bindchan = rightw(1 $channels)
+            h.debug Binding to $channel in window $winref
+            ^window $winref bind $h.bindchan
+        }
     }
 
     # Change nicks in servers we're already connected to
     foreach h.session.servers server {
-	@ :h.sname = decode($server)
-	if (findw($h.sname $myservers()) == -1) { continue }
-	if (servernick($servernum($decode($server))) != \
-		h[session][servers][$server][nick]) {
-	    @ :h.oldnick = servernick($servernum($decode($server)))
-	    @ :h.newnick = h[session][servers][$server][nick]
-	    h.debug Changing nick to $h.newnick in $h.sname
-	    xeval -server $servernum($h.sname) nick $h.newnick
-	}
+        @ :h.sname = decode($server)
+        if (findw($h.sname $myservers()) == -1) { continue }
+        if (servernick($servernum($decode($server))) != \
+                h[session][servers][$server][nick]) {
+            @ :h.oldnick = servernick($servernum($decode($server)))
+            @ :h.newnick = h[session][servers][$server][nick]
+            h.debug Changing nick to $h.newnick in $h.sname
+            xeval -server $servernum($h.sname) nick $h.newnick
+        }
     }
 
     # and now... the evil stuff!
@@ -183,47 +183,47 @@ alias h.session.restore (session, ...) {
     # prepare to join channels and change nick on servers that we'll
     # be connecting to later
     fe ($h.postponed_winrefs) winref {
-	@ :h.server = h[session][windows][$winref][server]
-	if (findw($h.server $h.postponed_servers) == -1) {
-	    push :h.postponed_servers $h.server
-	}
+        @ :h.server = h[session][windows][$winref][server]
+        if (findw($h.server $h.postponed_servers) == -1) {
+            push :h.postponed_servers $h.server
+        }
     }
     fe ($h.postponed_servers) server {
-	@ :h.servname = before(: $server)
-	@ :h.servport = after(: $server)
-	h.debug Will join channels in $server later when connected  
-	^on #-connect $hash_32bit(session) "$h.servname $h.servport *" {
+        @ :h.servname = before(: $server)
+        @ :h.servport = after(: $server)
+        h.debug Will join channels in $server later when connected
+        ^on #-connect $hash_32bit(session) "$h.servname $h.servport *" {
 
-	    # change nick
-	    @ :h.nick = h[session][servers][$h.encode($0)][nick]
-	    if (strlen($h.nick)) {
-		xeval -server $servernum($0) nick $h.nick
-	    }
+            # change nick
+            @ :h.nick = h[session][servers][$h.encode($0)][nick]
+            if (strlen($h.nick)) {
+                xeval -server $servernum($0) nick $h.nick
+            }
 
-	    foreach h.session.windows winref {
-		if (h[session][windows][$winref][server] != [$0:$1]) {
-		    continue
-		}
+            foreach h.session.windows winref {
+                if (h[session][windows][$winref][server] != [$0:$1]) {
+                    continue
+                }
 
-		# join channels
-		fe ($h[session][windows][$winref][channels]) channel {
-		    h.debug (delayed) Joining $channel in window $winref 
-		    ^window $winref channel $channel
-		}
-		if (strlen($h[session][windows][$winref][channels])) {
-		    @ :h.bindchan = rightw(1 $h[session][windows][$winref][channels])
-		    h.debug (delayed) Binding to $h.bindchan in window $winref
-		    ^window $winref bind $h.bindchan
-		}
+                # join channels
+                fe ($h[session][windows][$winref][channels]) channel {
+                    h.debug (delayed) Joining $channel in window $winref
+                    ^window $winref channel $channel
+                }
+                if (strlen($h[session][windows][$winref][channels])) {
+                    @ :h.bindchan = rightw(1 $h[session][windows][$winref][channels])
+                    h.debug (delayed) Binding to $h.bindchan in window $winref
+                    ^window $winref bind $h.bindchan
+                }
 
-		# change level
-		h.debug (delayed) Changing level to \
-		    $h[session][windows][$winref][level] in $winref
-		@ :h.levels = unsplit(, $h[session][windows][$winref][level])
-		^window $winref level $h.levels
-	    }
-	    ^on #-connect $hash_32bit(session) -"$0 $1 *"
-	}
+                # change level
+                h.debug (delayed) Changing level to \
+                    $h[session][windows][$winref][level] in $winref
+                @ :h.levels = unsplit(, $h[session][windows][$winref][level])
+                ^window $winref level $h.levels
+            }
+            ^on #-connect $hash_32bit(session) -"$0 $1 *"
+        }
     }
 
     stack push set auto_reconnect
@@ -231,22 +231,25 @@ alias h.session.restore (session, ...) {
 
     # connect to servers we aren't already connected to
     fe ($h.postponed_winrefs) winref {
-	h.debug (delayed) Connecting $winref to \
-	    $h[session][windows][$winref][server]
-	@ :h.s_before = servername($winserv($winref))
-    	^window $winref server $h[session][windows][$winref][server]
-	@ :h.s_now = servername($winserv($winref))
-	# server hasn't changed; assume the connection failed
-	if (h.s_before == h.s_now) {
-	    h.debug Connecting to $h[session][windows][$winref][server] \
-		seems to fail, aborting channel joins
-	    h.debug The window seems to be connected to $servername($winserv($winref))
-	    ^window $winref discon
-	    @ :h.servname = before(: $h[session][windows][$winref][server])
-	    @ :h.servport = after(: $h[session][windows][$winref][server])
-	    ^on #-connect $hash_32bit(session) -"$h.servname $h.servport *"
-	    ^on #-disconnect $hash_32bit(session) -"$h.servname $h.servport *"
-	}
+        @ :h.s_before = servername($winserv($winref))
+        if (h.s_before == before(: $h[session][windows][$winref][server])) {
+            h.debug Seems we are already connected to $h.s_before
+            continue
+        }
+        h.debug (delayed) Connecting $winref to \
+            $h[session][windows][$winref][server]
+        ^window $winref server $h[session][windows][$winref][server]
+        @ :h.s_now = servername($winserv($winref))
+        # server hasn't changed; assume the connection failed
+        if (h.s_before == h.s_now) {
+            h.debug Connecting to $h[session][windows][$winref][server] \
+                seems to fail, aborting channel joins
+            ^window $winref discon
+            @ :h.servname = before(: $h[session][windows][$winref][server])
+            @ :h.servport = after(: $h[session][windows][$winref][server])
+            ^on #-connect $hash_32bit(session) -"$h.servname $h.servport *"
+            ^on #-disconnect $hash_32bit(session) -"$h.servname $h.servport *"
+        }
     }
     stack pop set auto_reconnect
 }
@@ -256,26 +259,26 @@ alias h.session.save (session, ...) {
     @ unlink(~/.hienoa/.session-debug)
 
     if (fexist(~/.hienoa/sessions/$session) == 1) {
-	if (unlink(~/.hienoa/sessions/$session) != 0) {
-	    xecho -b Couldn't remove session file ~/.hienoa/sessions/$session
-	    return
-	}
+        if (unlink(~/.hienoa/sessions/$session) != 0) {
+            xecho -b Couldn't remove session file ~/.hienoa/sessions/$session
+            return
+        }
     }
 
     @ :fd = open(~/.hienoa/sessions/$session W)
     if (!strlen($fd)) {
-	xecho -b Couldn't open session file ~/.hienoa/sessions/$session
-	return
+        xecho -b Couldn't open session file ~/.hienoa/sessions/$session
+        return
     }
 
     @ write($fd $chr(35) Hienoa session file - $strftime(%c) $chr(10))
 
     # Save nicks
     fe ($myservers()) server {
-	@ write($fd $chr(35) Server $server)
-	@ :h.var = [h[session][servers][$h.encode($server)][nick]]
-	@ write($fd @ $h.var = [$servernick($servernum($server))])
-	@ write($fd)
+        @ write($fd $chr(35) Server $server)
+        @ :h.var = [h[session][servers][$h.encode($server)][nick]]
+        @ write($fd @ $h.var = [$servernick($servernum($server))])
+        @ write($fd)
     }
 
     # Save windows
@@ -286,34 +289,34 @@ alias h.session.save (session, ...) {
     # the revw()
 
     fe ($revw($winrefs())) winref {
-	@ :h.wcount++
-	@ write($fd $chr(35) Window $chr(35)$winref)
-	@ :h.snum = winserv($winref) 
-	@ :h.server = [$servername($h.snum):$word(1 $servports($h.snum))]
+        @ :h.wcount++
+        @ write($fd $chr(35) Window $chr(35)$winref)
+        @ :h.snum = winserv($winref)
+        @ :h.server = [$servername($h.snum):$word(0 $servports($h.snum))]
 
-	if (winvisible($winref) == 1) { push :h.visible_windows $winref }
-	
-	@ :h.struct = [h[session][windows][$winref]]
-	@ write($fd @ ${h[struct]}[name] = [$winnam($winref)])
-	@ write($fd @ ${h[struct]}[server] = [$h.server])
-	@ write($fd @ ${h[struct]}[level] = [$winlevel($winref)])
-	@ write($fd @ ${h[struct]}[size] = $winsize($winref))
+        if (winvisible($winref) == 1) { push :h.visible_windows $winref }
 
-	@ :h[winchans][$winref] = []
+        @ :h.struct = [h[session][windows][$winref]]
+        @ write($fd @ ${h[struct]}[name] = [$winnam($winref)])
+        @ write($fd @ ${h[struct]}[server] = [$h.server])
+        @ write($fd @ ${h[struct]}[level] = [$winlevel($winref)])
+        @ write($fd @ ${h[struct]}[size] = $winsize($winref))
 
-	fe ($mychannels($h.snum)) channel {
-	    xeval -server $h.snum ^local h.chanwin \$chanwin\($channel\)
-	    if (h.chanwin != winref) { continue }
-	    push :h[winchans][$h.chanwin] $channel
-	    @ :h.ccount++
-	}
+        @ :h[winchans][$winref] = []
 
-	# place the current channel last
-	@ :h[winchans][$winref] = remw($chanwin($winref) $h[winchans][$winref])
-	push :h[winchans][$winref] $chanwin($winref)
+        fe ($mychannels($h.snum)) channel {
+            xeval -server $h.snum ^local h.chanwin \$chanwin\($channel\)
+            if (h.chanwin != winref) { continue }
+            push :h[winchans][$h.chanwin] $channel
+            @ :h.ccount++
+        }
 
-	@ write($fd @ ${h[struct]}[channels] = [$h[winchans][$winref]])
-	@ write($fd)
+        # place the current channel last
+        @ :h[winchans][$winref] = remw($chanwin($winref) $h[winchans][$winref])
+        push :h[winchans][$winref] $chanwin($winref)
+
+        @ write($fd @ ${h[struct]}[channels] = [$h[winchans][$winref]])
+        @ write($fd)
     }
 
     @ write($fd $chr(35) The order of visible windows)
@@ -325,4 +328,4 @@ alias h.session.save (session, ...) {
     xecho -b Saved $h.ccount channels, $h.scount servers, $h.wcount windows
 }
 
-# vim: set sw=4:
+# vim: set ai tw=75 sw=4 et:

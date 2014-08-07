@@ -1,15 +1,15 @@
 # hienoa theme file
 
-# Name:			something
-# Author:		cthulhain <lordzork@lordzork.com>
-# Comments:		Based on Upi Tamminen's "echoes" 
-#			theme for hienoa, which in turn 
-#			was based on whitefang's "echoes" 
-#			theme for LiCe (which was based
-#			on trey's echoes theme for rain).
+# Name:                 something
+# Author:               cthulhain <lordzork@lordzork.com>
+# Comments:             Based on Upi Tamminen's "echoes" 
+#                       theme for hienoa, which in turn 
+#                       was based on whitefang's "echoes" 
+#                       theme for LiCe (which was based
+#                       on trey's echoes theme for rain).
 #
-#			and it's weeping in my heart, 
-#			like it's raining in the town.
+#                       and it's weeping in my heart, 
+#                       like it's raining in the town.
 
 screenmode lowascii
 set status_no_repeat off

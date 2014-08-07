@@ -1,4 +1,4 @@
-# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 package away
@@ -28,28 +28,28 @@ alias awya away
 alias setaway away
 alias away (h.am default $h.cfg.awaymessage) {
     if (h.cfg.public_away) {
-	fe ($myservers(1)) h.s {
-	    fe ($mychannels($h.s)) h.c {
-		if (h.cfg.public_away_channels && \
-			findw($word(1 $h.c) $h.cfg.public_away_channels) < 0) {
-	    	    continue
-	       	}
-		@ :h.m = [PRIVMSG $h.c :ACTION is away, $h.am]
-		^xquote -server $h.s $h.m
-	    }
-	}
-	if (C) { shook send_action ... is away, $h.am }
+        fe ($myservers(1)) h.s {
+            fe ($mychannels($h.s)) h.c {
+                if (h.cfg.public_away_channels && \
+                    findw($word(1 $h.c) $h.cfg.public_away_channels) < 0) {
+                    continue
+                }
+                @ :h.m = [PRIVMSG $h.c :ACTION is away, $h.am]
+                ^xquote -server $h.s $h.m
+            }
+        }
+        if (C) { shook send_action ... is away, $h.am }
     }
     if (h.cfg.away_change_nick && h.cfg.away_nick && N != h.cfg.away_nick) {
-	fe ($uniq($myservers())) h.s {
-	    @ h.away_original_nick = N
-	    xeval -server $servernum($h.s) nick $h.cfg.away_nick
-	}
+        fe ($uniq($myservers())) h.s {
+            @ h.away_original_nick = N
+            xeval -server $servernum($h.s) nick $h.cfg.away_nick
+        }
     }
     @ h.awaytime = time()
     @ h.away = 1
     if (h.cfg.away_timestamp) {
-	@ h.am #= [ \(since $stime($time())\)]
+        @ h.am #= [ \(since $stime($time())\)]
     }
     //away -all $h.am
 }
@@ -57,60 +57,60 @@ alias away (h.am default $h.cfg.awaymessage) {
 alias setback back
 alias back (h.bm default $h.cfg.backmessage) {
     if (h.away && h.cfg.public_away) {
-	@ :h.bm = [is back, $h.bm \($tdiff2(${time()-h.awaytime})\)]
-	fe ($myservers(1)) h.s {
-	    fe ($mychannels($h.s)) h.c {
-		if (h.cfg.public_away_channels && \
-			findw($word(1 $h.c) $h.cfg.public_away_channels) < 0) {
-	    	    continue
-	       	}
-		@ :h.m = [PRIVMSG $h.c :$chr(1)ACTION $h.bm$chr(1)]
-		^xquote -server $h.s $h.m
-	    }
-	}
-	if (C) { shook send_action ... $h.bm }
+        @ :h.bm = [is back, $h.bm \($tdiff2(${time()-h.awaytime})\)]
+        fe ($myservers(1)) h.s {
+            fe ($mychannels($h.s)) h.c {
+                if (h.cfg.public_away_channels && \
+                        findw($word(1 $h.c) $h.cfg.public_away_channels) < 0) {
+                    continue
+                }
+                @ :h.m = [PRIVMSG $h.c :$chr(1)ACTION $h.bm$chr(1)]
+                ^xquote -server $h.s $h.m
+            }
+        }
+        if (C) { shook send_action ... $h.bm }
     }
     if (h.away && h.cfg.away_change_nick && h.away_original_nick) {
-	fe ($uniq($myservers())) h.s {
-	    xeval -server $servernum($h.s) nick $h.away_original_nick
-	}
-	^assign -h.away_original_nick
+        fe ($uniq($myservers())) h.s {
+            xeval -server $servernum($h.s) nick $h.away_original_nick
+        }
+        ^assign -h.away_original_nick
     }
     @ h.away = 0
     //away -all
     @ :h.fn = [~/.hienoa/away$pid()]
     if (fexist($h.fn) == 1) {
-	xecho -b You have messages.
-	xecho -b Use /readlog to read your log, /remlog to delete it.
+        xecho -b You have messages.
+        xecho -b Use /readlog to read your log, /remlog to delete it.
     }
 }
 
 alias remlog {
     @ :h.fn = [~/.hienoa/away$pid()]
     if (fexist($h.fn) > -1) {
-	if (unlink($h.fn)) {
-	    xecho -b Failed to remove awaylog
-	} else {
-	    xecho -say -b Awaylog removed
-	    @ h.awaycount = 0
-	    h.refresh.away
-	}
+        if (unlink($h.fn)) {
+            xecho -b Failed to remove awaylog
+        } else {
+            xecho -say -b Awaylog removed
+            @ h.awaycount = 0
+            h.refresh.away
+        }
     } else {
-	xecho -say -b The awaylog is empty
+        xecho -say -b The awaylog is empty
     }
 }
 
 alias readlog {
     @ :h.fn = [~/.hienoa/away$pid()]
     if (fexist($h.fn) == -1) {
-	xecho -b The awaylog is empty
-	return
+        xecho -b The awaylog is empty
+        return
     }
     if (:h.f = open($h.fn R)) {
-	while (!eof($h.f)) {
-	    @ :h.l = read($h.f)
-	    if (h.l) { xecho -b $h.l }
-	}
+        while (!eof($h.f)) {
+            @ :h.l = read($h.f)
+            if (h.l) { xecho -b $h.l }
+        }
     }
     if (h.f) { @ close($h.f) }
 }
@@ -127,10 +127,10 @@ alias h.auto_away.init {
     ^on #-idle $hash_32bit(away) -
     if (!h.cfg.auto_away_time || !isnumber($h.cfg.auto_away_time)) { return }
     ^on #-idle $hash_32bit(away) $h.cfg.auto_away_time {
-	if (!h.away && h.cfg.auto_away) {
-	    away auto-away after $h.cfg.auto_away_time minutes
-	}
+        if (!h.away && h.cfg.auto_away) {
+            away auto-away after $h.cfg.auto_away_time minutes
+        }
     }
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

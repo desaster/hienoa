@@ -1,4 +1,4 @@
-# Copyright (c) 2001-2002 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 # h.userlist.user = 1
@@ -17,42 +17,43 @@ config_entry "Auto-op delay in seconds" type "text" var "h.cfg.aop_delay" def "5
 eval on #-invite $hash_32bit(userlist) "*" {
     @ :h.user = h.userlist.getuser($0!$userhost())
     if (h.user && h.userlist.hasflag(i $h.user $1)) {
-	join $1
+        join $1
     }
 }
 
 eval on #-hook $hash_32bit(userlist) "mode_stripped *" {
     if ([$1] == servernick() || !ischannel($2)) { return }
     switch ($3) {
-	(-o) {
-	    if ([$1] == [$4]) { continue }
-	    @ :h.user = h.userlist.getuser($4!$h.uh($4))
-	    if (h.user && h.userlist.hasflag(p $h.user $h.channel) && \
-		    h.userlist.hasflag(o $h.user $h.channel) && \
-		    ischanop($servernick() $h.channel) == 1) {
-		//mode $2 +o $4
-	    }
-	}
-	(-v) {
-	    if ([$1] == [$4]) { continue }
-	    @ :h.user = h.userlist.getuser($4!$h.uh($4))
-	    if (h.user && h.userlist.hasflag(p $h.user $h.channel) && \
-		    h.userlist.hasflag(v $h.user $h.channel) && \
-		    ischanop($servernick() $h.channel) == 1) {
-		//mode $2 +v $4
-	    }
-	}
+        (-o) {
+            if ([$1] == [$4]) { continue }
+            @ :h.user = h.userlist.getuser($4!$h.uh($4))
+            if (h.user && h.userlist.hasflag(p $h.user $h.channel) && \
+                    h.userlist.hasflag(o $h.user $h.channel) && \
+                    ischanop($servernick() $h.channel) == 1) {
+                //mode $2 +o $4
+            }
+        }
+        (-v) {
+            if ([$1] == [$4]) { continue }
+            @ :h.user = h.userlist.getuser($4!$h.uh($4))
+            if (h.user && h.userlist.hasflag(p $h.user $h.channel) && \
+                    h.userlist.hasflag(v $h.user $h.channel) && \
+                    ischanop($servernick() $h.channel) == 1) {
+                //mode $2 +v $4
+            }
+        }
     }
 }
 
 eval on #-311 $hash_32bit(userlist) "*" {
     if (:h.user = h.userlist.getuser($1!$2@$3)) {
-	@ :h.flags = h.userlist[$h.encode($h.user)][flags]
-	@ :h.flags = h.flags ? h.flags : [none]
-	foreach h.userlist.${h.encode($h.user)}.channels h.channel {
-	    push :h.channels $decode($h.channel)
-	}
-	h.format.parse whois_userlist $0-1 $h.user $h.flags $h.channels
+        @ :h.flags = h.userlist[$h.encode($h.user)][flags]
+        @ :h.flags = h.flags ? h.flags : [none]
+        #foreach h.userlist.${h.encode($h.user)}.channels h.channel {
+        fe ($get_structure_children(h.userlist.${h.encode($h.user)}.channels)) h.channel {
+            push :h.channels $decode($h.channel)
+        }
+        h.format.parse whois_userlist $0-1 $h.user $h.flags $h.channels
     }
 }
 
@@ -60,10 +61,10 @@ eval on #-ctcp $hash_32bit(userlist) "*" {
     @ :h.user = h.userlist.getuser($0!$h.uh($0))
     if (!h.user || !h.userlist.hasflag(c $h.user)) { return }
     switch ($2) {
-	(pass) (password) { h.userlist.ctcp_password $0 $h.user $3- }
-	(op) (ops) { h.userlist.ctcp_op $0 $h.user $3- }
-	(voice) { h.userlist.ctcp_voice $0 $h.user $3- }
-	(whoami) { h.userlist.ctcp_whoami $0 $h.user }
+        (pass) (password) { h.userlist.ctcp_password $0 $h.user $3- }
+        (op) (ops) { h.userlist.ctcp_op $0 $h.user $3- }
+        (voice) { h.userlist.ctcp_voice $0 $h.user $3- }
+        (whoami) { h.userlist.ctcp_whoami $0 $h.user }
     }
 }
 
@@ -72,21 +73,21 @@ eval on #-join $hash_32bit(userlist) "*" {
     if (!(:h.user = h.userlist.getuser($0!$2))) { return }
     if (h.userlist.hasflag(b $h.user $1)) { ban $1 $0 }
     if (h.userlist.hasflag(k $h.user $1)) {
-	kick $1 $0
-	return
+        kick $1 $0
+        return
     }
     if (h.userlist.hasflag(a $h.user $1)) {
-	if (h.userlist.hasflag(o $h.user $1)) {
-	    if (h.cfg.aop_delay) {
-		timer $h.cfg.aop_delay {
-		    unless (ischanop($0 $1)) { //mode $1 +o $0 }
-		}
-	    } else {
-		unless (ischanop($0 $1)) { //mode $1 +o $0 }
-	    }
-	} elsif (h.userlist.hasflag(v $h.user $1)) {
-	    unless (ischanvoice($0 $1) > 0) { //mode $1 +v $0 }
-	}
+        if (h.userlist.hasflag(o $h.user $1)) {
+            if (h.cfg.aop_delay) {
+                timer $h.cfg.aop_delay {
+                    unless (ischanop($0 $1)) { //mode $1 +o $0 }
+                }
+            } else {
+                unless (ischanop($0 $1)) { //mode $1 +o $0 }
+            }
+        } elsif (h.userlist.hasflag(v $h.user $1)) {
+            unless (ischanvoice($0 $1) > 0) { //mode $1 +v $0 }
+        }
     }
 }
 
@@ -94,20 +95,22 @@ alias unuser deluser
 alias userdel deluser
 alias deluser (h.user, ...) {
     if (!h.user) {
-	xecho -b Usage: /deluser <user>
-	return
+        xecho -b Usage: /deluser <user>
+        return
     }
     if (!h[userlist][$h.encode($h.user)]) {
-	xecho -b No such user
-	return
+        xecho -b No such user
+        return
     }
     xecho -say -b Removing user $h.user
-    foreach h.userlist.${h.encode($h.user)}.channels h.v {
-	^assign -h.userlist.${h.encode($h.user)}.channels.${h.v}.flags
-	^assign -h.userlist.${h.encode($h.user)}.channels.${h.v}
+    #foreach h.userlist.${h.encode($h.user)}.channels h.v {
+    fe ($get_structure_children(h.userlist.${h.encode($h.user)}.channels)) h.v {
+        ^assign -h.userlist.${h.encode($h.user)}.channels.${h.v}.flags
+        ^assign -h.userlist.${h.encode($h.user)}.channels.${h.v}
     }
-    foreach h.userlist.${h.encode($h.user)} h.v {
-	^assign -h.userlist.${h.encode($h.user)}.${h.v}
+    #foreach h.userlist.${h.encode($h.user)} h.v {
+    fe ($get_structure_children(h.userlist.${h.encode($h.user)})) h.v {
+        ^assign -h.userlist.${h.encode($h.user)}.${h.v}
     }
     ^assign -h.userlist.${h.encode($h.user)}
     if (h.cfg.userlist_save) { h.userlist.save }
@@ -116,29 +119,29 @@ alias deluser (h.user, ...) {
 alias useradd adduser
 alias adduser (h.user, h.args) {
     if (!h.user) {
-	xecho -b Usage: /adduser <user> [+flag(s)] [#channel(s)] [+flag(s)] [hostmask(s)]
-	return
+        xecho -b Usage: /adduser <user> [+flag(s)] [#channel(s)] [+flag(s)] [hostmask(s)]
+        return
     }
     if (h[userlist][$h.encode($h.user)]) {
-	xecho -b $h.user already exists
-	return
+        xecho -b $h.user already exists
+        return
     } else {
-	xecho -say $G Adding user $h.user
-	@ h[userlist][$h.encode($h.user)] = 1
+        xecho -say $G Adding user $h.user
+        @ h[userlist][$h.encode($h.user)] = 1
     }
     while (:h.w = shift(h.args)) {
-	if (h.w =~ [#%]) {
-	    @ :h.channel = h.w
-	    ^addchannel $h.user $h.w
-	    continue
-	}
-	if (h.w =~ [?%!?%@?%]) {
-	    ^addhost $h.user $h.w
-	    continue
-	}
-	if (h.w =~ [+%]) {
-	    ^userflags $h.user${h.channel ? [ $h.channel ] : [ ]}$h.w
-	}
+        if (h.w =~ [#%]) {
+            @ :h.channel = h.w
+            ^addchannel $h.user $h.w
+            continue
+        }
+        if (h.w =~ [?%!?%@?%]) {
+            ^addhost $h.user $h.w
+            continue
+        }
+        if (h.w =~ [+%]) {
+            ^userflags $h.user${h.channel ? [ $h.channel ] : [ ]}$h.w
+        }
     }
     if (h.cfg.userlist_save) { h.userlist.save }
 }
@@ -147,12 +150,12 @@ alias +host addhost
 alias hostadd addhost
 alias addhost (h.user, h.hosts) {
     if (!h.hosts) {
-	echo $G Usage: /addhost <user> [hostmask(s)]
-	return
+        echo $G Usage: /addhost <user> [hostmask(s)]
+        return
     }
     if (!h[userlist][$h.encode($h.user)]) {
-	echo $G User $h.user does not exist
-	return
+        echo $G User $h.user does not exist
+        return
     }
     @ :h.var = [h.userlist.${h.encode($h.user)}.hosts]
     @ $h.var = uniq($($h.var) $pattern(%!%@% $h.hosts))
@@ -165,12 +168,12 @@ alias -host delhost
 alias hostdel delhost
 alias delhost (h.user, h.hosts) {
     if (!h.hosts) {
-	echo $G Usage: /delhost <user> [hostmask(s)]
-	return
+        echo $G Usage: /delhost <user> [hostmask(s)]
+        return
     }
     if (!h[userlist][$h.encode($h.user)]) {
-	echo $G User $h.user does not exist
-	return
+        echo $G User $h.user does not exist
+        return
     }
     @ :h.var = [h.userlist.${h.encode($h.user)}.hosts]
     @ $h.var = remws($h.hosts / $($h.var))
@@ -182,18 +185,19 @@ alias delhost (h.user, h.hosts) {
 alias +channel addchannel
 alias addchannel (h.user, h.channels) {
     if (!h.channels) {
-	echo $G Usage: /addchannel <user> [channel(s)]
-	return
+        echo $G Usage: /addchannel <user> [channel(s)]
+        return
     }
     if (!h[userlist][$h.encode($h.user)]) {
-	echo $G User $h.user does not exist
-	return
+        echo $G User $h.user does not exist
+        return
     }
     fe ($pattern(#?% $h.channels)) h.channel {
-	@ h[userlist][$h.encode($h.user)][channels][$h.encode($h.channel)] = 1
+        @ h[userlist][$h.encode($h.user)][channels][$h.encode($h.channel)] = 1
     }
-    foreach h.userlist.${h.encode($h.user)}.channels h.channel {
-	push :h.l $decode($h.channel)
+    #foreach h.userlist.${h.encode($h.user)}.channels h.channel {
+    fe ($get_structure_children(h.userlist.${h.encode($h.user)}.channels)) h.channel {
+        push :h.l $decode($h.channel)
     }
     xecho -say -b Channels for $h.user are now: ${h.l ? h.l : [any]}
     if (h.cfg.userlist_save) { h.userlist.save }
@@ -201,19 +205,20 @@ alias addchannel (h.user, h.channels) {
 
 alias delchannel (h.user, h.channels) {
     if (!h.channels) {
-	echo $G Usage: /delchan <user> [channel(s)]
-	return
+        echo $G Usage: /delchan <user> [channel(s)]
+        return
     }
     if (!h[userlist][$h.encode($h.user)]) {
-	echo $G User $h.user does not exist
-	return
+        echo $G User $h.user does not exist
+        return
     }
     fe ($h.channels) h.channel {
-	^assign -h[userlist][$h.encode($h.user)][channels][$h.encode($h.channel)][flags]
-	^assign -h[userlist][$h.encode($h.user)][channels][$h.encode($h.channel)]
+        ^assign -h[userlist][$h.encode($h.user)][channels][$h.encode($h.channel)][flags]
+        ^assign -h[userlist][$h.encode($h.user)][channels][$h.encode($h.channel)]
     }
-    foreach h.userlist.${h.encode($h.user)}.channels h.channel {
-	push :h.l $decode($h.channel)
+    #foreach h.userlist.${h.encode($h.user)}.channels h.channel {
+    fe ($get_structure_children(h.userlist.${h.encode($h.user)}.channels)) h.channel {
+        push :h.l $decode($h.channel)
     }
     xecho -say -b Channels for $h.user are now: ${h.l ? h.l : [any]}
     if (h.cfg.userlist_save) { h.userlist.save }
@@ -224,43 +229,43 @@ alias setflags userflags
 alias chattr userflags
 alias userflags (h.user, h.args) {
     if (!h.args) {
-	echo $G Usage: /userflags <user> [channel] <+flags>
-	return
+        echo $G Usage: /userflags <user> [channel] <+flags>
+        return
     }
     if (!h[userlist][$h.encode($h.user)]) {
-	echo $G User $h.user does not exist
-	return
+        echo $G User $h.user does not exist
+        return
     }
     while (:h.w = shift(h.args)) {
-	if (h.w =~ [#%]) {
-	    @ :h.channel = h.w
-	    continue
-	}
-	@ :h.add = 1
-	@ :h.w = (strlen($h.channel) ? \
-	    pass(coavbkpi-+ $h.w) : \
-	    pass(cdoavbkpi-+ $h.w))
-	fec ($h.w) h.c {
-	    if (h.c != [+] && h.c != [-]) {
-		@ :h.var = [h.userlist.${h.encode($h.user)}.] ## (h.channel ? \
-		    [channels.${h.encode($h.channel)}.] : []) ## [flags]
-		if (h.add && [$($h.var)] !~ [%$h.c%]) {
-		    @ $h.var = [$($h.var)$h.c]
-		} elsif (!h.add && [$($h.var)] =~ [%$h.c%]) {
-		    @ $h.var = tr(/$h.c//$($h.var))
-		}
-		@ :h.flags_changed = 1
-		continue
-	    }
-	    if (h.c == [+]) { @ :h.add = 1 }
-	    if (h.c == [-]) { @ :h.add = 0 }
-	}
+        if (h.w =~ [#%]) {
+            @ :h.channel = h.w
+            continue
+        }
+        @ :h.add = 1
+        @ :h.w = (strlen($h.channel) ? \
+            pass(coavbkpi-+ $h.w) : \
+            pass(cdoavbkpi-+ $h.w))
+        fec ($h.w) h.c {
+            if (h.c != [+] && h.c != [-]) {
+                @ :h.var = [h.userlist.${h.encode($h.user)}.] ## (h.channel ? \
+                    [channels.${h.encode($h.channel)}.] : []) ## [flags]
+                if (h.add && [$($h.var)] !~ [%$h.c%]) {
+                    @ $h.var = [$($h.var)$h.c]
+                } elsif (!h.add && [$($h.var)] =~ [%$h.c%]) {
+                    @ $h.var = tr(/$h.c//$($h.var))
+                }
+                @ :h.flags_changed = 1
+                continue
+            }
+            if (h.c == [+]) { @ :h.add = 1 }
+            if (h.c == [-]) { @ :h.add = 0 }
+        }
     }
     if (h.cfg.userlist_save) { h.userlist.save }
     if (h.flags_changed) {
-	xecho -say -b Flags for $h.user changed
+        xecho -say -b Flags for $h.user changed
     } else {
-	xecho -say -b No flags for $h.user changed
+        xecho -say -b No flags for $h.user changed
     }
 }
 
@@ -268,27 +273,29 @@ alias ul userlist
 alias listusers userlist
 alias userlist (h.pattern) {
     if (!aliasctl(assign match h.userlist.)) {
-	xecho -b Userlist is empty
-	return
+        xecho -b Userlist is empty
+        return
     }
-    foreach h.userlist h.user_encoded {
-	@ :h.user = decode($h.user_encoded)
-	if (h.pattern && h.user !~ [$h.pattern]) { continue }
-	@ :h.var = [h.userlist.${h.user_encoded}]
-	@ :h.flags = [$(${h.var}.flags)]
-	@ :h.l = [$tolower($h.user)${h.flags ? [\(+$h.flags\)] : []}]
-	@ :h.password = h[userlist][$h.user_encoded][password] ? [yes] : [no]
-	@ :h.l #= [ \[pwd:$h.password\]]
-	if (aliasctl(assign match ${h.var}.channels.)) {
-	    foreach ${h.var}.channels h.channel {
-		@ :h.l #= [ $decode($h.channel)]
-		@ :h.flags = [$(${h.var}.channels.${h.channel}.flags)]
-		if (h.flags) { @ :h.l #= [\(+$h.flags\)] }
-	    }
-	} else { @ :h.l #= [ *] }
-	@ :h.hosts = [$(${h.var}.hosts)] ? [$(${h.var}.hosts)] : [no hosts]
-	xecho -b * $h.l
-	xecho -b   [$h.hosts]
+    #foreach h.userlist h.user_encoded {
+    fe ($get_structure_children(h.userlist)) h.user_encoded {
+        @ :h.user = decode($h.user_encoded)
+        if (h.pattern && h.user !~ [$h.pattern]) { continue }
+        @ :h.var = [h.userlist.${h.user_encoded}]
+        @ :h.flags = [$(${h.var}.flags)]
+        @ :h.l = [$tolower($h.user)${h.flags ? [\(+$h.flags\)] : []}]
+        @ :h.password = h[userlist][$h.user_encoded][password] ? [yes] : [no]
+        @ :h.l #= [ \[pwd:$h.password\]]
+        if (aliasctl(assign match ${h.var}.channels.)) {
+            #foreach ${h.var}.channels h.channel {
+            fe ($get_structure_children(${h.var}.channels)) h.channel {
+                @ :h.l #= [ $decode($h.channel)]
+                @ :h.flags = [$(${h.var}.channels.${h.channel}.flags)]
+                if (h.flags) { @ :h.l #= [\(+$h.flags\)] }
+            }
+        } else { @ :h.l #= [ *] }
+        @ :h.hosts = [$(${h.var}.hosts)] ? [$(${h.var}.hosts)] : [no hosts]
+        xecho -b * $h.l
+        xecho -b   [$h.hosts]
     }
 }
 
@@ -296,41 +303,43 @@ alias h.userlist.save {
     @ unlink(~/.hienoa/userlist)
     @ :h.f = open(~/.hienoa/userlist W)
     @ write($h.f # hienoa userlist V3 \($stime($time())\)$chr(10))
-    foreach h.userlist h.user {
-	@ :h.args = decode($h.user)
-	if (h[userlist][$h.user][flags]) {
-	    push :h.args +$h[userlist][$h.user][flags]
-	}
-	foreach h.userlist.${h.user}.channels h.channel {
-	    push :h.args $decode($h.channel)
-	    @ :h.flags = h[userlist][$h.user][channels][$h.channel][flags]
-	    if (h.flags) { push :h.args +$h.flags }
-	}
-	if (h[userlist][$h.user][hosts]) {
-	    push :h.args $h[userlist][$h.user][hosts]
-	}
-	if (h[userlist][$h.user][password]) {
-	    @ :h.args #= chr(10) ## [^setpassword $tolower($decode($h.user)) ]
-	    @ :h.args #= [nocrypt ${h[userlist][$h.user][password]}]
-	}
-	@ write($h.f ^adduser $h.args)
+    #foreach h.userlist h.user {
+    fe ($get_structure_children(h.userlist)) h.user {
+        @ :h.args = decode($h.user)
+        if (h[userlist][$h.user][flags]) {
+            push :h.args +$h[userlist][$h.user][flags]
+        }
+        #foreach h.userlist.${h.user}.channels h.channel {
+        fe ($get_structure_children(h.userlist.${h.user}.channels)) h.channel {
+            push :h.args $decode($h.channel)
+            @ :h.flags = h[userlist][$h.user][channels][$h.channel][flags]
+            if (h.flags) { push :h.args +$h.flags }
+        }
+        if (h[userlist][$h.user][hosts]) {
+            push :h.args $h[userlist][$h.user][hosts]
+        }
+        if (h[userlist][$h.user][password]) {
+            @ :h.args #= chr(10) ## [^setpassword $tolower($decode($h.user)) ]
+            @ :h.args #= [nocrypt ${h[userlist][$h.user][password]}]
+        }
+        @ write($h.f ^adduser $h.args)
     }
     @ close($h.f)
 }
 
 alias setpassword (h.user, h.password) {
     if (!h.password) {
-	xecho -b Usage: /setpassword <user> [nocrypt] <password>
-	return
+        xecho -b Usage: /setpassword <user> [nocrypt] <password>
+        return
     } elsif (!h[userlist][$h.encode($h.user)]) {
-	xecho -b No such user!
-	return
+        xecho -b No such user!
+        return
     }
     if (word(0 $h.password) == [nocrypt] && numwords($h.password) > 1) {
-	@ h[userlist][$h.encode($h.user)][password] = restw(1 $h.password)
+        @ h[userlist][$h.encode($h.user)][password] = restw(1 $h.password)
     } else {
-	@ :h.rand = rand(89) + 10
-	@ h[userlist][$h.encode($h.user)][password] = crypt($h.password $h.rand)
+        @ :h.rand = rand(89) + 10
+        @ h[userlist][$h.encode($h.user)][password] = crypt($h.password $h.rand)
     }
     xecho -say -b Password for $h.user changed
     if (h.cfg.userlist_save) { h.userlist.save }
@@ -338,23 +347,24 @@ alias setpassword (h.user, h.password) {
 
 alias delpassword (h.user, ...) {
     if (!h.user) {
-	xecho -b Usage: /delpassword <user>
+        xecho -b Usage: /delpassword <user>
     } elsif (!h[userlist][$h.encode($h.user)]) {
-	xecho -b No such user!
-	return
+        xecho -b No such user!
+        return
     } else {
-	^assign -h.userlist.${h.encode($h.user)}.password
-	xecho -say -b Removed $h.user's password
+        ^assign -h.userlist.${h.encode($h.user)}.password
+        xecho -say -b Removed $h.user's password
     }
     if (h.cfg.userlist_save) { h.userlist.save }
 }
 
 alias h.userlist.getuser (h.host) {
-    foreach h.userlist h.user {
-	if (!h[userlist][$h.user][hosts]) { continue }
-	if (rmatch($h.host $h.userlist[$h.user][hosts])) {
-	    return $decode($h.user)
-	}
+    #foreach h.userlist h.user {
+    fe ($get_structure_children(h.userlist)) h.user {
+        if (!h[userlist][$h.user][hosts]) { continue }
+        if (rmatch($h.host $h.userlist[$h.user][hosts])) {
+            return $decode($h.user)
+        }
     }
 }
 
@@ -362,10 +372,10 @@ alias h.userlist.hasflag (h.flag, h.user, h.channel) {
     if (!h[userlist][$h.encode($h.user)]) { return 0 }
     @ :h.flags = h[userlist][$h.encode($h.user)][flags]
     if (:h.channel = h.encode($h.channel)) {
-	if (h[userlist][$h.encode($h.user)][channels][$h.channel][flags]) {
-	    @ :h.flags #= \
-		h[userlist][$h.encode($h.user)][channels][$h.channel][flags]
-	}
+        if (h[userlist][$h.encode($h.user)][channels][$h.channel][flags]) {
+            @ :h.flags #= \
+                h[userlist][$h.encode($h.user)][channels][$h.channel][flags]
+        }
     }
     if (match(*$h.flag* $h.flags)) { return 1 } else { return 0 }
 }
@@ -373,73 +383,74 @@ alias h.userlist.hasflag (h.flag, h.user, h.channel) {
 alias h.userlist.checkpassword (h.user, h.password) {
     if (!h[userlist][$h.encode($h.user)][password]) { return 0 }
     if (crypt($h.password $left(2 $h[userlist][$h.encode($h.user)][password])) == \
-	h[userlist][$h.encode($h.user)][password]) {
-	    return 1
-	} else {
-	    return 0
-	}
+            h[userlist][$h.encode($h.user)][password]) {
+        return 1
+    } else {
+        return 0
+    }
 }
 
 alias h.userlist.ctcp_password (h.nick, h.user, h.pass1, h.pass2, ...) {
     if (!h.pass1) {
-	//notice $h.nick Usage: /CTCP $N PASSWORD [oldpassword] <newpassword>
+        //notice $h.nick Usage: /CTCP $N PASSWORD [oldpassword] <newpassword>
     } elsif (h.pass2 && !h[userlist][$h.encode($h.user)][password]) {
-	//notice $h.nick You don't have password yet
+        //notice $h.nick You don't have password yet
     } elsif (h.pass2 && h[userlist][$h.encode($h.user)][password] && \
-	    h.userlist.checkpassword($h.user $h.pass1)) {
-	^setpassword $h.user $h.pass2
-	//notice $h.nick Password changed
+            h.userlist.checkpassword($h.user $h.pass1)) {
+        ^setpassword $h.user $h.pass2
+        //notice $h.nick Password changed
     } elsif (!h.pass2 && !h[userlist][$h.encode($h.user)][password]) {
-	^setpassword $h.user $h.pass1
-	//notice $h.nick Password saved
+        ^setpassword $h.user $h.pass1
+        //notice $h.nick Password saved
     } else {
-	//notice $h.nick Incorrect password
+        //notice $h.nick Incorrect password
     }
 }
 
 alias h.userlist.ctcp_op (h.nick, h.user, h.channel, h.password, ...) {
     if (!h.password && !ischannel($h.channel)) {
-	//notice $h.nick Usage: /CTCP $N OP <#channel> <password>
+        //notice $h.nick Usage: /CTCP $N OP <#channel> <password>
     } elsif (h.userlist.checkpassword($h.user $h.password)) {
-	if (ischanop($h.nick $h.channel)) { break }
-	if (h.userlist.hasflag(o $h.user $h.channel)) {
-	    //mode $h.channel +o $h.nick
-	} else {
-	    //notice $h.nick You have no access
-	}
+        if (ischanop($h.nick $h.channel)) { break }
+        if (h.userlist.hasflag(o $h.user $h.channel)) {
+            //mode $h.channel +o $h.nick
+        } else {
+            //notice $h.nick You have no access
+        }
     } else {
-	//notice $h.nick Incorrect password
+        //notice $h.nick Incorrect password
     }
 }
 
 alias h.userlist.ctcp_voice (h.nick, h.user, h.channel, h.password, ...) {
     if (!h.password && !ischannel($h.channel)) {
-	//notice $h.nick Usage: /CTCP $N VOICE <#channel> <password>
+        //notice $h.nick Usage: /CTCP $N VOICE <#channel> <password>
     } elsif (h.userlist.checkpassword($h.user $h.password)) {
-	if (ischanop($h.nick $h.channel)) { break }
-	if (h.userlist.hasflag(v $h.user $h.channel)) {
-	    //mode $h.channel +v $h.nick
-	} else {
-	    //notice $h.nick All your base are belong to us
-	}
+        if (ischanop($h.nick $h.channel)) { break }
+        if (h.userlist.hasflag(v $h.user $h.channel)) {
+            //mode $h.channel +v $h.nick
+        } else {
+            //notice $h.nick All your base are belong to us
+        }
     } else {
-	//notice $h.nick Incorrect password
+        //notice $h.nick Incorrect password
     }
 }
 
 alias h.userlist.ctcp_whoami (h.nick, h.user) {
     @ :h.flags = h[userlist][$h.encode($h.user)][flags] ? \
-	[\(+] ## h[userlist][$h.encode($h.user)][flags] ## [\)] : []
+        [\(+] ## h[userlist][$h.encode($h.user)][flags] ## [\)] : []
     @ :h.hosts = h[userlist][$h.encode($h.user)][hosts] ? \
-	h[userlist][$h.encode($h.user)][hosts] : [none]
-    foreach h.userlist.${h.encode($h.user)}.channels h.channel {
-	push :h.channels $decode($h.channel)
-	if (!h[userlist][$h.encode($h.user)][channels][$h.channel][flags]) {
-	    continue
-	}
-	@ :h.channels #= [\(+] ## \
-	    h[userlist][$h.encode($h.user)][channels][$h.channel][flags] ## \
-	    [\)]
+        h[userlist][$h.encode($h.user)][hosts] : [none]
+    #foreach h.userlist.${h.encode($h.user)}.channels h.channel {
+    fe ($get_structure_children(h.userlist.${h.encode($h.user)}.channels)) h.channel {
+        push :h.channels $decode($h.channel)
+        if (!h[userlist][$h.encode($h.user)][channels][$h.channel][flags]) {
+            continue
+        }
+        @ :h.channels #= [\(+] ## \
+            h[userlist][$h.encode($h.user)][channels][$h.channel][flags] ## \
+            [\)]
     }
     if (!h.channels) { @ :h.channels = [any] }
     notice $h.nick User: $h.user$h.flags
@@ -453,11 +464,11 @@ if (fexist(~/.hienoa/userlist) == 1) {
     @ close($h.f)
     stack push assign h.cfg.userlist_save
     if (h.l !~ [* V3*]) {
-	load $h.path/etc/cvul.irc
+        load $h.path/etc/cvul.irc
     } else {
-	load ~/.hienoa/userlist
+        load ~/.hienoa/userlist
     }
     stack pop assign h.cfg.userlist_save
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

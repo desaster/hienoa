@@ -1,20 +1,20 @@
-# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 # this file contains aliases that can't be in modules
 
 alias h.loadbar {
     if (!h.loadbar) {
-	@ h.loadbar = \
-    	    [\(oa...h\) ] ## \
-    	    [\(a...hi\) ] ## \
-    	    [\(...hie\) ] ## \
-    	    [\(..hien\) ] ## \
-    	    [\(.hieno\) ] ## \
-    	    [\(hienoa\) ] ## \
-    	    [\(ienoa.\) ] ## \
-    	    [\(enoa..\) ] ## \
-    	    [\(noa...\) ]
+        @ h.loadbar = \
+            [\(oa...h\) ] ## \
+            [\(a...hi\) ] ## \
+            [\(...hie\) ] ## \
+            [\(..hien\) ] ## \
+            [\(.hieno\) ] ## \
+            [\(hienoa\) ] ## \
+            [\(ienoa.\) ] ## \
+            [\(enoa..\) ] ## \
+            [\(noa...\) ]
     }
     ^set input_prompt loading $word(0 $push(h.loadbar $shift(h.loadbar)))
 }
@@ -40,4 +40,14 @@ alias 18 window swap 18
 alias 19 window swap 19
 alias 20 window swap 20
 
-# vim: set ai tw=75 sw=4:
+alias reload load $h.path/hienoa.irc
+
+alias debug {
+    if (!h.cfg.debug) return
+    @ :h.fd = open(~/.hienoa/debug.log W)
+    @ :h.stamp = strftime(%H:%M:%S)
+    @ write($h.fd [$h.stamp] $*)
+    @ close($h.fd)
+}
+
+# vim: set ai tw=75 sw=4 et:

@@ -1,4 +1,4 @@
-# Copyright (c) 2000, 2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 2000-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 package dcc
@@ -39,10 +39,10 @@ alias h.dcc.reject_chat {
 alias h.dcc.auto_accept (h.type, h.nick) {
     @ :h.user = h.userlist.getuser($h.nick!$h.uh($h.nick))
     if (h.user && h.userlist.hasflag(d $h.user)) {
-	//dcc $h.type $h.nick
-	return 1
+        //dcc $h.type $h.nick
+        return 1
     }
     return 0
 }
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:

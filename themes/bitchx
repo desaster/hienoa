@@ -1,8 +1,8 @@
 # hienoa theme file
 
-# Name:		bitchx
-# Author:	Upi Tamminen <desaster@dragonlight.fi>
-# Comments:	Based on "BitchX" irc client made by panasync.
+# Name:         bitchx
+# Author:       Upi Tamminen <desaster at gmail>
+# Comments:     Based on "BitchX" irc client made by panasync.
 
 screenmode lowascii
 set status_no_repeat on

@@ -1,4 +1,4 @@
-# Copyright (c) 1999-2001 Upi Tamminen <desaster@dragonlight.fi>
+# Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
 set indent on
@@ -16,4 +16,4 @@ set mode_stripper off
 # Don't break URLs
 eval set word_break $strip(. $word_break)
 
-# vim: set ai tw=75 sw=4:
+# vim: set ai tw=75 sw=4 et:
