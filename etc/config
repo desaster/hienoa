@@ -14,7 +14,6 @@ config_entry "Words to hilight in public messages" type "wordlist" var "h.cfg.hi
 config_entry "Display a notification on highlight" type "check" var "h.cfg.hilight_notify" def "0"
 
 config_title "Look & feel"
-config_entry "Color terminal" type "icheck" var "color"
 config_entry "Beep terminal" type "icheck" var "beep"
 config_entry "Show 24-hour clock in status bar" type "icheck" var "clock_24hour"
 config_entry "Strip colors/attributes from all incoming data" type "check" var "h.cfg.strip_crap" def "0"
@@ -22,11 +21,3 @@ config_entry "Assign fancy colors to nicks in public messages" type "check" var 
 
 config_title "Server stuff"
 config_entry "Default usermode" type "text" var "h.cfg.default_usermode" def "+i"
-config_entry "Reconnect after disconnect" type "icheck" var "auto_reconnect"
-config_entry "Max reconnects" type "itext" var "max_reconnects"
-config_entry "Seconds before reconnect" type "itext" var "auto_reconnect_delay"
-config_entry "Connect timeout" type "itext" var "connect_timeout"
-config_entry "Suppress server motd" type "icheck" var "suppress_server_motd"
-
-config_title "Debugging"
-config_entry "Save debug data to ~/.hienoa/debug.log" type "check" var "h.cfg.debug" def "0"
