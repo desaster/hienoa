@@ -33,7 +33,7 @@ on ^319 * { h.format.parse whois_channels $* }
 on ^329 * { h.format.parse channel_info $* }
 on ^331 * {
     @ h.topics[$h.encode($0)][$h.encode($1)] = []
-    @ h.topics[$h.encode($0)][$h.encode($1)].setby = []
+    @ h.topics[$h.encode($0)][$h.encode($1)][setby] = []
     h.format.parse topic_empty $*
     if (h.cfg.xterm_enable) { h.xterm.set $1 }
 }
@@ -42,7 +42,7 @@ on ^332 * {
     if (h.topics[$h.encode($0)][$h.encode($1)] != [$2-]) {
         @ h.topics[$h.encode($0)][$h.encode($1)] = [$2-]
     } else {
-        @ :h.l = h.topics[$h.encode($0)][$h.encode($1)].setby
+        @ :h.l = h.topics[$h.encode($0)][$h.encode($1)][setby]
         if (h.l) { h.format.parse topic_setby $0 $1 $h.l }
     }
     if (h.cfg.xterm_enable) { h.xterm.set $1 - $2- }
@@ -51,9 +51,9 @@ on ^332 * {
     on ^333 -"$0 $1 *"
 }
 on ^333 * {
-    @ :h.l = h.topics[$h.encode($0)][$h.encode($1)].setby
+    @ :h.l = h.topics[$h.encode($0)][$h.encode($1)][setby]
     if (!h.l) { h.format.parse topic_setby $* }
-    @ h.topics[$h.encode($0)][$h.encode($1)].setby = $2-
+    @ h.topics[$h.encode($0)][$h.encode($1)][setby] = [$2-]
 }
 on ^353 * {
     @ push(h.names[$h.encode($0)][$h.encode($2)] $3-)
@@ -256,7 +256,7 @@ on ^invite "*" {
 on ^join "*" { h.format.parse join $* }
 on ^kick * {
     @ h.topics[$encode($servername())][$encode($2)] = []
-    @ h.topics[$encode($servername())][$encode($2)].setby = []
+    @ h.topics[$encode($servername())][$encode($2)][setby] = []
     if ([$0] == servernick()) {
         h.format.parse kick_user $*
         if (!C && h.cfg.xterm_enable) { h.xterm.set $servername() }
@@ -443,12 +443,12 @@ on ^topic * {
     if ([$2]) {
         h.format.parse topic_change $*
         @ h.topics[$h.encode($servername())][$h.encode($1)] = [$2-]
-        @ h.topics[$h.encode($servername())][$h.encode($1)].setby = [$0 $time()]
+        @ h.topics[$h.encode($servername())][$h.encode($1)][setby] = [$0 $time()]
         if (h.cfg.xterm_enable && (C == [$1])) { h.xterm.set $1 - $2- }
     } else {
         h.format.parse topic_unset $*
         @ h.topics[$h.encode($servername())][$h.encode($1)] = []
-        @ h.topics[$h.encode($servername())][$h.encode($1)].setby = []
+        @ h.topics[$h.encode($servername())][$h.encode($1)][setby] = []
         if (h.cfg.xterm_enable && (C == [$1])) { h.xterm.set $1 }
     }
 }
