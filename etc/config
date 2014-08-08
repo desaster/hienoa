@@ -21,3 +21,6 @@ config_entry "Assign fancy colors to nicks in public messages" type "check" var 
 
 config_title "Server stuff"
 config_entry "Default usermode" type "text" var "h.cfg.default_usermode" def "+i"
+
+config_title "Debugging options"
+config_entry "Save debug log to ~/.hienoa/debug.log" type "check" var "h.cfg.debug" def "0"
