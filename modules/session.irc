@@ -9,9 +9,7 @@ alias h.fixline {
 }
 
 alias h.debug {
-    @ :fd = open(~/.hienoa/.session-debug W)
-    @ write($fd [$strftime(%c)] $h.fixline($*))
-    @ close($fd)
+    debug [session] $*
 }
 
 alias ssave session save
@@ -123,16 +121,20 @@ alias h.session.restore (session, ...) {
 
         # Connect windows to servers, but only if we're already connected
         # to that server already
-        if (h[session][windows][$winref][server] != \
-                servername($winserv($winref)) ## \
-                [:$word(0 $servports($winserv($winref)))]) {
-            @ :h.sname = before(: $h[session][windows][$winref][server])
+        @ :refnum = windowctl(GET $winref SERVER)
+        @ :h.sname = [$serverctl(GET $refnum NAME):$serverctl(GET $refnum PORT)]
+        if (h[session][windows][$winref][server] != h.sname) {
+            @ :h.sname = $h[session][windows][$winref][server]
+            h.debug we might connect to $h.sname
+            h.debug that is because it doesn't match this: $serverctl(GET $refnum NAME):$serverctl(GET $refnum PORT)
+
             if (findw($h.sname $myservers()) == -1) {
                 h.debug Postponing connecting window $winref to $h.sname
                 push :h.postponed_winrefs $winref
                 continue
             }
             h.debug Connecting window $winref to $h.sname
+            h.debug ^window $winref server $h[session][windows][$winref][server]
             ^window $winref server $h[session][windows][$winref][server]
         }
 
@@ -158,11 +160,6 @@ alias h.session.restore (session, ...) {
         h.debug Setting level to $h[session][windows][$winref][level] \
             in $winref
         ^window $winref level $unsplit(, $h[session][windows][$winref][level])
-        if (strlen($channels)) {
-            @ :h.bindchan = rightw(1 $channels)
-            h.debug Binding to $channel in window $winref
-            ^window $winref bind $h.bindchan
-        }
     }
 
     # Change nicks in servers we're already connected to
@@ -209,11 +206,6 @@ alias h.session.restore (session, ...) {
                 fe ($h[session][windows][$winref][channels]) channel {
                     h.debug (delayed) Joining $channel in window $winref
                     ^window $winref channel $channel
-                }
-                if (strlen($h[session][windows][$winref][channels])) {
-                    @ :h.bindchan = rightw(1 $h[session][windows][$winref][channels])
-                    h.debug (delayed) Binding to $h.bindchan in window $winref
-                    ^window $winref bind $h.bindchan
                 }
 
                 # change level
@@ -274,10 +266,11 @@ alias h.session.save (session, ...) {
     @ write($fd $chr(35) Hienoa session file - $strftime(%c) $chr(10))
 
     # Save nicks
-    fe ($myservers()) server {
-        @ write($fd $chr(35) Server $server)
-        @ :h.var = [h[session][servers][$h.encode($server)][nick]]
-        @ write($fd @ $h.var = [$servernick($servernum($server))])
+    fe ($myservers(1)) refnum {
+        @ :name = serverctl(GET $refnum NAME)
+        @ write($fd $chr(35) Server $name)
+        @ :h.var = [h[session][servers][$h.encode($name)][nick]]
+        @ write($fd @ $h.var = [$serverctl(GET $refnum NICKNAME)])
         @ write($fd)
     }
 
@@ -291,8 +284,8 @@ alias h.session.save (session, ...) {
     fe ($revw($winrefs())) winref {
         @ :h.wcount++
         @ write($fd $chr(35) Window $chr(35)$winref)
-        @ :h.snum = winserv($winref)
-        @ :h.server = [$servername($h.snum):$word(0 $servports($h.snum))]
+        @ :h.snum = windowctl(get $winref server)
+        @ :h.server = [$serverctl(GET $h.snum NAME):$serverctl(GET $h.snum PORT)]
 
         if (winvisible($winref) == 1) { push :h.visible_windows $winref }
 
