@@ -4,6 +4,22 @@
 package hienoa
 
 # Cleanup
+alias h.cleanup {
+    @ :version = h.version
+    @ :path = h.path
+    timer -d all
+    dump
+
+    load -pf global
+    unless (strlen($aliasctl(ALIAS GET servernick))) {
+        echo !!! ERROR: Something seems wrong, did "load global" fail?
+        return -1
+    }
+
+    @ h.version = version
+    @ h.path = path
+}
+if (h.cleanup() == -1) return
 
 # Check things
 
