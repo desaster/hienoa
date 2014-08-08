@@ -108,7 +108,6 @@ alias h.log_end (h.qm) {
 }
 
 alias h.log_append {
-    debug tryuing to log something!
     unless (rmatch($0 nickserv chanserv aimserv *AIM-*)) {
         @ :h.logdir = h.log_gendir()
         if (h.cfg.log_strip_hash) {
