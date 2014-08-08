@@ -1,7 +1,15 @@
 # Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
 # See the COPYRIGHT file for more information
 
-^dump all
+dump all
+timer -d all
+
+load -pf global
+
+unless (strlen($aliasctl(ALIAS GET servernick))) {
+    echo !!! ERROR: Something seems wrong, did "load global" fail?
+    return
+}
 
 unless (word(0 $info(v)) != [epic5]) {
     @ h.version = [2.0]

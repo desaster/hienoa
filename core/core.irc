@@ -5,21 +5,6 @@ package hienoa
 
 # Cleanup
 
-alias h.cleanup {
-    echo $*
-    @ :version = h.version
-    @ :path = h.path
-    timer -d all
-    dump
-    @ h.version = version
-    @ h.path = path
-}
-h.cleanup
-
-# now in epic5 a lot of the old stuff is scripted
-
-load global
-
 # Check things
 
 fe (~/.hienoa ~/.hienoa/themes ~/.hienoa/modules \
