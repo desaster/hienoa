@@ -123,10 +123,17 @@ alias h.session.restore (session, ...) {
         # to that server already
         @ :refnum = windowctl(GET $winref SERVER)
         @ :h.sname = [$serverctl(GET $refnum NAME):$serverctl(GET $refnum PORT)]
-        if (h[session][windows][$winref][server] != h.sname) {
-            @ :h.sname = $h[session][windows][$winref][server]
+
+        h.debug checking if we need to connect to $h[session][windows][$winref][server]
+
+        @ :h.sstatus = serverctl(GET $refnum STATUS)
+
+        if (h[session][windows][$winref][server] != h.sname || \
+                findw($h.sstatus CLOSED) >= 0) {
+            @ :h.sname = h[session][windows][$winref][server]
             h.debug we might connect to $h.sname
             h.debug that is because it doesn't match this: $serverctl(GET $refnum NAME):$serverctl(GET $refnum PORT)
+            h.debug or maybe because the server status is: $h.sstatus
 
             if (findw($h.sname $myservers()) == -1) {
                 h.debug Postponing connecting window $winref to $h.sname
@@ -223,8 +230,10 @@ alias h.session.restore (session, ...) {
 
     # connect to servers we aren't already connected to
     fe ($h.postponed_winrefs) winref {
-        @ :h.s_before = servername($winserv($winref))
-        if (h.s_before == before(: $h[session][windows][$winref][server])) {
+        @ :h.s_before = serverctl(GET $winserv($winref) NAME)
+        @ :h.s_status = serverctl(GET $winserv($winref) STATUS)
+        if (h.s_before == before(: $h[session][windows][$winref][server]) && \
+                findw($h.s_status CLOSED) == -1) {
             h.debug Seems we are already connected to $h.s_before
             continue
         }
@@ -233,7 +242,9 @@ alias h.session.restore (session, ...) {
         ^window $winref server $h[session][windows][$winref][server]
         @ :h.s_now = servername($winserv($winref))
         # server hasn't changed; assume the connection failed
-        if (h.s_before == h.s_now) {
+        h.debug checking if connection is ok: $serverctl(GET $winserv($winref) STATUS)
+        #if (h.s_before == h.s_now) {
+        if (serverctl(GET $winserv($winref) STATUS) == [EOF]) {
             h.debug Connecting to $h[session][windows][$winref][server] \
                 seems to fail, aborting channel joins
             ^window $winref discon
