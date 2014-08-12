@@ -18,6 +18,7 @@ config_entry "Beep terminal" type "icheck" var "beep"
 config_entry "Show 24-hour clock in status bar" type "icheck" var "clock_24hour"
 config_entry "Strip colors/attributes from all incoming data" type "check" var "h.cfg.strip_crap" def "0"
 config_entry "Assign fancy colors to nicks in public messages" type "check" var "h.cfg.colorify_nicks" def "0"
+config_entry "Use 256 colors" type "check" var "h.cfg.use_256_colors" def "0"
 
 config_title "Server stuff"
 config_entry "Default usermode" type "text" var "h.cfg.default_usermode" def "+i"
