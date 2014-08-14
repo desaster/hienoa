@@ -1,30 +1,29 @@
-Hienoa
-============
+# Hienoa
 
-hienoa for ircII-EPIC5
-Copyright (c) 1999-2014 Upi Tamminen <desaster at gmail>
+A script for ircII-EPIC5
+
+Copyright (C) 1999-2014 Upi Tamminen <desaster at gmail>
+
 See the COPYRIGHT file for more information
 
-About
------
+## About
 
-    Hienoa is a script for ircII-EPIC5. I started making hienoa because I
-    wasn't fully satisfied with any of the irc clients and scripts
-    available. I can't guarantee that you will be satisfied with this
-    script, but I'm working on it.
+Hienoa is a script for ircII-EPIC5. I started making hienoa because I wasn't fully satisfied with any of the irc clients and scripts available. I can't guarantee that you will be satisfied with this script, but I'm working on it.
 
+## Screenshot
 
-Installation
-------------
+![hienoa screenshot](http://c.rpg.fi/hienoa/hienoa-screenshot.png)
 
-    (1) Unpack hienoa
-    (2) Put "load ~/hienoa/hienoa.irc" (without quotes) to your .ircrc
-    (3) Start epic
+## Installation
 
-Usage
------
+1. Download from github
 
-    The most important commands are /help and /config. If you don't know
-    how to use EPIC or IRC at all, start with "/help 7 New_User" and
-    "/help 7 Introduction" (note that you need to have ircII-EPIC help
-    files installed)
+    `git clone https://github.com/desaster/hienoa.git`
+
+2. Add `load ~/hienoa/hienoa.irc` to your .epicrc
+
+2. Start epic5
+
+## Usage
+
+The most important commands are /help and /config. However, there actually is no /help. Perhaps it's best if you find me on IRC and ask.
