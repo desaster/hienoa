@@ -60,28 +60,23 @@ on #-leave 1 * {
     }
 }
 on #-join 1 * {
-    h.log_chan_timestamp
     if ([$0] == servernick() && h.cfg.log_chan) {
         h.log_append $1 ----- IRC log started $strftime(%c) -----
     }
     @ h.cfg.log_chan ? h.log_append($1 $h.cts()\*** $0 has joined $1 \($2\)) : []
 }
 on #-topic 1 * {
-    h.log_chan_timestamp
     @ h.cfg.log_chan ? h.log_append($1 $h.cts()\*** $0 has changed topic to \"$2-\") : []
 }
 on #-channel_nick 1 * {
-    h.log_chan_timestamp
     @ h.cfg.log_chan ? h.log_append($0 $h.cts()\*** $1 is now know as $2) : []
 }
 on #-channel_signoff 1 * {
     if ([$1] != servernick()) {
-        h.log_chan_timestamp
         @ h.cfg.log_chan ? h.log_append($0 $h.cts()\*** $1 has quit IRC \($2-\) \($userhost()\)) : []
     }
 }
 on #-mode 1 * {
-    h.log_chan_timestamp
     if (h.cfg.log_chan) { @ ischannel($1) ? h.log_append($1 $h.cts()\*** $0 sets channel mode\: $2-) : [] }
 }
 
