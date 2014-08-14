@@ -276,8 +276,6 @@ on ^msg * {
     if (h.away && h.cfg.awaylog_msg) {
         h.awaylog_append [$stime($time())] msg\($0\) $1- \($userhost()\)
     }
-    h.store_last_url $1-
-    if (h.cfg.url_grab) { h.graburl $0 $servernick() $1- }
 }
 on ^msg_group * { h.format.parse msg $* }
 on ^notice * {
@@ -285,8 +283,6 @@ on ^notice * {
     if (h.away && h.cfg.awaylog_notice) {
         h.awaylog_append [$stime($time())] notice\($0\) $1- \($userhost()\)
     }
-    h.store_last_url $1-
-    if (h.cfg.url_grab) { h.graburl $0 $servernick() $1- }
 }
 on ^notify_signoff * { h.format.parse notify_signoff $* }
 on ^notify_signon * { h.format.parse notify_signon $* }
@@ -321,8 +317,6 @@ on ^public * {
     } else {
         h.format.parse public $h.nick $1 $h.m
     }
-    h.store_last_url $2-
-    if (h.cfg.url_grab) { h.graburl $* }
 }
 on ^public_msg * {
     @ :h.m = [$2-]
@@ -341,8 +335,6 @@ on ^public_msg * {
     } else {
         h.format.parse public_msg $h.nick $1 $h.m
     }
-    h.store_last_url $2-
-    if (h.cfg.url_grab) { h.graburl $* }
 }
 on ^public_notice * { h.format.parse public_notice $* }
 on ^public_other * {
@@ -362,8 +354,6 @@ on ^public_other * {
     } else {
         h.format.parse public_other $h.nick $1 $h.m
     }
-    h.store_last_url $2-
-    if (h.cfg.url_grab) { h.graburl $* }
 }
 on ^raw_irc "*!* PRIVMSG % :VERSION" {
     notice $before(! $0) VERSION $h.version_reply()
@@ -397,8 +387,6 @@ on ^send_public * {
         h.format.parse send_public $0 $h.nick $1-
     }
     if (h.cfg.auto_back && A) { back }
-    h.store_last_url $*
-    if (h.cfg.url_grab) { h.graburl $servernick() $* }
     h.reset.idle
 }
 on ^server_notice * {
