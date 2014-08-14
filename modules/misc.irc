@@ -10,12 +10,12 @@ eval on #-hook $hash_32bit(misc) "post_load" {
     ^h.paste off
 }
 
-alias m msg
-alias q query
+alias m msg $*
+alias q query $*
 
-alias bye quit
-alias signoff quit
-alias exit quit
+alias bye quit $*
+alias signoff quit $*
+alias exit quit $*
 alias quit (h.qm) {
     if (h.qm) {
         h.log_end $h.qm
@@ -83,7 +83,7 @@ alias country (h.tld) {
     }
 }
 
-alias sv sayversion
+alias sv sayversion $*
 alias sayversion (h.target, ...) {
     if (h.target) {
         msg $h.target $h.version_reply()
