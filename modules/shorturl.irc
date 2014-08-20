@@ -11,6 +11,7 @@ if (V < 20031201) {
     config_entry "Port number" type "text" var "h.cfg.shorturl_port" def "1823"
     config_entry "Hostname to display" type "text" var "h.cfg.shorturl_host" def "127.0.0.1"
     config_entry "Maximum number of urls to store" type "text" var "h.cfg.shorturl_maxnum" def "100"
+    config_entry "Always shorten urls regardless of terminal size" type "check" var "h.cfg.shorturl_always" def "0"
 
     @ :h.myhash = hash_32bit(shorturl)
 
@@ -58,7 +59,10 @@ if (V < 20031201) {
         fe ($stripcrap(ALL,ALL_OFF $line)) word {
             if (!rmatch("$word" *://*)) continue
             # the crude definition of a 'long' url:
-            if (strlen($word) < (word(0 $geom()) - 10)) continue
+            if (!h.cfg.shorturl_always || \
+                    (strlen($word) < (word(0 $geom()) - 10))) {
+                continue
+            }
             @ h.shorturl.last_urlid++
             if (h.shorturl.last_urlid > h.cfg.shorturl_maxnum) {
                 @ :h.remid = (h.shorturl.last_urlid - \
