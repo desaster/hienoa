@@ -91,8 +91,8 @@ eval on #-join $hash_32bit(userlist) "*" {
     }
 }
 
-alias unuser deluser
-alias userdel deluser
+alias unuser deluser $*
+alias userdel deluser $*
 alias deluser (h.user, ...) {
     if (!h.user) {
         xecho -b Usage: /deluser <user>
@@ -116,7 +116,7 @@ alias deluser (h.user, ...) {
     if (h.cfg.userlist_save) { h.userlist.save }
 }
 
-alias useradd adduser
+alias useradd adduser $*
 alias adduser (h.user, h.args) {
     if (!h.user) {
         xecho -b Usage: /adduser <user> [+flag(s)] [#channel(s)] [+flag(s)] [hostmask(s)]
@@ -147,7 +147,7 @@ alias adduser (h.user, h.args) {
 }
 
 alias +host addhost
-alias hostadd addhost
+alias hostadd addhost $*
 alias addhost (h.user, h.hosts) {
     if (!h.hosts) {
         echo $G Usage: /addhost <user> [hostmask(s)]
@@ -165,7 +165,7 @@ alias addhost (h.user, h.hosts) {
 }
 
 alias -host delhost
-alias hostdel delhost
+alias hostdel delhost $*
 alias delhost (h.user, h.hosts) {
     if (!h.hosts) {
         echo $G Usage: /delhost <user> [hostmask(s)]
@@ -224,9 +224,9 @@ alias delchannel (h.user, h.channels) {
     if (h.cfg.userlist_save) { h.userlist.save }
 }
 
-alias flags userflags
-alias setflags userflags
-alias chattr userflags
+alias flags userflags $*
+alias setflags userflags $*
+alias chattr userflags $*
 alias userflags (h.user, h.args) {
     if (!h.args) {
         echo $G Usage: /userflags <user> [channel] <+flags>
@@ -269,8 +269,8 @@ alias userflags (h.user, h.args) {
     }
 }
 
-alias ul userlist
-alias listusers userlist
+alias ul userlist $*
+alias listusers userlist $*
 alias userlist (h.pattern) {
     if (!aliasctl(assign match h.userlist.)) {
         xecho -b Userlist is empty

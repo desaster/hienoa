@@ -3,8 +3,8 @@
 
 package queries
 
-alias wi whois
-alias ww whowas
+alias wi whois $*
+alias ww whowas $*
 
 alias t topic $*
 alias topic {

@@ -23,9 +23,9 @@ eval on #-hook $hash_32bit(away) "config_change" { h.auto_away.init }
 
 if (N && isaway($N)) { @ h.away = 1 }
 
-alias awya away
+alias awya away $*
 #     ^^^^  typo
-alias setaway away
+alias setaway away $*
 alias away (h.am default $h.cfg.awaymessage) {
     if (h.cfg.public_away) {
         fe ($myservers(1)) h.s {
@@ -54,7 +54,7 @@ alias away (h.am default $h.cfg.awaymessage) {
     //away -all $h.am
 }
 
-alias setback back
+alias setback back $*
 alias back (h.bm default $h.cfg.backmessage) {
     if (h.away && h.cfg.public_away) {
         @ :h.bm = [is back, $h.bm \($tdiff2(${time()-h.awaytime})\)]
