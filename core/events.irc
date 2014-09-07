@@ -265,7 +265,7 @@ on ^kick * {
     }
 }
 on ^kill * { h.format.parse kill $* }
-on ^leave * { h.format.parse leave $* }
+on ^part * { h.format.parse leave $* }
 on ^mode * {
     h.format.parse mode $*
     h.mode_stripper $*
