@@ -28,8 +28,8 @@ bind ^ws parse_command { window server $"Server: " }
 bind ^ww parse_command window back
 
 # juiceSSH uses irssi keybindings for swiping, let's emulate them
-bind ^wp parse_command window next
-bind ^wn parse_command window prev
+bind ^p parse_command window next
+bind ^n parse_command window prev
 
 bind ^w1 parse_command hook switch_window 1
 bind ^w2 parse_command hook switch_window 2
