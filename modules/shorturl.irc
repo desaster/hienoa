@@ -51,6 +51,21 @@ eval ^on #-notice $h.myhash "% *://*" {
     h.shorturl.process_line $1-
 }
 
+alias h.shorturl.mock_url (url) {
+    @ :url1 = []
+    fec ($url) c {
+        @ :url1 #= isalpha($c) ? c : [ ]
+    }
+    @ :url2 = []
+    fe ($url1) w {
+        if (findw($w http https www) != -1) {
+            continue
+        }
+        @ push(url2 $w)
+    }
+    return $url2
+}
+
 alias h.shorturl.process_line (line) {
     if (!h.cfg.shorturl_enabled) return
     fe ($stripcrap(ALL,ALL_OFF $line)) word {
@@ -69,11 +84,14 @@ alias h.shorturl.process_line (line) {
             ^assign -h.shorturl.urls[$h.remid]
         }
         @ h.shorturl.urls[$h.shorturl.last_urlid] = word
+
+        @ :murl = h.shorturl.mock_url($word)
+
         @ :shorturl = [http://$h.cfg.shorturl_host:$h.shorturl.port/$h.shorturl.last_urlid]
         @ :used = (strlen($stripcrap(ALL,ALL_OFF $getset(BANNER))) + \
             strlen($shorturl) + 8)
         @ :avail = (word(0 $geom()) - used)
-        @ :str = [$shorturl \($left($avail $word)...\)]
+        @ :str = [$shorturl \($left($avail $murl)...\)]
         xecho -b $str
     }
 }
