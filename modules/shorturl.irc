@@ -54,7 +54,7 @@ eval ^on #-notice $h.myhash "% *://*" {
 alias h.shorturl.mock_url (url) {
     @ :url1 = []
     fec ($url) c {
-        @ :url1 #= isalpha($c) ? c : [ ]
+        @ :url1 #= isalpha($c) || isdigit($c) ? c : [ ]
     }
     @ :url2 = []
     fe ($url1) w {
