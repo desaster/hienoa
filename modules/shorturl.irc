@@ -54,9 +54,11 @@ eval ^on #-notice $h.myhash "% *://*" {
 alias h.shorturl.process_line (line) {
     if (!h.cfg.shorturl_enabled) return
     fe ($stripcrap(ALL,ALL_OFF $line)) word {
-        if (!rmatch("$word" *://*)) continue
+        if (!rmatch("$word" *://*)) {
+            continue
+        }
         # the crude definition of a 'long' url:
-        if (!h.cfg.shorturl_always || \
+        if (!h.cfg.shorturl_always && \
                 (strlen($word) < (word(0 $geom()) - 10))) {
             continue
         }
