@@ -1,0 +1,121 @@
+# Copyright (c) 2015 Upi Tamminen <desaster at gmail>
+# See the COPYRIGHT file for more information
+
+package pushover
+
+config_title "Pushover notifications"
+config_entry "Application token" type "text" var "h.cfg.pushover_token" def ""
+config_entry "User key" type "text" var "h.cfg.pushover_user" def ""
+config_entry "Only send notifications if idle for this long" type "text" var "h.cfg.pushover_idle" def ""
+config_entry "Only send notifications when away" type "check" var "h.cfg.pushover_away" def "0"
+
+config_entry "Words to trigger in public messages" type "wordlist" var "h.cfg.pushover_public_words"
+
+eval on #-public $hash_32bit(pushover) "*" {
+    @ :h.match = h.pushover.match($2-)
+    if (strlen($h.match)) {
+        h.pushover.push_if_can <$0> $2-
+    }
+}
+
+eval on #-public_msg $hash_32bit(pushover) "*" {
+    @ :h.match = h.pushover.match($2-)
+    if (strlen($h.match)) {
+        h.pushover.push_if_can <$0> $2-
+    }
+}
+
+eval on #-public_other $hash_32bit(pushover) "*" {
+    @ :h.match = h.pushover.match($2-)
+    if (strlen($h.match)) {
+        h.pushover.push_if_can <$0> $2-
+    }
+}
+
+eval on #-action $hash_32bit(pushover) "*" {
+    if (ischannel($1)) {
+        @ :h.match = h.pushover.match($2-)
+        if (strlen($h.match)) {
+            h.pushover.push_if_can * $0 $2-
+        }
+    } else {
+        h.pushover.push_if_can * $0 $2-
+    }
+}
+
+eval on #-msg $hash_32bit(pushover) "*" {
+    h.pushover.push_if_can *$0* $1-
+}
+
+eval on #-notice $hash_32bit(pushover) "*" {
+    h.pushover.push_if_can -${[$0]}- $1-
+}
+
+alias h.pushover.match {
+    fe ($h.cfg.pushover_public_words) h.w {
+        if (match(*$h.w* $*)) { return $h.w }
+    }
+}
+
+alias h.pushover.push_if_can {
+    if (strlen(h.cfg.pushover_idle) && \
+            isdigit($h.cfg.pushover_idle) && \
+            h.cfg.pushover_idle > 0 && \
+            idle() < h.cfg.pushover_idle) {
+        xecho -b not idle for enough
+        return
+    }
+    if (h.cfg.pushover_away && !isaway()) {
+        return
+    }
+    h.pushover.push $*
+}
+
+alias h.pushover.push {
+    @ :pushover_url = [https://api.pushover.net/1/messages.json]
+    #@ :pushover_url = [http://localhost:8484]
+    @ :pname = [pushover] ## rand(100000)
+
+    if (!strlen($h.cfg.pushover_token)) {
+        xecho -b ERROR: Empty pushover token!
+        return
+    }
+
+    if (!strlen($h.cfg.pushover_user)) {
+        xecho -b ERROR: Empty pushover user key!
+        return
+    }
+
+    @ :tmpfile = [/tmp/] ## pname
+
+    if (fexist($tmpfile) != -1) {
+        xecho -b ERROR: $tmpfile already exists!
+        return
+    }
+
+    @ :fd = open($tmpfile W)
+    @ chmod($tmpfile 600)
+    @ write($fd $*)
+    @ close($fd)
+
+    ^on ^exec_exit "$pname *" {
+        on exec_exit -"$0 *"
+        on exec -"$0 *"
+        on exec_errors -"$0 *"
+        on exec_prompt -"$0 *"
+        timer -d $0_kill
+        timer -d $0_close
+        @ unlink(/tmp/$0)
+    }
+
+    ^on ^exec "$pname *"
+    ^on ^exec_errors "$pname *"
+    ^on ^exec_prompt "$pname *"
+
+    timer -ref ${pname}_kill 10 ^exec -kill %$pname
+    timer -ref ${pname}_close 15 ^exec -close %$pname
+
+    exec -direct -name $pname curl -o - -F "token=${h.cfg.pushover_token}" -F "user=${h.cfg.pushover_user}" -F "message=<$tmpfile" $pushover_url
+}
+
+# vim: set ai tw=75 sw=4 et:
