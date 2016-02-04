@@ -221,7 +221,7 @@ on ^input "*" {
         send $h.line
         return
     }
-    sendline $h.line
+    //sendline $h.line
 
 }
 
@@ -235,17 +235,17 @@ on ^input "/%/*" {
     }
 
     if ([$*] =~ [//*]) {
-        sendline $h.line
+        //sendline $h.line
     } else {
-        send $h.line
+        //send $h.line
     }
 }
 on ^input "%: *" {
     if (h.cfg.nickcomp && T == C && count(: $0) == 1 && strlen($0) > 1 && \
         (:h.w = match($before(: $0)* $chanusers()))) {
-        sendline $word(${h.w - 1} $chanusers())$h.cfg.nickcomp_char $1-
+        //sendline $word(${h.w - 1} $chanusers())$h.cfg.nickcomp_char $1-
     } else {
-        sendline $*
+        //sendline $*
     }
 }
 on ^invite "*" {
