@@ -122,7 +122,7 @@ alias h.session.restore (session, ...) {
         # Connect windows to servers, but only if we're already connected
         # to that server already
         @ :refnum = windowctl(GET $winref SERVER)
-        @ :h.sname = [$serverctl(GET $refnum NAME):$serverctl(GET $refnum PORT)]
+        @ :h.sname = [$serverctl(GET $refnum FULLDESC)]
 
         h.debug checking if we need to connect to $h[session][windows][$winref][server]
 
@@ -132,7 +132,7 @@ alias h.session.restore (session, ...) {
                 findw($h.sstatus CLOSED) >= 0) {
             @ :h.sname = h[session][windows][$winref][server]
             h.debug we might connect to $h.sname
-            h.debug that is because it doesn't match this: $serverctl(GET $refnum NAME):$serverctl(GET $refnum PORT)
+            h.debug that is because it doesn't match this: $serverctl(GET $refnum FULLDESC)
             h.debug or maybe because the server status is: $h.sstatus
 
             if (findw($h.sname $myservers()) == -1) {
@@ -193,9 +193,11 @@ alias h.session.restore (session, ...) {
         }
     }
     fe ($h.postponed_servers) server {
-        @ :h.servname = before(: $server)
-        @ :h.servport = after(: $server)
+        @ :h.servname = word(0 $split(: $server))
+        @ :h.servport = word(1 $split(: $server))
+
         h.debug Will join channels in $server later when connected
+
         ^on #-connect $hash_32bit(session) "$h.servname $h.servport *" {
 
             # change nick
@@ -205,7 +207,8 @@ alias h.session.restore (session, ...) {
             }
 
             foreach h.session.windows winref {
-                if (h[session][windows][$winref][server] != [$0:$1]) {
+                @ :fulldesc = h[session][windows][$winref][server]
+                if (word(0 $split(: $fulldesc)) != [$0]) {
                     continue
                 }
 
@@ -248,8 +251,8 @@ alias h.session.restore (session, ...) {
             h.debug Connecting to $h[session][windows][$winref][server] \
                 seems to fail, aborting channel joins
             ^window $winref discon
-            @ :h.servname = before(: $h[session][windows][$winref][server])
-            @ :h.servport = after(: $h[session][windows][$winref][server])
+            @ :h.servname = word(0 $split(: $h[session][windows][$winref][server]))
+            @ :h.servport = word(1 $split(: $h[session][windows][$winref][server]))
             ^on #-connect $hash_32bit(session) -"$h.servname $h.servport *"
             ^on #-disconnect $hash_32bit(session) -"$h.servname $h.servport *"
         }
@@ -278,7 +281,7 @@ alias h.session.save (session, ...) {
 
     # Save nicks
     fe ($myservers(1)) refnum {
-        @ :name = serverctl(GET $refnum NAME)
+        @ :name = serverctl(GET $refnum FULLDESC)
         @ write($fd $chr(35) Server $name)
         @ :h.var = [h[session][servers][$h.encode($name)][nick]]
         @ write($fd @ $h.var = [$serverctl(GET $refnum NICKNAME)])
@@ -296,7 +299,7 @@ alias h.session.save (session, ...) {
         @ :h.wcount++
         @ write($fd $chr(35) Window $chr(35)$winref)
         @ :h.snum = windowctl(get $winref server)
-        @ :h.server = [$serverctl(GET $h.snum NAME):$serverctl(GET $h.snum PORT)]
+        @ :h.server = [$serverctl(GET $h.snum FULLDESC)]
 
         if (winvisible($winref) == 1) { push :h.visible_windows $winref }
 
