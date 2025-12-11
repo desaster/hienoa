@@ -1,0 +1,191 @@
+# hienoa theme file
+
+# Name:         gruvbox
+# Description:  Adaptation of gruvbox-material dark theme for hienoa
+# Author:       Upi Tamminen <desaster at gmail>
+
+screenmode lowascii
+set status_no_repeat on
+
+@ th.colors.fg0                 = [#d4be98]
+@ th.colors.fg1                 = [#ddc7a1]
+@ th.colors.red                 = [#ea6962]
+@ th.colors.orange              = [#e78a4e]
+@ th.colors.yellow              = [#d8a657]
+@ th.colors.green               = [#a9b665]
+@ th.colors.aqua                = [#89b482]
+@ th.colors.blue                = [#7daea3]
+@ th.colors.purple              = [#d3869b]
+@ th.colors.bg_red              = [#ea6962]
+@ th.colors.bg_green            = [#a9b665]
+@ th.colors.bg_yellow           = [#d8a657]
+@ th.colors.bg_dim              = [#141617]
+@ th.colors.bg0                 = [#1d2021]
+@ th.colors.bg1                 = [#282828]
+@ th.colors.bg2                 = [#282828]
+@ th.colors.bg3                 = [#3c3836]
+@ th.colors.bg4                 = [#3c3836]
+@ th.colors.bg5                 = [#504945]
+@ th.colors.bg_statusline1      = [#282828]
+@ th.colors.bg_statusline2      = [#32302f]
+@ th.colors.bg_statusline3      = [#504945]
+@ th.colors.bg_visual_red       = [#442e2d]
+@ th.colors.bg_visual_yellow    = [#473c29]
+@ th.colors.bg_visual_green     = [#333e34]
+@ th.colors.bg_visual_blue      = [#2e3b3b]
+@ th.colors.bg_visual_purple    = [#3c333b]
+@ th.colors.bg_diff_red         = [#3c1f1e]
+@ th.colors.bg_diff_green       = [#32361a]
+@ th.colors.bg_diff_blue        = [#0d3138]
+@ th.colors.bg_current_word     = [#32302f]
+@ th.colors.grey0               = [#7c6f64]
+@ th.colors.grey1               = [#928374]
+@ th.colors.grey2               = [#a89984]
+
+alias th.fromhex {
+    return ${strtol(16 $mid(1 2 $0))}\;${strtol(16 $mid(3 2 $0))}\;${strtol(16 $mid(5 2 $0))}
+}
+
+alias th.rst {
+    return $chr(27)\[0m
+}
+
+alias th.bg {
+    return $chr(27)\[48\;2\;${th.fromhex($th.colors[$0])}m
+}
+
+alias th.fg {
+    return $chr(27)\[38\;2\;${th.fromhex($th.colors[$0])}m
+}
+
+@ colorifynick.gruvbox = \
+    [#ebdbb2 #d5c4a1 #bdae93 #a89984 #fbf1c7 #f2e5bc #e0d0a0 #c8b68a ] ## \
+    [#d79921 #cc8e1a #b57d17 #a06c12 #fabd2f #e5a823 #d09a1c #bb8b15 ] ## \
+    [#83a598 #728b88 #6a8280 #597170 #8ec07c #7aad64 #689a54 #578744 ] ## \
+    [#458588 #3d6f72 #3a6668 #335b5d #b16286 #9a5172 #874464 #743a57 ] ## \
+    [#d3869b #bf7388 #a06078 #8c5268 #fb4934 #e6402c #cc3624 #b52d1d ] ## \
+    [#fe8019 #e67617 #cc6614 #b75811 #b8bb26 #a0a421 #89901d #727b19 ] ## \
+    [#689d6a #5c8a5c #50764f #446341 #d65d0e #c4540d #ab4a0b #934109 ] ## \
+    [#928374 #7d6e63 #6a5d54 #574c45 #665c54 #5a5049 #4e453f #423a35]
+
+format ACTION $stamp()${th.fg(blue)}= ${th.fg(fg0)}$0&n/${th.fg(fg0)}$1&n $2-
+format BANNER ${th.fg(fg0)}==
+format CHANNEL_SIGNOFF $G signoff ${th.fg(fg0)}$0&n by ${th.fg(fg0)}$1&n \($2-&n\) $stamp()
+format CONFIG_TITLE &n ${th.fg(fg1)}${th.bg(bg_statusline1)}$pad(${word(0 $geom()) - 3} " " [ hienoa $h.version - $*)]
+format CTCP_CHANNEL $G ctcp ${th.fg(fg0)}$toupper(${[$4] ? [$3-] : [$3]})&n to ${th.fg(fg0)}$2&n from ${th.fg(fg0)}$0 $stamp()
+format CTCP_REPLY $G ctcp ${th.fg(fg0)}$toupper($1)&n reply from ${th.fg(fg0)}$0&n: $2- $stamp()
+format CTCP_USER $G ctcp ${th.fg(fg0)}$toupper(${[$4] ? [$3-] : [$3]})&n from ${th.fg(fg0)}$0!$1 $stamp()
+format DCC_CHAT ${th.fg(fg0)}=&n$0${th.fg(fg0)}=&n $1- $stamp()
+format DCC_COMPLETED $G dcc ${th.fg(fg0)}$1 $2&n with ${th.fg(fg0)}$0&n completed \($3 kb/s\) $stamp()
+format DCC_CONNECT $G dcc ${th.fg(fg0)}$1&n connection with ${th.fg(fg0)}$0&n established \($2:$3\) $stamp()
+format DCC_LOST $G dcc ${th.fg(fg0)}$1&n connection with ${th.fg(fg0)}$0&n lost \($2-\) $stamp()
+format DCC_OFFER_CHAT $G dcc ${th.fg(fg0)}$1&n request sent to ${th.fg(fg0)}$0&n
+format DCC_OFFER $G dcc ${th.fg(fg0)}$1 $2&n request sent to ${th.fg(fg0)}$0&n \($3b\)
+format DCC_REQUEST $G dcc ${th.fg(fg0)}$1 ${[$5] ? [$5 $6 ] : []}&nrequest from ${th.fg(fg0)}$0&n \($3:$4\) $stamp()
+format HILIGHT_NOTIFY $G Highlight in window ${th.fg(fg0)}#$0&n by ${th.fg(fg0)}$2&n \($4\)
+format -INPUT_PROMPT
+format INVITE $G invite ${th.fg(fg0)}$1&n by ${th.fg(fg0)}$0!$userhost() $stamp()
+format JOIN $G join ${th.fg(fg0)}$1&n by ${th.fg(fg0)}$0!$userhost() $stamp()
+format KICK $G kick ${th.fg(fg0)}$0&n off ${th.fg(fg0)}$2&n by ${th.fg(fg0)}$1&n \($3-&n\) $stamp()
+format KICK_USER $G kick ${th.fg(fg0)}$0&n off ${th.fg(fg0)}$2&n by ${th.fg(fg0)}$1&n \($3-&n\) $stamp()
+format KILL $G kill ${th.fg(fg0)}$1&n by ${th.fg(fg0)}$2&n \($4-\) $stamp()
+format LEAVE $G part ${th.fg(fg0)}$1&n by ${th.fg(fg0)}$0!$2&n${[$3] ? [ ${th.fg(fg0)}\(&n$3-&n${th.fg(fg0)}\)&n] : []} $stamp()
+format MODE $G mode ${th.fg(fg0)}$1-&n by ${th.fg(fg0)}$0 $stamp()
+format MSG ${th.fg(fg0)}*&n$0${th.fg(fg0)}*&n $1- &n${th.fg(fg0)}\(&n$userhost()${th.fg(fg0)}\) $stamp()
+format NAMES_BOTTOM $G &X6D..[ ${th.fg(fg0)}+o &n$2 ${th.fg(fg0)}-o &n${[$1] - [$2]} ${th.fg(fg0)}t &n$1
+format NAMES_NONOP &n $0$chr(32)
+format NAMES_OP ${th.fg(fg0)}@&n$0 &n
+format NAMES_ROW $G ${th.fg(blue)}..| &n
+format NAMES_TOP $G ${th.fg(blue)}..[ ${th.fg(fg0)}$0
+format NAMES_VOICE ${th.fg(blue)}+&n$0$chr(32)
+format NICK $G nick ${th.fg(fg0)}$1&n by ${th.fg(fg0)}$0
+format NOTICE ${th.fg(fg0)}-&n$0${th.fg(fg0)}-&n $1- &n${th.fg(fg0)}-&n$userhost()${th.fg(fg0)}- $stamp()
+format NOTIFY_SIGNOFF $G notify ${th.fg(fg0)}offline&n by ${th.fg(fg0)}$0 $stamp()
+format NOTIFY_SIGNON $G notify ${th.fg(fg0)}online&n by ${th.fg(fg0)}$0!$1 $stamp()
+format PUBLIC_HL $stamp()${th.fg(blue)}<${th.fg(fg0)}$0${th.fg(blue)}>&n $2-
+format PUBLIC_MSG_HL $stamp()${th.fg(blue)}<${th.fg(fg0)}$0${th.fg(blue)}:&n$1${th.fg(blue)}>&n $2-
+format PUBLIC_MSG $stamp()${th.fg(blue)}<&n$0${th.fg(blue)}:&n$1${th.fg(blue)}>&n $2-
+format PUBLIC_NOTICE ${th.fg(fg0)}-&n$0${th.fg(fg0)}:&n$1${th.fg(fg0)}-&n $2- &n${th.fg(fg0)}\(&n$userhost()${th.fg(fg0)}\) $stamp()
+format PUBLIC_OTHER_HL $stamp()${th.fg(blue)}<${th.fg(fg0)}$0${th.fg(blue)}/&n$1${th.fg(blue)}>&n $2-
+format PUBLIC_OTHER $stamp()${th.fg(blue)}<&n$0${th.fg(blue)}/&n$1${th.fg(blue)}>&n $2-
+format PUBLIC $stamp()${th.fg(blue)}<&n$0${th.fg(blue)}>&n $2-
+format SEND_ACTION $stamp()${th.fg(blue)}= ${th.fg(fg0)}$N&n/${th.fg(fg0)}$0&n $1-
+format SEND_CTCP $G ctcp ${th.fg(fg0)}$toupper(${[$3] ? [$2-] : [$2]})&n sent to ${th.fg(fg0)}$1
+format SEND_DCC_CHAT ${th.fg(fg0)}-> =&n$0${th.fg(fg0)}=&n $1-
+format SEND_MSG ${th.fg(fg0)}-> *&n$0${th.fg(fg0)}*&n $1-
+format SEND_NOTICE ${th.fg(fg0)}-> -&n$0${th.fg(fg0)}-&n $1-
+format SEND_PUBLIC $stamp()${th.fg(blue)}<&n$1${th.fg(blue)}${th.fg(blue)}>&n $2-
+format SERVER_NOTICE $G ${th.fg(fg0)}[&n$0${th.fg(fg0)}]&n $2- $stamp()
+format STATUS_AWAY |A:$0&N
+format STATUS_CHANMODE ${th.bg(bg_statusline3)}${th.fg(fg1)}\(+%+\) ${th.rst()}
+format STATUS_CHANNEL ${th.bg(bg_statusline3)}${th.fg(fg1)} %C ${th.rst()}
+format STATUS_CHANOP @&N
+format STATUS_CLOCK %T&N
+format STATUS_CPU_SAVER |C&N
+format -STATUS_DCC
+format -STATUS_HOLD
+format STATUS_HOLD_LINES |H:%B&N
+format -STATUS_IDLE
+format STATUS_IRCOP *&N
+format STATUS_LAG L:%1&N
+format -STATUS_LINE1
+format -STATUS_LINE2
+
+# https://www.epicsol.org/set_status_format
+# [%R]      This always expands to the window's name, if it has one, and to the window's refnum, if it does not have a name.
+# %*        (STATUS_OPER)
+# %@        (STATUS_CHANOP or STATUS_HALFOP)
+# %=        (STATUS_VOICE)
+# %N        (STATUS_NICKNAME)
+# %#        (STATUS_UMODE)
+# %C        (STATUS_CHANNEL)
+# %+        (STATUS_MODE)
+# %>        "right justify" section
+# %Q        (STATUS_QUERY)
+# [
+#   %1      (SET STATUS_USER1)
+#   %M      (STATUS_MAIL, wrapper)
+#   %A      (STATUS_AWAY)
+#   %L      (STATUS_CPU_SAVER, wrapper)
+#   %B      (STATUS_HOLD_LINES, wrapper)
+#   %F      (STATUS_NOTIFY, wrapper)
+#   %O      (STATUS_OVERWRITE)
+#   %5      (STATUS_USER1)
+# ]
+# %T        (STATUS_CLOCK)
+
+format STATUS_LINE ${th.bg(grey2)}${th.fg(bg1)}[%R] %*%@%=%N%# %C%+${th.bg(bg1)}${th.fg(fg1)}%>%Q${th.bg(bg_statusline3)} [%1%M%A%L%B%F%O%5] ${th.bg(grey2)}${th.fg(bg1)} %T
+format STATUS_MAIL |M:%M&N
+format STATUS_NICK %N&N
+format STATUS_NOTIFY |a:%F&N
+format STATUS_OVERWRITE |i&N
+format STATUS_PASTE |PASTE&N
+format STATUS_QUERY q:%Q &N
+format -STATUS_SCROLLBACK
+format -STATUS_SERVER
+format STATUS_UMODE \(+%#\)&N
+format -STATUS_UPTIME
+format STATUS_VOICE +&N
+format TIMESTAMP ${th.fg(fg0)}[${th.rst()}$*${th.fg(fg0)}] &n
+format TOPIC_CHANGE $G topic for ${th.fg(fg0)}$1&n changed by ${th.fg(fg0)}$0&n: $2- $stamp()
+format TOPIC_EMPTY $G topic ${th.fg(fg0)}$1&n: $2-
+format TOPIC $G topic ${th.fg(fg0)}$1&n: $2-
+format TOPIC_SETBY $G topic set by ${th.fg(fg0)}$2&n on $stime($3)
+format TOPIC_UNSET $G topic for ${th.fg(fg0)}$1&n unset by ${th.fg(fg0)}$0&n $stamp()
+format WALLOP ${th.fg(fg0)}!&n$0${th.fg(fg0)}!&n $2- $stamp()
+format -WHO_END
+format WHOIS_AWAY $G ${th.fg(blue)}..\(&n away     ${th.fg(blue)}:&n $1-
+format WHOIS_CHANNELS $G ${th.fg(blue)}..\(&n channels ${th.fg(blue)}:&n $2-
+format -WHOIS_END
+format -WHOIS_HEADER
+format WHOIS_IDLE $G ${th.fg(blue)}..\(&n idle     ${th.fg(blue)}:&n $tdiff($2) \(signon $stime($3)\)
+format WHOIS_IRCNAME $G ${th.fg(blue)}..\(&n ircname  ${th.fg(blue)}:&n $2-
+format WHOIS_NICK $G ${th.fg(blue)}..\(&n address  ${th.fg(blue)}:&n $1${th.fg(fg0)}!&n$2${th.fg(fg0)}@&n$3 ${th.fg(fg0)}\(&n$h.tld($after(-1 . $3))${th.fg(fg0)}\)
+format WHOIS_OPER $G ${th.fg(blue)}..\(&n ircop    ${th.fg(blue)}:&n $1-
+format WHOIS_SERVER $G ${th.fg(blue)}..\(&n server   ${th.fg(blue)}:&n $2 \($3-\)
+format WHOIS_USERLIST $G ${th.fg(blue)}..\(&n userlist ${th.fg(blue)}:&n $2 \($3\) [$4-]
+format -WHOWAS_END
+format -WHOWAS_HEADER
+format WHOWAS_IRCNAME $G ${th.fg(blue)}..\(&n ircname  ${th.fg(blue)}:&n $2-
+format WHOWAS_NICK $G ${th.fg(blue)}..\(&n was      ${th.fg(blue)}:&n $1${th.fg(fg0)}!&n$2${th.fg(fg0)}@&n$3 ${th.fg(fg0)}\(&n$h.tld($after(-1 . $3))${th.fg(fg0)}\)
+format WHO ${th.fg(fg0)}$0 &n$[3]2 ${th.fg(fg0)}$1!$3@$4 &n\($7-\)
