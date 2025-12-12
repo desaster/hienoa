@@ -107,26 +107,26 @@ format SEND_MSG ${th.rgb(fg0)}-> *&n$0${th.rgb(fg0)}*&n $1-
 format SEND_NOTICE ${th.rgb(fg0)}-> -&n$0${th.rgb(fg0)}-&n $1-
 format SEND_PUBLIC $stamp()${th.rgb(blue)}<&n$1${th.rgb(blue)}${th.rgb(blue)}>&n $2-
 format SERVER_NOTICE $G ${th.rgb(fg0)}[&n$0${th.rgb(fg0)}]&n $2- $stamp()
-format STATUS_AWAY |A:$0&N
+format STATUS_AWAY &N A:$0&N
 format STATUS_CHANMODE ${th.rgb(fg1 bg_statusline3)}\(+%+\) &n
 format STATUS_CHANNEL ${th.rgb(fg1 bg_statusline3)}%C&n
 format STATUS_CHANOP @&N
 format STATUS_CLOCK %T&N
-format STATUS_CPU_SAVER |C&N
+format STATUS_CPU_SAVER &N C&N
 format -STATUS_DCC
 format -STATUS_HOLD
-format STATUS_HOLD_LINES |H:%B&N
+format STATUS_HOLD_LINES &N H:%B&N
 format -STATUS_IDLE
 format STATUS_IRCOP *&N
 format STATUS_LAG L:%1&N
 format -STATUS_LINE1
 format -STATUS_LINE2
-format STATUS_LINE ${th.rgb(bg1 grey2)}$chr(27)[1m[%R]$chr(27)[22m %*%@%=%N%# ${th.rgb(grey2 bg_statusline3)} %C%{1}+${th.rgb(bg_statusline3 bg1)}${th.rgb(fg1 bg1)}%>%Q${th.rgb(bg_statusline3 bg1)}${th.rgb(fg1 bg_statusline3)} [%1%M%A%L%B%F%O%5] ${th.rgb(grey2 bg_statusline3)}${th.rgb(bg1 grey2)} %T &N
-format STATUS_MAIL |M:%M&N
+format STATUS_LINE ${th.rgb(bg1 grey2)}$chr(27)[1m[%R]$chr(27)[22m %*%@%=%N%# ${th.rgb(grey2 bg_statusline3)} %C%{1}+${th.rgb(bg_statusline3 bg1)}${th.rgb(fg1 bg1)}%>%Q${th.rgb(bg_statusline3 bg1)}${th.rgb(fg1 bg_statusline3)} %1%M%A%L%B%F%O%5 ${th.rgb(grey2 bg_statusline3)}${th.rgb(bg1 grey2)} %T &N
+format STATUS_MAIL &N M:%M&N
 format STATUS_NICK %N&N
-format STATUS_NOTIFY |a:%F&N
-format STATUS_OVERWRITE |i&N
-format STATUS_PASTE |PASTE&N
+format STATUS_NOTIFY &N a:%F&N
+format STATUS_OVERWRITE &N i&N
+format STATUS_PASTE &N PASTE&N
 format STATUS_QUERY q:%Q &N
 format -STATUS_SCROLLBACK
 format -STATUS_SERVER
