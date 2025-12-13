@@ -7,6 +7,9 @@
 screenmode lowascii
 set status_no_repeat on
 
+# to change default text & bg color  in tmux, you can do:
+# :select-pane -t:. -P 'fg=#d4be98,bg=#1d2021'
+
 @ th.colors.fg0                 = [#d4be98]
 @ th.colors.fg1                 = [#ddc7a1]
 @ th.colors.red                 = [#ea6962]
@@ -59,54 +62,54 @@ alias th.rgb {
     [#689d6a #5c8a5c #50764f #446341 #d65d0e #c4540d #ab4a0b #934109 ] ## \
     [#928374 #7d6e63 #6a5d54 #574c45 #665c54 #5a5049 #4e453f #423a35]
 
-format ACTION $stamp()${th.rgb(blue)}= ${th.rgb(fg0)}$0&n/${th.rgb(fg0)}$1&n $2-
-format BANNER ${th.rgb(fg0)}==
-format CHANNEL_SIGNOFF $G signoff ${th.rgb(fg0)}$0&n by ${th.rgb(fg0)}$1&n \($2-&n\) $stamp()
+format ACTION $stamp()${th.rgb(blue)}= ${th.rgb(yellow)}$0&n/${th.rgb(yellow)}$1&n $2-
+format BANNER ${th.rgb(blue)}≡≡
+format CHANNEL_SIGNOFF $G signoff ${th.rgb(yellow)}$0&n by ${th.rgb(yellow)}$1&n \($2-&n\) $stamp()
 format CONFIG_TITLE &n ${th.rgb(fg1 bg_statusline1)}$pad(${word(0 $geom()) - 3} " " [ hienoa $h.version - $*)]
-format CTCP_CHANNEL $G ctcp ${th.rgb(fg0)}$toupper(${[$4] ? [$3-] : [$3]})&n to ${th.rgb(fg0)}$2&n from ${th.rgb(fg0)}$0 $stamp()
-format CTCP_REPLY $G ctcp ${th.rgb(fg0)}$toupper($1)&n reply from ${th.rgb(fg0)}$0&n: $2- $stamp()
-format CTCP_USER $G ctcp ${th.rgb(fg0)}$toupper(${[$4] ? [$3-] : [$3]})&n from ${th.rgb(fg0)}$0!$1 $stamp()
-format DCC_CHAT ${th.rgb(fg0)}=&n$0${th.rgb(fg0)}=&n $1- $stamp()
-format DCC_COMPLETED $G dcc ${th.rgb(fg0)}$1 $2&n with ${th.rgb(fg0)}$0&n completed \($3 kb/s\) $stamp()
-format DCC_CONNECT $G dcc ${th.rgb(fg0)}$1&n connection with ${th.rgb(fg0)}$0&n established \($2:$3\) $stamp()
-format DCC_LOST $G dcc ${th.rgb(fg0)}$1&n connection with ${th.rgb(fg0)}$0&n lost \($2-\) $stamp()
-format DCC_OFFER_CHAT $G dcc ${th.rgb(fg0)}$1&n request sent to ${th.rgb(fg0)}$0&n
-format DCC_OFFER $G dcc ${th.rgb(fg0)}$1 $2&n request sent to ${th.rgb(fg0)}$0&n \($3b\)
-format DCC_REQUEST $G dcc ${th.rgb(fg0)}$1 ${[$5] ? [$5 $6 ] : []}&nrequest from ${th.rgb(fg0)}$0&n \($3:$4\) $stamp()
-format HILIGHT_NOTIFY $G Highlight in window ${th.rgb(fg0)}#$0&n by ${th.rgb(fg0)}$2&n \($4\)
+format CTCP_CHANNEL $G ctcp ${th.rgb(yellow)}$toupper(${[$4] ? [$3-] : [$3]})&n to ${th.rgb(yellow)}$2&n from ${th.rgb(yellow)}$0 $stamp()
+format CTCP_REPLY $G ctcp ${th.rgb(yellow)}$toupper($1)&n reply from ${th.rgb(yellow)}$0&n: $2- $stamp()
+format CTCP_USER $G ctcp ${th.rgb(yellow)}$toupper(${[$4] ? [$3-] : [$3]})&n from ${th.rgb(yellow)}$0!$1 $stamp()
+format DCC_CHAT ${th.rgb(yellow)}=&n$0${th.rgb(yellow)}=&n $1- $stamp()
+format DCC_COMPLETED $G dcc ${th.rgb(yellow)}$1 $2&n with ${th.rgb(yellow)}$0&n completed \($3 kb/s\) $stamp()
+format DCC_CONNECT $G dcc ${th.rgb(yellow)}$1&n connection with ${th.rgb(yellow)}$0&n established \($2:$3\) $stamp()
+format DCC_LOST $G dcc ${th.rgb(yellow)}$1&n connection with ${th.rgb(yellow)}$0&n lost \($2-\) $stamp()
+format DCC_OFFER_CHAT $G dcc ${th.rgb(yellow)}$1&n request sent to ${th.rgb(yellow)}$0&n
+format DCC_OFFER $G dcc ${th.rgb(yellow)}$1 $2&n request sent to ${th.rgb(yellow)}$0&n \($3b\)
+format DCC_REQUEST $G dcc ${th.rgb(yellow)}$1 ${[$5] ? [$5 $6 ] : []}&nrequest from ${th.rgb(yellow)}$0&n \($3:$4\) $stamp()
+format HILIGHT_NOTIFY $G Highlight in window ${th.rgb(yellow)}#$0&n by ${th.rgb(yellow)}$2&n \($4\)
 format -INPUT_PROMPT
-format INVITE $G invite ${th.rgb(fg0)}$1&n by ${th.rgb(fg0)}$0!$userhost() $stamp()
-format JOIN $G join ${th.rgb(fg0)}$1&n by ${th.rgb(fg0)}$0!$userhost() $stamp()
-format KICK $G kick ${th.rgb(fg0)}$0&n off ${th.rgb(fg0)}$2&n by ${th.rgb(fg0)}$1&n \($3-&n\) $stamp()
-format KICK_USER $G kick ${th.rgb(fg0)}$0&n off ${th.rgb(fg0)}$2&n by ${th.rgb(fg0)}$1&n \($3-&n\) $stamp()
-format KILL $G kill ${th.rgb(fg0)}$1&n by ${th.rgb(fg0)}$2&n \($4-\) $stamp()
-format LEAVE $G part ${th.rgb(fg0)}$1&n by ${th.rgb(fg0)}$0!$2&n${[$3] ? [ ${th.rgb(fg0)}\(&n$3-&n${th.rgb(fg0)}\)&n] : []} $stamp()
-format MODE $G mode ${th.rgb(fg0)}$1-&n by ${th.rgb(fg0)}$0 $stamp()
-format MSG ${th.rgb(fg0)}*&n$0${th.rgb(fg0)}*&n $1- &n${th.rgb(fg0)}\(&n$userhost()${th.rgb(fg0)}\) $stamp()
-format NAMES_BOTTOM $G &X6D..[ ${th.rgb(fg0)}+o &n$2 ${th.rgb(fg0)}-o &n${[$1] - [$2]} ${th.rgb(fg0)}t &n$1
+format INVITE $G invite ${th.rgb(yellow)}$1&n by ${th.rgb(yellow)}$0!$userhost() $stamp()
+format JOIN $G join ${th.rgb(yellow)}$1&n by ${th.rgb(yellow)}$0!$userhost() $stamp()
+format KICK $G kick ${th.rgb(yellow)}$0&n off ${th.rgb(yellow)}$2&n by ${th.rgb(yellow)}$1&n \($3-&n\) $stamp()
+format KICK_USER $G kick ${th.rgb(yellow)}$0&n off ${th.rgb(yellow)}$2&n by ${th.rgb(yellow)}$1&n \($3-&n\) $stamp()
+format KILL $G kill ${th.rgb(yellow)}$1&n by ${th.rgb(yellow)}$2&n \($4-\) $stamp()
+format LEAVE $G part ${th.rgb(yellow)}$1&n by ${th.rgb(yellow)}$0!$2&n${[$3] ? [ ${th.rgb(yellow)}\(&n$3-&n${th.rgb(yellow)}\)&n] : []} $stamp()
+format MODE $G mode ${th.rgb(yellow)}$1-&n by ${th.rgb(yellow)}$0 $stamp()
+format MSG ${th.rgb(yellow)}*&n$0${th.rgb(yellow)}*&n $1- &n${th.rgb(yellow)}\(&n$userhost()${th.rgb(yellow)}\) $stamp()
+format NAMES_BOTTOM $G &X6D..[ ${th.rgb(yellow)}+o &n$2 ${th.rgb(yellow)}-o &n${[$1] - [$2]} ${th.rgb(yellow)}t &n$1
 format NAMES_NONOP &n $0$chr(32)
-format NAMES_OP ${th.rgb(fg0)}@&n$0 &n
+format NAMES_OP ${th.rgb(yellow)}@&n$0 &n
 format NAMES_ROW $G ${th.rgb(blue)}..| &n
-format NAMES_TOP $G ${th.rgb(blue)}..[ ${th.rgb(fg0)}$0
+format NAMES_TOP $G ${th.rgb(blue)}..[ ${th.rgb(yellow)}$0
 format NAMES_VOICE ${th.rgb(blue)}+&n$0$chr(32)
-format NICK $G nick ${th.rgb(fg0)}$1&n by ${th.rgb(fg0)}$0
-format NOTICE ${th.rgb(fg0)}-&n$0${th.rgb(fg0)}-&n $1- &n${th.rgb(fg0)}-&n$userhost()${th.rgb(fg0)}- $stamp()
-format NOTIFY_SIGNOFF $G notify ${th.rgb(fg0)}offline&n by ${th.rgb(fg0)}$0 $stamp()
-format NOTIFY_SIGNON $G notify ${th.rgb(fg0)}online&n by ${th.rgb(fg0)}$0!$1 $stamp()
-format PUBLIC_HL $stamp()${th.rgb(blue)}<${th.rgb(fg0)}$0${th.rgb(blue)}>&n $2-
-format PUBLIC_MSG_HL $stamp()${th.rgb(blue)}<${th.rgb(fg0)}$0${th.rgb(blue)}:&n$1${th.rgb(blue)}>&n $2-
+format NICK $G nick ${th.rgb(yellow)}$1&n by ${th.rgb(yellow)}$0
+format NOTICE ${th.rgb(yellow)}-&n$0${th.rgb(yellow)}-&n $1- &n${th.rgb(yellow)}-&n$userhost()${th.rgb(yellow)}- $stamp()
+format NOTIFY_SIGNOFF $G notify ${th.rgb(yellow)}offline&n by ${th.rgb(yellow)}$0 $stamp()
+format NOTIFY_SIGNON $G notify ${th.rgb(yellow)}online&n by ${th.rgb(yellow)}$0!$1 $stamp()
+format PUBLIC_HL $stamp()${th.rgb(blue)}<${th.rgb(yellow)}$0${th.rgb(blue)}>&n $2-
+format PUBLIC_MSG_HL $stamp()${th.rgb(blue)}<${th.rgb(yellow)}$0${th.rgb(blue)}:&n$1${th.rgb(blue)}>&n $2-
 format PUBLIC_MSG $stamp()${th.rgb(blue)}<&n$0${th.rgb(blue)}:&n$1${th.rgb(blue)}>&n $2-
-format PUBLIC_NOTICE ${th.rgb(fg0)}-&n$0${th.rgb(fg0)}:&n$1${th.rgb(fg0)}-&n $2- &n${th.rgb(fg0)}\(&n$userhost()${th.rgb(fg0)}\) $stamp()
-format PUBLIC_OTHER_HL $stamp()${th.rgb(blue)}<${th.rgb(fg0)}$0${th.rgb(blue)}/&n$1${th.rgb(blue)}>&n $2-
+format PUBLIC_NOTICE ${th.rgb(yellow)}-&n$0${th.rgb(yellow)}:&n$1${th.rgb(yellow)}-&n $2- &n${th.rgb(yellow)}\(&n$userhost()${th.rgb(yellow)}\) $stamp()
+format PUBLIC_OTHER_HL $stamp()${th.rgb(blue)}<${th.rgb(yellow)}$0${th.rgb(blue)}/&n$1${th.rgb(blue)}>&n $2-
 format PUBLIC_OTHER $stamp()${th.rgb(blue)}<&n$0${th.rgb(blue)}/&n$1${th.rgb(blue)}>&n $2-
 format PUBLIC $stamp()${th.rgb(blue)}<&n$0${th.rgb(blue)}>&n $2-
-format SEND_ACTION $stamp()${th.rgb(blue)}= ${th.rgb(fg0)}$N&n/${th.rgb(fg0)}$0&n $1-
-format SEND_CTCP $G ctcp ${th.rgb(fg0)}$toupper(${[$3] ? [$2-] : [$2]})&n sent to ${th.rgb(fg0)}$1
-format SEND_DCC_CHAT ${th.rgb(fg0)}-> =&n$0${th.rgb(fg0)}=&n $1-
-format SEND_MSG ${th.rgb(fg0)}-> *&n$0${th.rgb(fg0)}*&n $1-
-format SEND_NOTICE ${th.rgb(fg0)}-> -&n$0${th.rgb(fg0)}-&n $1-
+format SEND_ACTION $stamp()${th.rgb(blue)}= ${th.rgb(yellow)}$N&n/${th.rgb(yellow)}$0&n $1-
+format SEND_CTCP $G ctcp ${th.rgb(yellow)}$toupper(${[$3] ? [$2-] : [$2]})&n sent to ${th.rgb(yellow)}$1
+format SEND_DCC_CHAT ${th.rgb(yellow)}-> =&n$0${th.rgb(yellow)}=&n $1-
+format SEND_MSG ${th.rgb(yellow)}-> *&n$0${th.rgb(yellow)}*&n $1-
+format SEND_NOTICE ${th.rgb(yellow)}-> -&n$0${th.rgb(yellow)}-&n $1-
 format SEND_PUBLIC $stamp()${th.rgb(blue)}<&n$1${th.rgb(blue)}${th.rgb(blue)}>&n $2-
-format SERVER_NOTICE $G ${th.rgb(fg0)}[&n$0${th.rgb(fg0)}]&n $2- $stamp()
+format SERVER_NOTICE $G ${th.rgb(yellow)}[&n$0${th.rgb(yellow)}]&n $2- $stamp()
 format STATUS_AWAY &N A:$0&N
 format STATUS_CHANMODE ${th.rgb(fg1 bg_statusline3)}\(+%+\) &n
 format STATUS_CHANNEL ${th.rgb(fg1 bg_statusline3)}%C&n
@@ -133,13 +136,13 @@ format -STATUS_SERVER
 format STATUS_UMODE \(+%#\)&N
 format -STATUS_UPTIME
 format STATUS_VOICE +&N
-format TIMESTAMP ${th.rgb(fg0)}[&n$*${th.rgb(fg0)}] &n
-format TOPIC_CHANGE $G topic for ${th.rgb(fg0)}$1&n changed by ${th.rgb(fg0)}$0&n: $2- $stamp()
-format TOPIC_EMPTY $G topic ${th.rgb(fg0)}$1&n: $2-
-format TOPIC $G topic ${th.rgb(fg0)}$1&n: $2-
-format TOPIC_SETBY $G topic set by ${th.rgb(fg0)}$2&n on $stime($3)
-format TOPIC_UNSET $G topic for ${th.rgb(fg0)}$1&n unset by ${th.rgb(fg0)}$0&n $stamp()
-format WALLOP ${th.rgb(fg0)}!&n$0${th.rgb(fg0)}!&n $2- $stamp()
+format TIMESTAMP ${th.rgb(bg3)}$* &n
+format TOPIC_CHANGE $G topic for ${th.rgb(yellow)}$1&n changed by ${th.rgb(yellow)}$0&n: $2- $stamp()
+format TOPIC_EMPTY $G topic ${th.rgb(yellow)}$1&n: $2-
+format TOPIC $G topic ${th.rgb(yellow)}$1&n: $2-
+format TOPIC_SETBY $G topic set by ${th.rgb(yellow)}$2&n on $stime($3)
+format TOPIC_UNSET $G topic for ${th.rgb(yellow)}$1&n unset by ${th.rgb(yellow)}$0&n $stamp()
+format WALLOP ${th.rgb(yellow)}!&n$0${th.rgb(yellow)}!&n $2- $stamp()
 format -WHO_END
 format WHOIS_AWAY $G ${th.rgb(blue)}..\(&n away     ${th.rgb(blue)}:&n $1-
 format WHOIS_CHANNELS $G ${th.rgb(blue)}..\(&n channels ${th.rgb(blue)}:&n $2-
@@ -147,12 +150,12 @@ format -WHOIS_END
 format -WHOIS_HEADER
 format WHOIS_IDLE $G ${th.rgb(blue)}..\(&n idle     ${th.rgb(blue)}:&n $tdiff($2) \(signon $stime($3)\)
 format WHOIS_IRCNAME $G ${th.rgb(blue)}..\(&n ircname  ${th.rgb(blue)}:&n $2-
-format WHOIS_NICK $G ${th.rgb(blue)}..\(&n address  ${th.rgb(blue)}:&n $1${th.rgb(fg0)}!&n$2${th.rgb(fg0)}@&n$3 ${th.rgb(fg0)}\(&n$h.tld($after(-1 . $3))${th.rgb(fg0)}\)
+format WHOIS_NICK $G ${th.rgb(blue)}..\(&n address  ${th.rgb(blue)}:&n $1${th.rgb(yellow)}!&n$2${th.rgb(yellow)}@&n$3 ${th.rgb(yellow)}\(&n$h.tld($after(-1 . $3))${th.rgb(yellow)}\)
 format WHOIS_OPER $G ${th.rgb(blue)}..\(&n ircop    ${th.rgb(blue)}:&n $1-
 format WHOIS_SERVER $G ${th.rgb(blue)}..\(&n server   ${th.rgb(blue)}:&n $2 \($3-\)
 format WHOIS_USERLIST $G ${th.rgb(blue)}..\(&n userlist ${th.rgb(blue)}:&n $2 \($3\) [$4-]
 format -WHOWAS_END
 format -WHOWAS_HEADER
 format WHOWAS_IRCNAME $G ${th.rgb(blue)}..\(&n ircname  ${th.rgb(blue)}:&n $2-
-format WHOWAS_NICK $G ${th.rgb(blue)}..\(&n was      ${th.rgb(blue)}:&n $1${th.rgb(fg0)}!&n$2${th.rgb(fg0)}@&n$3 ${th.rgb(fg0)}\(&n$h.tld($after(-1 . $3))${th.rgb(fg0)}\)
-format WHO ${th.rgb(fg0)}$0 &n$[3]2 ${th.rgb(fg0)}$1!$3@$4 &n\($7-\)
+format WHOWAS_NICK $G ${th.rgb(blue)}..\(&n was      ${th.rgb(blue)}:&n $1${th.rgb(yellow)}!&n$2${th.rgb(yellow)}@&n$3 ${th.rgb(yellow)}\(&n$h.tld($after(-1 . $3))${th.rgb(yellow)}\)
+format WHO ${th.rgb(yellow)}$0 &n$[3]2 ${th.rgb(yellow)}$1!$3@$4 &n\($7-\)
