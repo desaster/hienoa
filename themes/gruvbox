@@ -63,7 +63,7 @@ alias th.rgb {
     [#928374 #7d6e63 #6a5d54 #574c45 #665c54 #5a5049 #4e453f #423a35]
 
 format ACTION $stamp()${th.rgb(blue)}= ${th.rgb(yellow)}$0&n/${th.rgb(yellow)}$1&n $2-
-format BANNER ${th.rgb(blue)}≡≡
+format BANNER ${th.rgb(aqua)}≡≡
 format CHANNEL_SIGNOFF $G signoff ${th.rgb(yellow)}$0&n by ${th.rgb(yellow)}$1&n \($2-&n\) $stamp()
 format CONFIG_TITLE &n ${th.rgb(fg1 bg_statusline1)}$pad(${word(0 $geom()) - 3} " " [ hienoa $h.version - $*)]
 format CTCP_CHANNEL $G ctcp ${th.rgb(yellow)}$toupper(${[$4] ? [$3-] : [$3]})&n to ${th.rgb(yellow)}$2&n from ${th.rgb(yellow)}$0 $stamp()
@@ -136,7 +136,7 @@ format -STATUS_SERVER
 format STATUS_UMODE \(+%#\)&N
 format -STATUS_UPTIME
 format STATUS_VOICE +&N
-format TIMESTAMP ${th.rgb(bg3)}$* &n
+format TIMESTAMP ${th.rgb(aqua)}[${th.rgb(fg0)}$*${th.rgb(aqua)}] &n
 format TOPIC_CHANGE $G topic for ${th.rgb(yellow)}$1&n changed by ${th.rgb(yellow)}$0&n: $2- $stamp()
 format TOPIC_EMPTY $G topic ${th.rgb(yellow)}$1&n: $2-
 format TOPIC $G topic ${th.rgb(yellow)}$1&n: $2-
