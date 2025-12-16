@@ -10,9 +10,11 @@ See the COPYRIGHT file for more information
 
 Hienoa is a script for ircII-EPIC5. I started making hienoa because I wasn't fully satisfied with any of the irc clients and scripts available. I can't guarantee that you will be satisfied with this script, but I'm working on it.
 
-## Screenshot
+## Screenshots
 
-![hienoa screenshot](http://c.rpg.fi/hienoa/hienoa-screenshot.png)
+![hienoa original bluecow theme](https://github.com/user-attachments/assets/8b67551f-fc28-4d83-bcae-9730f15d44a9)
+
+![hienoa gruvbox theme 2025](https://github.com/user-attachments/assets/40225b2a-b3f0-4fa7-8eb8-9f789ad7f4a3)
 
 ## Installation
 
